@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<TfrxReport Version="5.3.16" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="43607,6541289352" ReportOptions.Description.Text="" ReportOptions.LastChange="43607,6762966319" ScriptLanguage="PascalScript" ScriptText.Text="begin&#13;&#10;&#13;&#10;end.">
+  <Datasets>
+    <item DataSet="frEtiquetaDespacho" DataSetName="frEtiquetaDespacho"/>
+  </Datasets>
+  <TfrxDataPage Name="Data" Height="1000" Left="0" Top="0" Width="1000"/>
+  <TfrxReportPage Name="Page1" PaperWidth="110" PaperHeight="1110" PaperSize="256" LeftMargin="10" RightMargin="10" TopMargin="10" BottomMargin="10" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+    <TfrxMasterData Name="MasterData1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="173,85838" Left="0" Top="18,89765" Width="340,1577" ColumnWidth="0" ColumnGap="0" DataSet="frEtiquetaDespacho" DataSetName="frEtiquetaDespacho" RowCount="0">
+      <TfrxMemoView Name="Memo1" Left="0" Top="0" Width="64,25201" Height="18,89765" Font.Charset="1" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="Destinatário"/>
+      <TfrxMemoView Name="Memo2" Left="0" Top="18,89765" Width="336,37817" Height="18,89765" DataField="NOME" DataSet="frEtiquetaDespacho" DataSetName="frEtiquetaDespacho" Font.Charset="1" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="[frEtiquetaDespacho.&#34;NOME&#34;]"/>
+      <TfrxMemoView Name="Memo3" Left="0" Top="37,7953" Width="336,37817" Height="18,89765" DataSet="frEtiquetaDespacho" DataSetName="frEtiquetaDespacho" Font.Charset="1" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="[frEtiquetaDespacho.&#34;endereco&#34;], [frEtiquetaDespacho.&#34;NUMERO&#34;]">
+        <Formats>
+          <item/>
+          <item/>
+        </Formats>
+      </TfrxMemoView>
+      <TfrxMemoView Name="Memo4" Left="0" Top="56,69295" Width="336,37817" Height="18,89765" DataSet="frEtiquetaDespacho" DataSetName="frEtiquetaDespacho" Font.Charset="1" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="[frEtiquetaDespacho.&#34;bairro&#34;]"/>
+      <TfrxMemoView Name="Memo5" Left="0" Top="75,5906" Width="336,37817" Height="18,89765" DataSet="frEtiquetaDespacho" DataSetName="frEtiquetaDespacho" Font.Charset="1" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="0" ParentFont="False" Text="[frEtiquetaDespacho.&#34;cidade&#34;]\[frEtiquetaDespacho.&#34;UF&#34;] - [frEtiquetaDespacho.&#34;cep&#34;]">
+        <Formats>
+          <item/>
+          <item/>
+          <item/>
+        </Formats>
+      </TfrxMemoView>
+      <TfrxBarCodeView Name="BarCode1" Left="181,41744" Top="113,3859" Width="129" Height="56,69295" BarType="bcCode39" Expression="&#60;frEtiquetaDespacho.&#34;NFE_NUMERO&#34;&#62;" Rotation="0" ShowText="False" Text="12345678" WideBarRatio="2" Zoom="1" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial" Font.Style="0"/>
+      <TfrxMemoView Name="Memo6" Left="3,77953" Top="102,04731" Width="162,51979" Height="18,89765" Text="NF-e: [frEtiquetaDespacho.&#34;NFE_NUMERO&#34;]"/>
+      <TfrxMemoView Name="Memo7" Left="3,77953" Top="120,94496" Width="162,51979" Height="18,89765" DataSet="frEtiquetaDespacho" DataSetName="frEtiquetaDespacho" Text="Volume: [frEtiquetaDespacho.&#34;NFE_VOLUME_QTDE&#34;]"/>
+      <TfrxLineView Name="Line1" Left="-1,22047" Top="98,04731" Width="340,1577" Height="0" Color="0" Frame.Typ="4"/>
+      <TfrxMemoView Name="Memo8" Left="3,77953" Top="143,62214" Width="83,14966" Height="18,89765" DataSet="frEtiquetaDespacho" DataSetName="frEtiquetaDespacho" Text="Pes. Liq.: [frEtiquetaDespacho.&#34;NFE_PESO_LIQUIDO&#34;]"/>
+      <TfrxMemoView Name="Memo9" Left="90,70872" Top="143,62214" Width="83,14966" Height="18,89765" DataSet="frEtiquetaDespacho" DataSetName="frEtiquetaDespacho" Text="Pes. Bru.: [frEtiquetaDespacho.&#34;NFE_PESO_BRUTO&#34;]"/>
+    </TfrxMasterData>
+  </TfrxReportPage>
+</TfrxReport>
