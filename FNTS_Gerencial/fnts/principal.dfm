@@ -9657,8 +9657,8 @@ object frmPrincipal: TfrmPrincipal
         object RzLabel1: TRzLabel
           Left = 0
           Top = 0
-          Width = 124
-          Height = 14
+          Width = 352
+          Height = 20
           Align = alClient
           Alignment = taCenter
           Caption = 'Registro do Sistema'
@@ -9670,6 +9670,8 @@ object frmPrincipal: TfrmPrincipal
           ParentFont = False
           Transparent = True
           Layout = tlCenter
+          ExplicitWidth = 124
+          ExplicitHeight = 14
         end
       end
     end
@@ -9785,7 +9787,7 @@ object frmPrincipal: TfrmPrincipal
         object Label2: TLabel
           Left = 4
           Top = 116
-          Width = 33
+          Width = 146
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -9798,11 +9800,12 @@ object frmPrincipal: TfrmPrincipal
           ParentFont = False
           Transparent = True
           Layout = tlBottom
+          ExplicitWidth = 33
         end
         object Label1: TRzLabel
           Left = 4
           Top = 59
-          Width = 57
+          Width = 146
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -9815,6 +9818,7 @@ object frmPrincipal: TfrmPrincipal
           ParentFont = False
           Transparent = True
           Layout = tlBottom
+          ExplicitWidth = 57
         end
         object Bevel3: TBevel
           Left = 4
@@ -9883,8 +9887,8 @@ object frmPrincipal: TfrmPrincipal
         object lbcaixa: TRzLabel
           Left = 0
           Top = 0
-          Width = 66
-          Height = 14
+          Width = 154
+          Height = 20
           Align = alClient
           Alignment = taCenter
           Caption = 'Caixa Geral'
@@ -9896,6 +9900,8 @@ object frmPrincipal: TfrmPrincipal
           ParentFont = False
           Transparent = True
           Layout = tlCenter
+          ExplicitWidth = 66
+          ExplicitHeight = 14
         end
       end
     end

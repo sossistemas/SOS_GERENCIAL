@@ -2364,6 +2364,7 @@ type
     qrconfigPDV_EXIBE_ESTOQUE_TELA_VENDA: TWideStringField;
     qrconfigLIBERA_CANC_PDV_GERENCIAL: TWideStringField;
     qrconfigMANTEM_ATENDIMENTO_ABERTO: TWideStringField;
+    qrrelatorioVALOR_PIX: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qrsubgrupoBeforePost(DataSet: TDataSet);
     procedure qrgrade_subgrupoBeforePost(DataSet: TDataSet);

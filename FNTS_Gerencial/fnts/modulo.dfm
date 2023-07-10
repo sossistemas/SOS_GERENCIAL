@@ -7743,6 +7743,9 @@ object frmmodulo: Tfrmmodulo
     object qrrelatorioTP: TIntegerField
       FieldName = 'TP'
     end
+    object qrrelatorioVALOR_PIX: TFloatField
+      FieldName = 'VALOR_PIX'
+    end
   end
   object qrcliente_veiculo: TZQuery
     Connection = Conexao
@@ -9053,7 +9056,6 @@ object frmmodulo: Tfrmmodulo
     UserName = 'fxrelatorio'
     CloseDataSource = False
     FieldAliases.Strings = (
-      'TEXTO_GRANDE=TEXTO_GRANDE'
       'LINHA1=LINHA1'
       'LINHA2=LINHA2'
       'LINHA3=LINHA3'
@@ -9098,7 +9100,10 @@ object frmmodulo: Tfrmmodulo
       'VALOR32=VALOR32'
       'VALOR33=VALOR33'
       'VALOR34=VALOR34'
-      'VALOR35=VALOR35')
+      'VALOR35=VALOR35'
+      'TEXTO_GRANDE=TEXTO_GRANDE'
+      'TP=TP'
+      'VALOR_PIX=VALOR_PIX')
     DataSet = qrrelatorio
     BCDToCurrency = False
     Left = 159

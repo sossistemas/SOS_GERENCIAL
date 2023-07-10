@@ -214,13 +214,13 @@ begin
     '(select sum(VALOR) valor_22 from c000044 where atb like :atb and movimento = 22 and data >= :datai and data <= :dataf ' + caixa + conta + '), ' + // column_22  - cc
     '(select sum(VALOR) valor_23 from c000044 where atb like :atb and movimento = 23 and data >= :datai and data <= :dataf ' + caixa + conta + '), ' + // column_23  - cd
     '(select sum(VALOR) valor_24 from c000044 where atb like :atb and movimento = 40 and data >= :datai and data <= :dataf ' + caixa + conta + '), ' + // 24 convenios
-    '(select sum(VALOR) valor_25 from c000044 where atb like :atb and movimento = 42 and data >= :datai and data <= :dataf ' + caixa + conta + ') ' + // 24 convenios
+    '(select sum(VALOR) valor_25 from c000044 where atb like :atb and movimento = 42 and data >= :datai and data <= :dataf ' + caixa + conta + '), ' + // 24 convenios
+    '(select sum(VALOR) valor_26 from c000044 where atb like :atb and movimento = 43 and data >= :datai and data <= :dataf ' + caixa + conta + ') ' + // 26 Pix
     'from c000044 where  data >= :datai and data <= :dataf ' + caixa + conta);
   qrsoma.Params.ParamByName('datai').asdatetime := dateedit1.date;
   qrsoma.Params.ParamByName('dataf').asdatetime := dateedit2.date;
   qrsoma.ParamByName('atb').Value := ME_FiltraATB('TB_MOVIMENTO_CAIXA');
   qrsoma.open;
-
 
   frmmodulo.qrrelatorio.FieldByName('valor1').Asfloat := qrsoma.fieldbyname('total_entrada').asfloat;
   frmmodulo.qrrelatorio.FieldByName('valor2').Asfloat := qrsoma.fieldbyname('total_saida').asfloat;
@@ -232,6 +232,7 @@ begin
   frmmodulo.qrrelatorio.FieldByName('valor7').Asfloat := qrsoma.fieldbyname('valor_3').asfloat; // cheque a prazo
   frmmodulo.qrrelatorio.FieldByName('valor8').Asfloat := qrsoma.fieldbyname('valor_4').asfloat; // cartao cred
   frmmodulo.qrrelatorio.FieldByName('valor9').Asfloat := qrsoma.fieldbyname('valor_5').asfloat; // cartao deb
+  frmmodulo.qrrelatorio.FieldByName('valor_pix').Asfloat := qrsoma.fieldbyname('valor_26').asfloat; //Pix
 
   frmmodulo.qrrelatorio.FieldByName('valor10').Asfloat := qrsoma.fieldbyname('valor').asfloat +
     qrsoma.fieldbyname('valor_1').asfloat +
@@ -239,10 +240,8 @@ begin
     qrsoma.fieldbyname('valor_3').asfloat +
     qrsoma.fieldbyname('valor_4').asfloat +
     qrsoma.fieldbyname('valor_5').asfloat +
-    qrsoma.fieldbyname('valor_24').asfloat;
-
-
-
+    qrsoma.fieldbyname('valor_24').asfloat+
+    qrsoma.fieldbyname('valor_26').asfloat;
 
 
   frmmodulo.qrrelatorio.FieldByName('valor11').Asfloat := qrsoma.fieldbyname('valor_6').asfloat; // DINHEIRO
@@ -295,9 +294,6 @@ begin
   frmmodulo.qrrelatorio.FieldByName('valor33').Asfloat := qrsoma.fieldbyname('valor_25').asfloat;
 
 
-
-
-
   if combo_relatorio.Text = 'FOLHA DE CAIXA' then
   begin
 
@@ -308,7 +304,6 @@ begin
     qrcaixa.Params.ParamByName('dataf').asdatetime := dateedit2.date;
     qrcaixa.ParamByName('atb').Value := ME_FiltraATB('TB_MOVIMENTO_CAIXA');
     qrcaixa.open;
-
 
     frmmodulo.qrrelatorio.fieldbyname('LINHA1').asstring := 'FOLHA DE CAIXA';
     fxcAIXA.LoadFromFile('c:\SOS\server\rel\f000071.fr3');
@@ -346,12 +341,13 @@ begin
 
     frmmodulo.qrrelatorio.FieldByName('valor10').Asfloat := frmmodulo.qrrelatorio.FieldByName('valor4').Asfloat +
       frmmodulo.qrrelatorio.FieldByName('valor6').Asfloat +
-      frmmodulo.qrrelatorio.FieldByName('valor9').Asfloat;
+      frmmodulo.qrrelatorio.FieldByName('valor9').Asfloat +
+      frmmodulo.qrrelatorio.FieldByName('valor_pix').Asfloat;
 
     frmmodulo.qrrelatorio.FieldByName('valor22').Asfloat := frmmodulo.qrrelatorio.FieldByName('valor18').Asfloat + frmmodulo.qrrelatorio.FieldByName('valor10').Asfloat;
     qrcaixa.close;
     qrcaixa.SQL.Clear;
-    qrcaixa.sql.add('select * from c000044 where atb like :atb and data >= :datai and data <= :dataf ' + caixa + conta + ' and movimento in (3,5,8,9,10,11,15,16) order by codigo');
+    qrcaixa.sql.add('select * from c000044 where atb like :atb and data >= :datai and data <= :dataf ' + caixa + conta + ' and movimento in (3,5,8,9,10,11,15,16,43) order by codigo');
     qrcaixa.Params.ParamByName('datai').asdatetime := dateedit1.date;
     qrcaixa.Params.ParamByName('dataf').asdatetime := dateedit2.date;
     qrcaixa.ParamByName('atb').Value := ME_FiltraATB('TB_MOVIMENTO_CAIXA');
@@ -439,8 +435,7 @@ begin
     40: qrcaixa.fieldbyname('descricao_movimento').asstring := 'VENDA CONVÊNIO';
     41: qrcaixa.fieldbyname('descricao_movimento').asstring := 'VENDA CONVÊNIO VIDALINK';
     42: qrcaixa.fieldbyname('descricao_movimento').asstring := 'VENDA FINANCEIRA';
-
-
+    43: qrcaixa.fieldbyname('descricao_movimento').asstring := 'VENDA PIX';
   end;
 end;
 

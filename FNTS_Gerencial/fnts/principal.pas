@@ -2366,8 +2366,11 @@ procedure TfrmPrincipal.Action60Execute(Sender: TObject);
 begin
   barra_relatorios.Visible := False;
   FRMLISTA_CAIXA2 := TFRMLISTA_CAIXA2.create(self);
-  FRMLISTA_CAIXA2.showmodal;
-  FreeAndNil(FRMLISTA_CAIXA2);
+  Try
+    FRMLISTA_CAIXA2.showmodal;
+  Finally
+    FreeAndNil(FRMLISTA_CAIXA2);
+  End;
 end;
 
 procedure TfrmPrincipal.Action61Execute(Sender: TObject);
