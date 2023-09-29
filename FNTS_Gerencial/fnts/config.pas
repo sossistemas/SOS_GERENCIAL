@@ -20,7 +20,10 @@ uses
   cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid, cxSpinEdit, Vcl.FileCtrl,
   ACBrDFeSSL, pcnConversao, ACBrNFeDANFEClass, ACBrNFeDANFEFR,
   ACBrMail, dxCore, dxColorEdit, dxDBColorEdit, ACBrDFeReport,
-  ACBrDFeDANFeReport, dxBarBuiltInMenu, cxPC, cxCustomData, cxFilter, cxData;
+  ACBrDFeDANFeReport, dxBarBuiltInMenu, cxPC, cxCustomData, cxFilter, cxData,
+  dxSkinsCore, dxSkinsDefaultPainters, dxDateRanges,
+  cxDataControllerConditionalFormattingRulesManagerDialog,
+  ACBrPosPrinter;
 
 const
   SELDIRHELP = 1000;
@@ -630,6 +633,13 @@ type
     DBCheckBox7: TDBCheckBox;
     DBCheckBox8: TDBCheckBox;
     DBCheckBox14: TDBCheckBox;
+    RzGroupBox6: TRzGroupBox;
+    cbxModelo: TComboBox;
+    Label6: TLabel;
+    Label8: TLabel;
+    cbxPorta: TComboBox;
+    Label9: TLabel;
+    cbxPagCodigo: TComboBox;
     procedure bcancelarClick(Sender: TObject);
     procedure bgravarClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -747,6 +757,10 @@ type
     procedure GravaDFE;
     procedure CarregaDFE;
     procedure CarregaNFE;
+
+    procedure BuscarPortasImpressora;
+    procedure LerIni;
+    procedure GravarINI;
   public
     { Public declarations }
   end;
@@ -789,6 +803,8 @@ begin
     end;
   end;
   GravaDFE;
+
+  GravarINI;
   impressora_venda := frmmodulo.qrconfig.fieldbyname('VENDA_PORTA_IMPRESSORA').asstring;
 
   frmmodulo.qrconfigCEP_SERVIDOR.AsInteger := cbxWS.ItemIndex;
@@ -884,6 +900,10 @@ var
   X: TSSLXmlSignLib;
   Y: TSSLType;
   IC: TACBrCEPWebService;
+
+
+  A: TACBrPosPrinterModelo;
+  B: TACBrPosPaginaCodigo;
 begin
   FRMMODULO.qrconfig.Close;
   FRMMODULO.qrconfig.Open;
@@ -967,6 +987,18 @@ begin
     combo_venda.Items.Add('16 - Pedido + Carnê com código de barras');
     combo_venda.Items.add('17 - Razão Laser - 2');
   end;
+
+  cbxModelo.Items.Clear ;
+  for A := Low(TACBrPosPrinterModelo) to High(TACBrPosPrinterModelo) do
+     cbxModelo.Items.Add( GetEnumName(TypeInfo(TACBrPosPrinterModelo), integer(A)));
+
+  cbxPagCodigo.Items.Clear ;
+  For B := Low(TACBrPosPaginaCodigo) to High(TACBrPosPaginaCodigo) do
+     cbxPagCodigo.Items.Add( GetEnumName(TypeInfo(TACBrPosPaginaCodigo), integer(B)));
+
+  BuscarPortasImpressora;
+
+  LerIni;
 end;
 
 procedure Tfrmconfig.baplicarClick(Sender: TObject);
@@ -1111,6 +1143,8 @@ begin
   frmmodulo.qrconfig.edit;
   frmmodulo.qrDFeConfig.edit;
 
+  GravarINI;
+
   Application.ProcessMessages;
 end;
 
@@ -1126,6 +1160,36 @@ begin
   if resultado_pesquisa1 <> '' then begin
     if (FRMMODULO.QRCONFIG.STATE = DSEDIT) or (FRMMODULO.QRCONFIG.StaTE = DSINSERT) then
       FRMMODULO.QRCONFIG.FIELDBYNAME('PLANO_VENDA_AV').ASSTRING := RESULTADO_PESQUISA1;
+  end;
+end;
+
+procedure Tfrmconfig.BuscarPortasImpressora;
+var
+  AcbrPos : TACBrPosPrinter;
+begin
+  AcbrPos := TACBrPosPrinter.Create(Self);
+
+  try
+    cbxPorta.Items.Clear;
+    AcbrPos.Device.AcharPortasSeriais( cbxPorta.Items );
+    {$IfDef MSWINDOWS}
+    AcbrPos.Device.AcharPortasUSB( cbxPorta.Items );
+    {$EndIf}
+    AcbrPos.Device.AcharPortasRAW( cbxPorta.Items );
+    {$IfDef HAS_BLUETOOTH}
+    try
+      AcbrPos.Device.AcharPortasBlueTooth( cbxPorta.Items, True );
+    except
+    end;
+    {$EndIf}
+
+    cbxPorta.Items.Add('LPT1') ;
+    cbxPorta.Items.Add('\\localhost\Epson') ;
+    cbxPorta.Items.Add('c:\temp\ecf.txt') ;
+    cbxPorta.Items.Add('TCP:192.168.0.31:9100') ;
+
+  finally
+    AcbrPos.Free;
   end;
 end;
 
@@ -1214,6 +1278,55 @@ end;
 procedure Tfrmconfig.Gravar1Click(Sender: TObject);
 begin
   bgravarClick(frmconfig);
+end;
+
+procedure Tfrmconfig.GravarINI;
+Var
+  ArqINI : String ;
+  INI : TIniFile ;
+begin
+  ArqINI := ChangeFileExt('C:\SOS\server\ini\PosPrinter', '.ini');
+
+  INI := TIniFile.Create(ArqINI);
+
+  try
+    INI.WriteInteger('PosPrinter','Modelo',cbxModelo.ItemIndex);
+    INI.WriteString('PosPrinter','Porta',cbxPorta.Text);
+//    INI.WriteString('PosPrinter','DeviceParams',ACBrPosPrinter1.Device.ParamsString);
+    INI.WriteInteger('PosPrinter','Colunas',48);
+    INI.WriteInteger('PosPrinter','EspacoEntreLinhas',0);
+    INI.WriteInteger('PosPrinter','LinhasBuffer',0);
+    INI.WriteInteger('PosPrinter','LinhasPular',1);
+    INI.WriteBool('PosPrinter','CortarPapel',True);
+    INI.WriteBool('PosPrinter','ControlePorta',False);
+    INI.WriteBool('PosPrinter','TraduzirTags',True);
+    INI.WriteBool('PosPrinter','IgnorarTags',False);
+    INI.WriteString('PosPrinter','ArqLog','');
+    INI.WriteInteger('PosPrinter','PaginaDeCodigo',cbxPagCodigo.ItemIndex);
+    INI.WriteInteger('Barras','Largura',0);
+    INI.WriteInteger('Barras','Altura',0);
+    INI.WriteBool('Barras','HRI',False);
+  finally
+     INI.Free;
+  end;
+end;
+
+procedure Tfrmconfig.LerIni;
+Var
+  ArqINI : String;
+  INI : TIniFile;
+begin
+  ArqINI := ChangeFileExt('C:\SOS\server\ini\PosPrinter', '.ini');
+
+  INI := TIniFile.Create(ArqINI);
+
+  try
+    cbxPorta.Text          := INI.ReadString('PosPrinter','Porta','');
+    cbxModelo.ItemIndex    := INI.ReadInteger('PosPrinter','Modelo', 0);
+    cbxPagCodigo.ItemIndex := INI.ReadInteger('PosPrinter','PaginaDeCodigo',0);
+  finally
+    INI.Free;
+  end;
 end;
 
 procedure Tfrmconfig.Aplicar1Click(Sender: TObject);

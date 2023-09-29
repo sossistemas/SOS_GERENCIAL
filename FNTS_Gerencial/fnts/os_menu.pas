@@ -183,7 +183,7 @@ type
     procedure wwDBGrid1RowChanged(Sender: TObject);
     procedure AdvMetroButton1Click(Sender: TObject);
   private
-    { Private declarations }
+    procedure VerificaSituacaoOS;
   public
     { Public declarations }
   end;
@@ -356,6 +356,24 @@ begin
     wwDBGrid1.SETFOCUS;
 end;
 
+procedure TfrmOs_menu.VerificaSituacaoOS;
+begin
+  if FRMMODULO.cdsos.fieldbyname('situacao').asstring = 'FECHADA' then
+  begin
+    if (frmos) <> nil then
+    begin
+      frmos.BGRAVAR.VISIBLE := false;
+      frmos.BCANCELAR.CAPTION := 'Fechar';
+    end;
+
+    if (frmos_auto) <> nil then
+    begin
+      frmos_auto.BGRAVAR.VISIBLE := false;
+      frmos_auto.BCANCELAR.CAPTION := 'Fechar';
+    end;
+  end;
+end;
+
 procedure TfrmOs_menu.LocalizarNmero1Click(Sender: TObject);
 begin
   loc.SETFOCUS;
@@ -444,92 +462,62 @@ begin
           /// /  LANCAMENTOS ESPECIFICOS DE CADA FORMA DE PAGAMENTO
           FRMMODULO.qrcaixa_mov.OPEN;
           FRMMODULO.qrconfig.OPEN;
+
+          FRMMODULO.qrcaixa_mov.insert;
+          FRMMODULO.qrcaixa_mov.fieldbyname('codigo').asstring := frmprincipal.codifica('000044');
+          FRMMODULO.qrcaixa_mov.fieldbyname('codcaixa').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
+          FRMMODULO.qrcaixa_mov.fieldbyname('codoperador').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
+          FRMMODULO.qrcaixa_mov.fieldbyname('data').asstring := FRMMODULO.qrcaixa_operador.fieldbyname('DATA').asstring;
+
           if FRMMODULO.cdsos.fieldbyname('MEIO_DINHEIRO').ASFLOAT <> 0 then
-          begin
-            FRMMODULO.qrcaixa_mov.insert;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codigo').asstring := frmprincipal.codifica('000044');
-            FRMMODULO.qrcaixa_mov.fieldbyname('codcaixa').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codoperador').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('data').asstring := FRMMODULO.qrcaixa_operador.fieldbyname('DATA').asstring;
+          begin  // venda em dinheiro
             FRMMODULO.qrcaixa_mov.fieldbyname('saida').ASFLOAT := FRMMODULO.cdsos.fieldbyname('MEIO_DINHEIRO').ASFLOAT;
             FRMMODULO.qrcaixa_mov.fieldbyname('valor').ASFLOAT := FRMMODULO.cdsos.fieldbyname('MEIO_DINHEIRO').ASFLOAT * (-1);
             FRMMODULO.qrcaixa_mov.fieldbyname('codconta').asstring := FRMMODULO.qrconfig.fieldbyname('PLANO_OS_AV').asstring;
-
             FRMMODULO.qrcaixa_mov.fieldbyname('movimento').asinteger := 18;
-            // venda em dinheiro
-            FRMMODULO.qrcaixa_mov.fieldbyname('historico').asstring := 'CANCELAMENTO O.S. No. ' + FRMMODULO.cdsos.fieldbyname('CODIGO').asstring + ' - ' + FRMMODULO.cdsos.fieldbyname('CLIENTE').asstring;
-            FRMMODULO.qrcaixa_mov.post;
           end;
           if FRMMODULO.cdsos.fieldbyname('MEIO_CHEQUEAV').ASFLOAT <> 0 then
-          begin
-            FRMMODULO.qrcaixa_mov.insert;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codigo').asstring := frmprincipal.codifica('000044');
-            FRMMODULO.qrcaixa_mov.fieldbyname('codcaixa').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codoperador').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('data').asstring := FRMMODULO.qrcaixa_operador.fieldbyname('DATA').asstring;
+          begin // venda CHEQUE AV
             FRMMODULO.qrcaixa_mov.fieldbyname('valor').ASFLOAT := FRMMODULO.cdsos.fieldbyname('MEIO_CHEQUEAV').ASFLOAT * (-1);
             FRMMODULO.qrcaixa_mov.fieldbyname('codconta').asstring := FRMMODULO.qrconfig.fieldbyname('PLANO_OS_AV').asstring;
             FRMMODULO.qrcaixa_mov.fieldbyname('movimento').asinteger := 20;
-            // venda CHEQUE AV
-            FRMMODULO.qrcaixa_mov.fieldbyname('historico').asstring := 'CANCELAMENTO O.S. No. ' + FRMMODULO.cdsos.fieldbyname('CODIGO').asstring + ' - ' + FRMMODULO.cdsos.fieldbyname('CLIENTE').asstring;
-            FRMMODULO.qrcaixa_mov.post;
+
           end;
           if FRMMODULO.cdsos.fieldbyname('MEIO_CHEQUEAP').ASFLOAT <> 0 then
-          begin
-            FRMMODULO.qrcaixa_mov.insert;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codigo').asstring := frmprincipal.codifica('000044');
-            FRMMODULO.qrcaixa_mov.fieldbyname('codcaixa').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codoperador').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('data').asstring := FRMMODULO.qrcaixa_operador.fieldbyname('DATA').asstring;
+          begin // venda CHEQUE AP
             FRMMODULO.qrcaixa_mov.fieldbyname('valor').ASFLOAT := FRMMODULO.cdsos.fieldbyname('MEIO_CHEQUEAP').ASFLOAT * (-1);
             FRMMODULO.qrcaixa_mov.fieldbyname('codconta').asstring := FRMMODULO.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
             FRMMODULO.qrcaixa_mov.fieldbyname('movimento').asinteger := 21;
-            // venda CHEQUE AP
-            FRMMODULO.qrcaixa_mov.fieldbyname('historico').asstring := 'CANCELAMENTO O.S. No. ' + FRMMODULO.cdsos.fieldbyname('CODIGO').asstring + ' - ' + FRMMODULO.cdsos.fieldbyname('CLIENTE').asstring;
-            FRMMODULO.qrcaixa_mov.post;
+
           end;
           if FRMMODULO.cdsos.fieldbyname('MEIO_CARTAOCRED').ASFLOAT <> 0 then
-          begin
-            FRMMODULO.qrcaixa_mov.insert;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codigo').asstring := frmprincipal.codifica('000044');
-            FRMMODULO.qrcaixa_mov.fieldbyname('codcaixa').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codoperador').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('data').asstring := FRMMODULO.qrcaixa_operador.fieldbyname('DATA').asstring;
+          begin // VENDA CARTAO CRED
             FRMMODULO.qrcaixa_mov.fieldbyname('valor').ASFLOAT := FRMMODULO.cdsos.fieldbyname('MEIO_CARTAOCRED').ASFLOAT * (-1);
             FRMMODULO.qrcaixa_mov.fieldbyname('codconta').asstring := FRMMODULO.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
             FRMMODULO.qrcaixa_mov.fieldbyname('movimento').asinteger := 22;
-            // VENDA CARTAO CRED
-            FRMMODULO.qrcaixa_mov.fieldbyname('historico').asstring := 'CANCELAMENTO O.S. No. ' + FRMMODULO.cdsos.fieldbyname('CODIGO').asstring + ' - ' + FRMMODULO.cdsos.fieldbyname('CLIENTE').asstring;
-            FRMMODULO.qrcaixa_mov.post;
+
           end;
           if FRMMODULO.cdsos.fieldbyname('MEIO_CARTAODEB').ASFLOAT <> 0 then
-          begin
-            FRMMODULO.qrcaixa_mov.insert;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codigo').asstring := frmprincipal.codifica('000044');
-            FRMMODULO.qrcaixa_mov.fieldbyname('codcaixa').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codoperador').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('data').asstring := FRMMODULO.qrcaixa_operador.fieldbyname('DATA').asstring;
+          begin // venda CARTAO DEB
             FRMMODULO.qrcaixa_mov.fieldbyname('valor').ASFLOAT := FRMMODULO.cdsos.fieldbyname('MEIO_CARTAODEB').ASFLOAT * (-1);
             FRMMODULO.qrcaixa_mov.fieldbyname('codconta').asstring := FRMMODULO.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
             FRMMODULO.qrcaixa_mov.fieldbyname('movimento').asinteger := 23;
-            // venda CARTAO DEB
-            FRMMODULO.qrcaixa_mov.fieldbyname('historico').asstring := 'CANCELAMENTO O.S. No. ' + FRMMODULO.cdsos.fieldbyname('CODIGO').asstring + ' - ' + FRMMODULO.cdsos.fieldbyname('CLIENTE').asstring;
-            FRMMODULO.qrcaixa_mov.post;
           end;
           if FRMMODULO.cdsos.fieldbyname('MEIO_CREDIARIO').ASFLOAT <> 0 then
-          begin
-            FRMMODULO.qrcaixa_mov.insert;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codigo').asstring := frmprincipal.codifica('000044');
-            FRMMODULO.qrcaixa_mov.fieldbyname('codcaixa').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('codoperador').asstring := FRMMODULO.cdsos.fieldbyname('CODCAIXA').asstring;
-            FRMMODULO.qrcaixa_mov.fieldbyname('data').asstring := FRMMODULO.qrcaixa_operador.fieldbyname('DATA').asstring;
+          begin // venda CREDIARIO
             FRMMODULO.qrcaixa_mov.fieldbyname('valor').ASFLOAT := FRMMODULO.cdsos.fieldbyname('MEIO_CREDIARIO').ASFLOAT * (-1);
             FRMMODULO.qrcaixa_mov.fieldbyname('codconta').asstring := FRMMODULO.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
             FRMMODULO.qrcaixa_mov.fieldbyname('movimento').asinteger := 19;
-            // venda CREDIARIO
-            FRMMODULO.qrcaixa_mov.fieldbyname('historico').asstring := 'CANCELAMENTO O.S. No. ' + FRMMODULO.cdsos.fieldbyname('CODIGO').asstring + ' - ' + FRMMODULO.cdsos.fieldbyname('CLIENTE').asstring;
-            FRMMODULO.qrcaixa_mov.post;
           end;
+          if FRMMODULO.cdsos.fieldbyname('MEIO_PIX').ASFLOAT <> 0 then
+          begin
+            FRMMODULO.qrcaixa_mov.fieldbyname('valor').ASFLOAT := FRMMODULO.cdsos.fieldbyname('MEIO_PIX').ASFLOAT * (-1);
+            FRMMODULO.qrcaixa_mov.fieldbyname('codconta').asstring := FRMMODULO.qrconfig.fieldbyname('PLANO_OS_AV').asstring;
+            FRMMODULO.qrcaixa_mov.fieldbyname('movimento').asinteger := 44;
+          end;
+
+          FRMMODULO.qrcaixa_mov.fieldbyname('historico').asstring := 'CANCELAMENTO O.S. No. ' + FRMMODULO.cdsos.fieldbyname('CODIGO').asstring + ' - ' + FRMMODULO.cdsos.fieldbyname('CLIENTE').asstring;
+          FRMMODULO.qrcaixa_mov.post;
         end;
       end;
 
@@ -620,48 +608,23 @@ end;
 
 procedure TfrmOs_menu.wwDBGrid1DblClick(Sender: TObject);
 begin
-  if FRMMODULO.cdsos.fieldbyname('situacao').asstring = 'FECHADA' then
+  if Novo_Ramo_Atividade = raComecioGeral then
   begin
-    if Novo_Ramo_Atividade = raComecioGeral then
-    begin
-      frmos := tfrmos.create(self);
-      frmos.BGRAVAR.VISIBLE := false;
-      frmos.BCANCELAR.CAPTION := 'Fechar';
-      frmos.showmodal;
-    end
-    else if Novo_Ramo_Atividade = raOficinaMecanica then
-    begin
-      frmos_auto := tfrmos_auto.create(self);
-      frmos_auto.BGRAVAR.VISIBLE := false;
-      frmos_auto.BCANCELAR.CAPTION := 'Fechar';
-      frmos_auto.showmodal;
-    end
-    else
-    begin
-      frmos := tfrmos.create(self);
-      frmos.BGRAVAR.VISIBLE := false;
-      frmos.BCANCELAR.CAPTION := 'Fechar';
-      frmos.showmodal;
-    end;
+    frmos := tfrmos.create(self);
+    VerificaSituacaoOS;
+    frmos.showmodal;
+  end
+  else if Novo_Ramo_Atividade = raOficinaMecanica then
+  begin
+    frmos_auto := tfrmos_auto.create(self);
+    VerificaSituacaoOS;
+    frmos_auto.showmodal;
   end
   else
   begin
-    FRMMODULO.cdsos.edit;
-    if Novo_Ramo_Atividade = raComecioGeral then
-    begin
-      frmos := tfrmos.create(self);
-      frmos.showmodal;
-    end
-    else if Novo_Ramo_Atividade = raOficinaMecanica then
-    begin
-      frmos_auto := tfrmos_auto.create(self);
-      frmos_auto.showmodal;
-    end
-    else
-    begin
-      frmos := tfrmos.create(self);
-      frmos.showmodal;
-    end;
+    frmos := tfrmos.create(self);
+    VerificaSituacaoOS;
+    frmos.showmodal;
   end;
 end;
 

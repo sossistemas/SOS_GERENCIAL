@@ -13,7 +13,9 @@ uses
   cxData, cxDataStorage, cxNavigator, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxCurrencyEdit, ZAbstractRODataset, ZAbstractDataset, ZDataset,
-  Datasnap.DBClient, cxSpinEdit, cxButtonEdit, frxClass, frxDBSet, frxExportPDF;
+  Datasnap.DBClient, cxSpinEdit, cxButtonEdit, frxClass, frxDBSet, frxExportPDF,
+  dxSkinsCore, dxSkinsDefaultPainters, dxDateRanges,
+  cxDataControllerConditionalFormattingRulesManagerDialog;
 
 type
   TfrmEnviaTransferencia = class(TFrmMaster)

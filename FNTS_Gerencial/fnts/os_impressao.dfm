@@ -708,7 +708,7 @@ object frmos_impressao: Tfrmos_impressao
     Top = 59
   end
   object fxos: TfrxReport
-    Version = '5.3.16'
+    Version = '6.3.7'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
@@ -764,24 +764,33 @@ object frmos_impressao: Tfrmos_impressao
       RightMargin = 10.000000000000000000
       TopMargin = 10.000000000000000000
       BottomMargin = 10.000000000000000000
+      Frame.Typ = []
+      MirrorMode = []
       object Shape30: TfrxShapeView
+        AllowVectorExport = True
         Left = 340.157700000000000000
         Top = 888.189550000000000000
         Width = 185.196970000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Shape55: TfrxShapeView
+        AllowVectorExport = True
         Left = 128.504020000000000000
         Top = 854.173780000000000000
         Width = 98.267780000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Shape17: TfrxShapeView
+        AllowVectorExport = True
         Top = 287.244280000000000000
         Width = 525.354670000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo10: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 22.677180000000000000
         Width = 30.236240000000000000
@@ -794,11 +803,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Cliente')
         ParentFont = False
       end
       object Memo14: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 45.354360000000000000
         Width = 30.236240000000000000
@@ -811,11 +822,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Endere'#231'o')
         ParentFont = False
       end
       object Memo51: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 287.244280000000000000
         Width = 34.015770000000000000
@@ -828,15 +841,19 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'C'#243'digo')
         ParentFont = False
       end
       object Shape1: TfrxShapeView
+        AllowVectorExport = True
         Width = 234.330860000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo2: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 12.118120000000000000
         Width = 222.992270000000000000
@@ -849,16 +866,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -8
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         Memo.UTF8W = (
           'TELEFONE: [fxemitente."TELEFONE"]')
         ParentFont = False
       end
       object Shape2: TfrxShapeView
+        AllowVectorExport = True
         Left = 234.330860000000000000
         Width = 105.826840000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo3: TfrxMemoView
+        AllowVectorExport = True
         Left = 238.110390000000000000
         Top = 4.000000000000000000
         Width = 98.267780000000000000
@@ -871,17 +892,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'O.S. N'#186' [fsos."CODIGO"]')
         ParentFont = False
       end
       object Shape3: TfrxShapeView
+        AllowVectorExport = True
         Left = 340.157700000000000000
         Width = 94.488250000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo4: TfrxMemoView
+        AllowVectorExport = True
         Left = 377.953000000000000000
         Top = 5.000000000000000000
         Width = 52.913420000000000000
@@ -895,11 +920,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."DATA"]')
         ParentFont = False
       end
       object Memo5: TfrxMemoView
+        AllowVectorExport = True
         Left = 347.716760000000000000
         Top = 5.779530000000000000
         Width = 30.236240000000000000
@@ -912,16 +939,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Data:')
         ParentFont = False
       end
       object Shape4: TfrxShapeView
+        AllowVectorExport = True
         Left = 434.645950000000000000
         Width = 181.417440000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo6: TfrxMemoView
+        AllowVectorExport = True
         Left = 487.559370000000000000
         Top = 4.913385830000000000
         Width = 113.385900000000000000
@@ -935,11 +966,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."atendente"]')
         ParentFont = False
       end
       object Memo7: TfrxMemoView
+        AllowVectorExport = True
         Left = 438.425480000000000000
         Top = 4.913385830000000000
         Width = 49.133890000000000000
@@ -952,16 +985,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Atendente:')
         ParentFont = False
       end
       object Shape5: TfrxShapeView
+        AllowVectorExport = True
         Left = 616.063390000000000000
         Width = 102.047310000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo8: TfrxMemoView
+        AllowVectorExport = True
         Left = 650.079160000000000000
         Top = 4.913385830000000000
         Width = 60.472480000000000000
@@ -975,11 +1012,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."TIPO"]')
         ParentFont = False
       end
       object Memo9: TfrxMemoView
+        AllowVectorExport = True
         Left = 623.622450000000000000
         Top = 4.913385830000000000
         Width = 26.456710000000000000
@@ -992,11 +1031,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Tipo:')
         ParentFont = False
       end
       object Memo1: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 1.000000000000000000
         Width = 222.992270000000000000
@@ -1009,16 +1050,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fxemitente."NOME"]')
         ParentFont = False
       end
       object Shape6: TfrxShapeView
+        AllowVectorExport = True
         Top = 22.677180000000000000
         Width = 434.645950000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo11: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 30.236240000000000000
         Width = 427.086890000000000000
@@ -1031,17 +1076,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."CODCLIENTE"] - [fsos."cliente"]')
         ParentFont = False
       end
       object Shape7: TfrxShapeView
+        AllowVectorExport = True
         Left = 434.645950000000000000
         Top = 22.677180000000000000
         Width = 283.464750000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo12: TfrxMemoView
+        AllowVectorExport = True
         Left = 438.425480000000000000
         Top = 22.677180000000000000
         Width = 30.236240000000000000
@@ -1054,11 +1103,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Solicitante')
         ParentFont = False
       end
       object Memo13: TfrxMemoView
+        AllowVectorExport = True
         Left = 438.425480000000000000
         Top = 30.236240000000000000
         Width = 275.905690000000000000
@@ -1071,16 +1122,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."SOLICITANTE"]')
         ParentFont = False
       end
       object Shape8: TfrxShapeView
+        AllowVectorExport = True
         Top = 45.354360000000000000
         Width = 718.110700000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo15: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 52.913420000000000000
         Width = 264.567100000000000000
@@ -1093,11 +1148,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[<fsos."cliente_endereco">] [fsos."cliente_bairro"]')
         ParentFont = False
       end
       object Memo16: TfrxMemoView
+        AllowVectorExport = True
         Left = 275.905690000000000000
         Top = 45.354360000000000000
         Width = 45.354360000000000000
@@ -1110,11 +1167,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Cidade/UF')
         ParentFont = False
       end
       object Memo17: TfrxMemoView
+        AllowVectorExport = True
         Left = 275.905690000000000000
         Top = 52.913420000000000000
         Width = 147.401670000000000000
@@ -1127,11 +1186,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."cliente_cidade"]/[fsos."cliente_uf"]')
         ParentFont = False
       end
       object Memo18: TfrxMemoView
+        AllowVectorExport = True
         Left = 427.086890000000000000
         Top = 45.354360000000000000
         Width = 45.354360000000000000
@@ -1144,11 +1205,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'CEP')
         ParentFont = False
       end
       object Memo19: TfrxMemoView
+        AllowVectorExport = True
         Left = 427.086890000000000000
         Top = 52.913420000000000000
         Width = 52.913420000000000000
@@ -1162,11 +1225,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."cliente_cep"]')
         ParentFont = False
       end
       object Memo20: TfrxMemoView
+        AllowVectorExport = True
         Left = 476.220780000000000000
         Top = 45.354360000000000000
         Width = 45.354360000000000000
@@ -1179,11 +1244,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Telefone')
         ParentFont = False
       end
       object Memo21: TfrxMemoView
+        AllowVectorExport = True
         Left = 481.220780000000000000
         Top = 52.913420000000000000
         Width = 71.811070000000000000
@@ -1197,11 +1264,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."cliente_telefone"]')
         ParentFont = False
       end
       object Memo22: TfrxMemoView
+        AllowVectorExport = True
         Left = 555.590910000000000000
         Top = 45.354360000000000000
         Width = 45.354360000000000000
@@ -1214,11 +1283,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'CPF/CNPJ')
         ParentFont = False
       end
       object Memo23: TfrxMemoView
+        AllowVectorExport = True
         Left = 555.590910000000000000
         Top = 52.913420000000000000
         Width = 86.929190000000000000
@@ -1232,11 +1303,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."cliente_cpf"]')
         ParentFont = False
       end
       object Memo24: TfrxMemoView
+        AllowVectorExport = True
         Left = 638.740570000000000000
         Top = 45.354360000000000000
         Width = 45.354360000000000000
@@ -1249,11 +1322,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'RG/ie')
         ParentFont = False
       end
       object Memo25: TfrxMemoView
+        AllowVectorExport = True
         Left = 641.740570000000000000
         Top = 52.913420000000000000
         Width = 71.811070000000000000
@@ -1267,17 +1342,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."cliente_rg"]')
         ParentFont = False
       end
       object Shape12: TfrxShapeView
+        AllowVectorExport = True
         Left = 359.055350000000000000
         Top = 79.370130000000000000
         Width = 359.055350000000000000
         Height = 45.354360000000000000
+        Frame.Typ = []
       end
       object Memo31: TfrxMemoView
+        AllowVectorExport = True
         Left = 362.834880000000000000
         Top = 79.370130000000000000
         Width = 222.992270000000000000
@@ -1290,11 +1369,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -8
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Defeitos Apresentados (Reclama'#231#245'es do Cliente)')
         ParentFont = False
       end
       object Memo36: TfrxMemoView
+        AllowVectorExport = True
         Left = 362.834880000000000000
         Top = 86.929190000000000000
         Width = 351.496290000000000000
@@ -1308,27 +1389,35 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."DEFEITO"]')
         ParentFont = False
       end
       object Shape13: TfrxShapeView
+        AllowVectorExport = True
         Top = 124.724490000000000000
         Width = 359.055350000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Shape14: TfrxShapeView
+        AllowVectorExport = True
         Top = 147.401670000000000000
         Width = 359.055350000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Shape15: TfrxShapeView
+        AllowVectorExport = True
         Left = 359.055350000000000000
         Top = 124.724490000000000000
         Width = 359.055350000000000000
         Height = 45.354360000000000000
+        Frame.Typ = []
       end
       object Memo37: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 124.724490000000000000
         Width = 60.472480000000000000
@@ -1341,11 +1430,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Data do Parecer')
         ParentFont = False
       end
       object Memo38: TfrxMemoView
+        AllowVectorExport = True
         Left = 136.063080000000000000
         Top = 124.724490000000000000
         Width = 68.031540000000000000
@@ -1358,11 +1449,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Setor T'#233'cnico')
         ParentFont = False
       end
       object Memo39: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 147.401670000000000000
         Width = 60.472480000000000000
@@ -1375,11 +1468,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'T'#233'cnico Respons'#225'vel')
         ParentFont = False
       end
       object Memo41: TfrxMemoView
+        AllowVectorExport = True
         Left = 362.834880000000000000
         Top = 124.724490000000000000
         Width = 260.787570000000000000
@@ -1392,11 +1487,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -8
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Detectado (Parecer T'#233'cnico)')
         ParentFont = False
       end
       object Memo42: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 132.283550000000000000
         Width = 83.149660000000000000
@@ -1410,11 +1507,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."DETECTADO_DATA"]')
         ParentFont = False
       end
       object Memo43: TfrxMemoView
+        AllowVectorExport = True
         Left = 136.063080000000000000
         Top = 132.283550000000000000
         Width = 158.740260000000000000
@@ -1428,11 +1527,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."setor"]')
         ParentFont = False
       end
       object Memo44: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 154.960730000000000000
         Width = 343.937230000000000000
@@ -1446,11 +1547,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."detectado_tecnico"]')
         ParentFont = False
       end
       object Memo46: TfrxMemoView
+        AllowVectorExport = True
         Left = 362.834880000000000000
         Top = 132.283550000000000000
         Width = 351.496290000000000000
@@ -1463,16 +1566,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."DETECTADO"]')
         ParentFont = False
       end
       object Shape16: TfrxShapeView
+        AllowVectorExport = True
         Top = 275.905690000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo40: TfrxMemoView
+        AllowVectorExport = True
         Top = 276.685220000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
@@ -1484,12 +1591,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -8
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'S E R V I '#199' O S    E X E C U T A D O S')
         ParentFont = False
       end
       object Memo52: TfrxMemoView
+        AllowVectorExport = True
         Left = 37.795300000000000000
         Top = 287.244280000000000000
         Width = 143.622140000000000000
@@ -1502,11 +1611,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Servi'#231'o')
         ParentFont = False
       end
       object Memo53: TfrxMemoView
+        AllowVectorExport = True
         Left = 185.196970000000000000
         Top = 287.244280000000000000
         Width = 177.637910000000000000
@@ -1519,11 +1630,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Complemento')
         ParentFont = False
       end
       object Memo54: TfrxMemoView
+        AllowVectorExport = True
         Left = 366.614410000000000000
         Top = 287.244280000000000000
         Width = 45.354360000000000000
@@ -1538,12 +1651,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           'Valor')
         ParentFont = False
       end
       object Memo55: TfrxMemoView
+        AllowVectorExport = True
         Left = 415.748300000000000000
         Top = 287.244280000000000000
         Width = 94.488250000000000000
@@ -1556,16 +1671,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'T'#233'cnico')
         ParentFont = False
       end
       object Shape18: TfrxShapeView
+        AllowVectorExport = True
         Top = 298.582870000000000000
         Width = 525.354670000000000000
         Height = 136.063080000000000000
+        Frame.Typ = []
       end
       object Subreport1: TfrxSubreport
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 300.582870000000000000
         Width = 514.016080000000000000
@@ -1574,12 +1693,15 @@ object frmos_impressao: Tfrmos_impressao
         Page = fxos.Page2
       end
       object Shape20: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 287.244280000000000000
         Width = 192.756030000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo56: TfrxMemoView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 287.244280000000000000
         Width = 192.756030000000000000
@@ -1592,17 +1714,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'TOTALIZA'#199#195'O DOS SERVI'#199'OS')
         ParentFont = False
       end
       object Shape19: TfrxShapeView
+        AllowVectorExport = True
         Top = 434.645950000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo57: TfrxMemoView
+        AllowVectorExport = True
         Top = 435.425480000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
@@ -1614,45 +1740,59 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -8
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'P R O D U T O S    U T I L I Z A D O S')
         ParentFont = False
       end
       object Shape26: TfrxShapeView
+        AllowVectorExport = True
         Top = 445.984540000000000000
         Width = 525.354670000000000000
         Height = 238.110390000000000000
+        Frame.Typ = []
       end
       object Shape28: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 457.323130000000000000
         Width = 192.756030000000000000
         Height = 30.236240000000000000
+        Frame.Typ = []
       end
       object Shape31: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 831.496600000000000000
         Width = 192.756030000000000000
         Height = 45.354360000000000000
+        Frame.Typ = []
       end
       object Shape33: TfrxShapeView
+        AllowVectorExport = True
         Top = 899.528140000000000000
         Width = 340.157700000000000000
         Height = 105.826840000000000000
+        Frame.Typ = []
       end
       object Shape34: TfrxShapeView
+        AllowVectorExport = True
         Left = 340.157700000000000000
         Top = 899.528140000000000000
         Width = 185.196970000000000000
         Height = 105.826840000000000000
+        Frame.Typ = []
       end
       object Shape37: TfrxShapeView
+        AllowVectorExport = True
         Top = 1024.252630000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo58: TfrxMemoView
+        AllowVectorExport = True
         Top = 1026.252630000000000000
         Width = 718.110700000000000000
         Height = 7.559060000000000000
@@ -1664,6 +1804,7 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           
@@ -1672,41 +1813,54 @@ object frmos_impressao: Tfrmos_impressao
         ParentFont = False
       end
       object Shape21: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 298.582870000000000000
         Width = 192.756030000000000000
         Height = 30.236240000000000000
+        Frame.Typ = []
       end
       object Shape24: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 328.819110000000000000
         Width = 192.756030000000000000
         Height = 30.236240000000000000
+        Frame.Typ = []
       end
       object Shape25: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 359.055350000000000000
         Width = 192.756030000000000000
         Height = 75.590600000000000000
+        Frame.Typ = []
       end
       object Shape29: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 487.559370000000000000
         Width = 192.756030000000000000
         Height = 30.236240000000000000
+        Frame.Typ = []
       end
       object Shape38: TfrxShapeView
+        AllowVectorExport = True
         Top = 445.984540000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Shape27: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 517.795610000000000000
         Width = 192.756030000000000000
         Height = 166.299320000000000000
+        Frame.Typ = []
       end
       object Memo59: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 445.984540000000000000
         Width = 34.015770000000000000
@@ -1719,11 +1873,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'C'#243'digo')
         ParentFont = False
       end
       object Memo60: TfrxMemoView
+        AllowVectorExport = True
         Left = 37.795300000000000000
         Top = 445.984540000000000000
         Width = 287.244280000000000000
@@ -1736,11 +1892,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Produto')
         ParentFont = False
       end
       object Memo61: TfrxMemoView
+        AllowVectorExport = True
         Left = 328.819110000000000000
         Top = 445.984540000000000000
         Width = 18.897650000000000000
@@ -1753,11 +1911,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Un.')
         ParentFont = False
       end
       object Memo62: TfrxMemoView
+        AllowVectorExport = True
         Left = 362.834880000000000000
         Top = 445.984540000000000000
         Width = 45.354360000000000000
@@ -1772,12 +1932,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           'Qtde.')
         ParentFont = False
       end
       object Memo63: TfrxMemoView
+        AllowVectorExport = True
         Left = 411.968770000000000000
         Top = 445.984540000000000000
         Width = 52.913420000000000000
@@ -1790,12 +1952,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           'Unit'#225'rio-R$')
         ParentFont = False
       end
       object Memo64: TfrxMemoView
+        AllowVectorExport = True
         Left = 468.661720000000000000
         Top = 445.984540000000000000
         Width = 52.913420000000000000
@@ -1808,12 +1972,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           'Total-R$')
         ParentFont = False
       end
       object Subreport2: TfrxSubreport
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 459.323130000000000000
         Width = 514.016080000000000000
@@ -1821,6 +1987,7 @@ object frmos_impressao: Tfrmos_impressao
         Page = fxos.Page3
       end
       object Memo71: TfrxMemoView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 445.984540000000000000
         Width = 192.756030000000000000
@@ -1833,12 +2000,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'TOTALIZA'#199#195'O DOS PRODUTOS')
         ParentFont = False
       end
       object Memo72: TfrxMemoView
+        AllowVectorExport = True
         Left = 532.913730000000000000
         Top = 309.921460000000000000
         Width = 56.692950000000000000
@@ -1851,11 +2020,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'SUBTOTAL:')
         ParentFont = False
       end
       object Memo75: TfrxMemoView
+        AllowVectorExport = True
         Left = 532.913730000000000000
         Top = 340.157700000000000000
         Width = 64.252010000000000000
@@ -1868,11 +2039,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'DESCONTO:')
         ParentFont = False
       end
       object Memo76: TfrxMemoView
+        AllowVectorExport = True
         Left = 532.913730000000000000
         Top = 374.173470000000000000
         Width = 117.165430000000000000
@@ -1885,11 +2058,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'TOTAL DOS SERVI'#199'OS:')
         ParentFont = False
       end
       object Memo77: TfrxMemoView
+        AllowVectorExport = True
         Left = 634.961040000000000000
         Top = 309.921460000000000000
         Width = 75.590551180000000000
@@ -1903,12 +2078,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."SERVICO_SUBTOTAL"]')
         ParentFont = False
       end
       object Memo80: TfrxMemoView
+        AllowVectorExport = True
         Left = 634.961040000000000000
         Top = 340.157700000000000000
         Width = 75.590551180000000000
@@ -1922,12 +2099,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."SERVICO_DESCONTO"]')
         ParentFont = False
       end
       object Memo81: TfrxMemoView
+        AllowVectorExport = True
         Left = 612.283860000000000000
         Top = 405.189240000000000000
         Width = 98.267731180000000000
@@ -1941,12 +2120,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."SERVICO_TOTAL"]')
         ParentFont = False
       end
       object Memo82: TfrxMemoView
+        AllowVectorExport = True
         Left = 532.913730000000000000
         Top = 468.661720000000000000
         Width = 56.692950000000000000
@@ -1959,11 +2140,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'SUBTOTAL:')
         ParentFont = False
       end
       object Memo83: TfrxMemoView
+        AllowVectorExport = True
         Left = 532.913730000000000000
         Top = 498.897960000000000000
         Width = 86.929190000000000000
@@ -1976,11 +2159,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'DESCONTO:')
         ParentFont = False
       end
       object Memo84: TfrxMemoView
+        AllowVectorExport = True
         Left = 532.913730000000000000
         Top = 529.134200000000000000
         Width = 120.944960000000000000
@@ -1993,11 +2178,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'TOTAL DOS PRODUTOS:')
         ParentFont = False
       end
       object Memo85: TfrxMemoView
+        AllowVectorExport = True
         Left = 529.134200000000000000
         Top = 835.276130000000000000
         Width = 113.385900000000000000
@@ -2010,11 +2197,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'VALOR TOTAL DA O.S.')
         ParentFont = False
       end
       object Memo86: TfrxMemoView
+        AllowVectorExport = True
         Left = 634.961040000000000000
         Top = 468.661720000000000000
         Width = 75.590551180000000000
@@ -2029,12 +2218,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[<fsos."PRODUTO_SUBTOTAL">')
         ParentFont = False
       end
       object Memo87: TfrxMemoView
+        AllowVectorExport = True
         Left = 634.961040000000000000
         Top = 498.897960000000000000
         Width = 75.590551180000000000
@@ -2048,12 +2239,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."PRODUTO_DESCONTO"]')
         ParentFont = False
       end
       object Memo88: TfrxMemoView
+        AllowVectorExport = True
         Left = 634.961040000000000000
         Top = 606.504330000000000000
         Width = 75.590551180000000000
@@ -2068,12 +2261,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -11
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[<fsos."PRODUTO_TOTAL">')
         ParentFont = False
       end
       object Memo89: TfrxMemoView
+        AllowVectorExport = True
         Left = 604.724800000000000000
         Top = 850.394250000000000000
         Width = 105.826791180000000000
@@ -2089,29 +2284,37 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."TOTAL"]')
         ParentFont = False
       end
       object Shape39: TfrxShapeView
+        AllowVectorExport = True
         Top = 888.189550000000000000
         Width = 340.157700000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Shape36: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 899.528140000000000000
         Width = 192.756030000000000000
         Height = 105.826840000000000000
+        Frame.Typ = []
       end
       object Shape41: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 888.189550000000000000
         Width = 192.756030000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo95: TfrxMemoView
+        AllowVectorExport = True
         Top = 888.189550000000000000
         Width = 340.157700000000000000
         Height = 11.338590000000000000
@@ -2123,12 +2326,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'Faturamento')
         ParentFont = False
       end
       object Memo96: TfrxMemoView
+        AllowVectorExport = True
         Left = 340.157700000000000000
         Top = 888.189550000000000000
         Width = 170.078850000000000000
@@ -2141,12 +2346,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'Assinatura do Cliente')
         ParentFont = False
       end
       object Memo97: TfrxMemoView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 888.189550000000000000
         Width = 192.756030000000000000
@@ -2159,28 +2366,35 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'Assinatura do Respons'#225'vel')
         ParentFont = False
       end
       object Subreport3: TfrxSubreport
+        AllowVectorExport = True
         Top = 901.528140000000000000
         Width = 340.157700000000000000
         Height = 102.047310000000000000
         Page = fxos.Page4
       end
       object Shape42: TfrxShapeView
+        AllowVectorExport = True
         Top = 170.078850000000000000
         Width = 718.110700000000000000
         Height = 105.826840000000000000
+        Frame.Typ = []
       end
       object Shape43: TfrxShapeView
+        AllowVectorExport = True
         Top = 170.078850000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo98: TfrxMemoView
+        AllowVectorExport = True
         Top = 170.858380000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
@@ -2192,12 +2406,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -8
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'I N T E R V E N '#199' '#213' E S')
         ParentFont = False
       end
       object Memo100: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 185.196970000000000000
         Width = 710.551640000000000000
@@ -2211,16 +2427,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."INTERVENCOES"]')
         ParentFont = False
       end
       object Shape22: TfrxShapeView
+        AllowVectorExport = True
         Top = 684.094930000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo73: TfrxMemoView
+        AllowVectorExport = True
         Top = 684.874460000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
@@ -2232,17 +2452,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -8
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'S E R V I '#199' O S    D E    T E R C E I R O S')
         ParentFont = False
       end
       object Shape23: TfrxShapeView
+        AllowVectorExport = True
         Top = 695.433520000000000000
         Width = 359.055350000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo74: TfrxMemoView
+        AllowVectorExport = True
         Top = 695.433520000000000000
         Width = 60.472480000000000000
         Height = 7.559060000000000000
@@ -2254,11 +2478,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Empresa (Assit'#234'ncia T'#233'cnica)')
         ParentFont = False
       end
       object Memo78: TfrxMemoView
+        AllowVectorExport = True
         Top = 702.992580000000000000
         Width = 343.937230000000000000
         Height = 11.338590000000000000
@@ -2271,17 +2497,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."detectado_tecnico"]')
         ParentFont = False
       end
       object Shape44: TfrxShapeView
+        AllowVectorExport = True
         Left = 359.055350000000000000
         Top = 695.433520000000000000
         Width = 359.055350000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo79: TfrxMemoView
+        AllowVectorExport = True
         Left = 362.834880000000000000
         Top = 695.433520000000000000
         Width = 60.472480000000000000
@@ -2294,11 +2524,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Contato')
         ParentFont = False
       end
       object Memo101: TfrxMemoView
+        AllowVectorExport = True
         Left = 362.834880000000000000
         Top = 702.992580000000000000
         Width = 343.937230000000000000
@@ -2312,23 +2544,29 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."detectado_tecnico"]')
         ParentFont = False
       end
       object Shape45: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 729.449290000000000000
         Width = 192.756030000000000000
         Height = 30.236240000000000000
+        Frame.Typ = []
       end
       object Shape46: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 759.685530000000000000
         Width = 192.756030000000000000
         Height = 30.236240000000000000
+        Frame.Typ = []
       end
       object Memo103: TfrxMemoView
+        AllowVectorExport = True
         Left = 532.913730000000000000
         Top = 740.787880000000000000
         Width = 56.692950000000000000
@@ -2341,11 +2579,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'SERVI'#199'OS:')
         ParentFont = False
       end
       object Memo106: TfrxMemoView
+        AllowVectorExport = True
         Left = 532.913730000000000000
         Top = 771.024120000000000000
         Width = 86.929190000000000000
@@ -2358,11 +2598,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'DESPESAS:')
         ParentFont = False
       end
       object Memo107: TfrxMemoView
+        AllowVectorExport = True
         Left = 634.961040000000000000
         Top = 740.787880000000000000
         Width = 75.590551180000000000
@@ -2376,12 +2618,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."TERCEIRO_VALOR"]')
         ParentFont = False
       end
       object Memo108: TfrxMemoView
+        AllowVectorExport = True
         Left = 634.961040000000000000
         Top = 771.024120000000000000
         Width = 75.590551180000000000
@@ -2395,18 +2639,22 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."TERCEIRO_COMISSAO"]')
         ParentFont = False
       end
       object Shape47: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 718.110700000000000000
         Width = 192.756030000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo109: TfrxMemoView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 719.890230000000000000
         Width = 192.756030000000000000
@@ -2419,18 +2667,22 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'TOTALIZA'#199#195'O DE TERCEIROS')
         ParentFont = False
       end
       object Shape48: TfrxShapeView
+        AllowVectorExport = True
         Left = 525.354670000000000000
         Top = 789.921770000000000000
         Width = 192.756030000000000000
         Height = 30.236240000000000000
+        Frame.Typ = []
       end
       object Memo110: TfrxMemoView
+        AllowVectorExport = True
         Left = 532.913730000000000000
         Top = 801.260360000000000000
         Width = 86.929190000000000000
@@ -2443,11 +2695,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'TOTAL:')
         ParentFont = False
       end
       object Memo111: TfrxMemoView
+        AllowVectorExport = True
         Left = 634.961040000000000000
         Top = 801.260360000000000000
         Width = 75.590551180000000000
@@ -2461,17 +2715,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."TERCEIRO_TOTAL"]')
         ParentFont = False
       end
       object Shape49: TfrxShapeView
+        AllowVectorExport = True
         Top = 820.158010000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo112: TfrxMemoView
+        AllowVectorExport = True
         Top = 819.937540000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
@@ -2483,17 +2741,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -8
         Font.Name = 'Arial'
         Font.Style = [fsBold]
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'D E S L O C A M E N T O')
         ParentFont = False
       end
       object Shape50: TfrxShapeView
+        AllowVectorExport = True
         Top = 718.110700000000000000
         Width = 525.354670000000000000
         Height = 102.047310000000000000
+        Frame.Typ = []
       end
       object Memo113: TfrxMemoView
+        AllowVectorExport = True
         Left = 7.559060000000000000
         Top = 725.669760000000000000
         Width = 498.897960000000000000
@@ -2507,16 +2769,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."TERCEIRO_OBS"]')
         ParentFont = False
       end
       object Shape51: TfrxShapeView
+        AllowVectorExport = True
         Top = 831.496600000000000000
         Width = 268.346630000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo114: TfrxMemoView
+        AllowVectorExport = True
         Top = 831.496600000000000000
         Width = 60.472480000000000000
         Height = 7.559060000000000000
@@ -2528,11 +2794,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Ve'#237'culo')
         ParentFont = False
       end
       object Memo115: TfrxMemoView
+        AllowVectorExport = True
         Top = 839.055660000000000000
         Width = 260.787570000000000000
         Height = 11.338590000000000000
@@ -2545,17 +2813,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."detectado_tecnico"]')
         ParentFont = False
       end
       object Shape52: TfrxShapeView
+        AllowVectorExport = True
         Left = 268.346630000000000000
         Top = 831.496600000000000000
         Width = 128.504020000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo116: TfrxMemoView
+        AllowVectorExport = True
         Left = 275.905690000000000000
         Top = 831.496600000000000000
         Width = 109.606370000000000000
@@ -2568,17 +2840,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Kilometragem Inicial')
         ParentFont = False
       end
       object Shape53: TfrxShapeView
+        AllowVectorExport = True
         Left = 396.850650000000000000
         Top = 831.496600000000000000
         Width = 128.504020000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo117: TfrxMemoView
+        AllowVectorExport = True
         Left = 128.504020000000000000
         Top = 861.732840000000000000
         Width = 90.708720000000000000
@@ -2592,12 +2868,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."DESLOC_COMBUSTIVEL"]')
         ParentFont = False
       end
       object Memo118: TfrxMemoView
+        AllowVectorExport = True
         Left = 404.409710000000000000
         Top = 831.496600000000000000
         Width = 109.606370000000000000
@@ -2610,16 +2888,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Kilometragem Final')
         ParentFont = False
       end
       object Shape54: TfrxShapeView
+        AllowVectorExport = True
         Top = 854.173780000000000000
         Width = 128.504020000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo119: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 861.732840000000000000
         Width = 120.944960000000000000
@@ -2632,11 +2914,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'DESPESAS COM DESLOCAMENTO:')
         ParentFont = False
       end
       object Memo120: TfrxMemoView
+        AllowVectorExport = True
         Left = 136.063080000000000000
         Top = 854.173780000000000000
         Width = 75.590600000000000000
@@ -2649,17 +2933,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Combust'#237'vel')
         ParentFont = False
       end
       object Shape56: TfrxShapeView
+        AllowVectorExport = True
         Left = 226.771800000000000000
         Top = 854.173780000000000000
         Width = 105.826840000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo121: TfrxMemoView
+        AllowVectorExport = True
         Left = 234.330860000000000000
         Top = 854.173780000000000000
         Width = 86.929190000000000000
@@ -2672,17 +2960,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Refei'#231#227'o')
         ParentFont = False
       end
       object Shape57: TfrxShapeView
+        AllowVectorExport = True
         Left = 332.598640000000000000
         Top = 854.173780000000000000
         Width = 94.488250000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo122: TfrxMemoView
+        AllowVectorExport = True
         Left = 340.157700000000000000
         Top = 854.173780000000000000
         Width = 79.370130000000000000
@@ -2695,17 +2987,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Hospedagem')
         ParentFont = False
       end
       object Shape58: TfrxShapeView
+        AllowVectorExport = True
         Left = 427.086890000000000000
         Top = 854.173780000000000000
         Width = 98.267780000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo123: TfrxMemoView
+        AllowVectorExport = True
         Left = 430.866420000000000000
         Top = 854.173780000000000000
         Width = 79.370130000000000000
@@ -2718,11 +3014,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Total do Deslocamento')
         ParentFont = False
       end
       object Memo124: TfrxMemoView
+        AllowVectorExport = True
         Left = 234.330860000000000000
         Top = 861.732840000000000000
         Width = 90.708720000000000000
@@ -2736,12 +3034,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."DESLOC_REFEICAO"]')
         ParentFont = False
       end
       object Memo125: TfrxMemoView
+        AllowVectorExport = True
         Left = 332.598640000000000000
         Top = 861.732840000000000000
         Width = 90.708720000000000000
@@ -2755,12 +3055,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."DESLOC_HOSPEDAGEM"]')
         ParentFont = False
       end
       object Memo126: TfrxMemoView
+        AllowVectorExport = True
         Left = 430.866420000000000000
         Top = 861.732840000000000000
         Width = 90.708720000000000000
@@ -2774,12 +3076,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haRight
         Memo.UTF8W = (
           '[fsos."DESLOC_TOTAL"]')
         ParentFont = False
       end
       object Memo90: TfrxMemoView
+        AllowVectorExport = True
         Left = 275.905690000000000000
         Top = 839.055660000000000000
         Width = 109.606370000000000000
@@ -2793,12 +3097,14 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           '[fsos."KM_INICIAL"]')
         ParentFont = False
       end
       object Memo91: TfrxMemoView
+        AllowVectorExport = True
         Left = 400.630180000000000000
         Top = 839.055660000000000000
         Width = 109.606370000000000000
@@ -2812,17 +3118,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           '[fsos."KM_FINAL"]')
         ParentFont = False
       end
       object Shape10: TfrxShapeView
+        AllowVectorExport = True
         Top = 79.370130000000000000
         Width = 359.055350000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo27: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 79.370130000000000000
         Width = 30.236240000000000000
@@ -2835,16 +3145,20 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Ve'#237'dulo')
         ParentFont = False
       end
       object Shape9: TfrxShapeView
+        AllowVectorExport = True
         Top = 68.031540000000000000
         Width = 718.110700000000000000
         Height = 11.338590000000000000
+        Frame.Typ = []
       end
       object Memo26: TfrxMemoView
+        AllowVectorExport = True
         Top = 69.811070000000000000
         Width = 718.110700000000000000
         Height = 7.559060000000000000
@@ -2856,17 +3170,21 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         HAlign = haCenter
         Memo.UTF8W = (
           'V E '#205' C U L O')
         ParentFont = False
       end
       object Shape11: TfrxShapeView
+        AllowVectorExport = True
         Top = 102.047310000000000000
         Width = 359.055350000000000000
         Height = 22.677180000000000000
+        Frame.Typ = []
       end
       object Memo28: TfrxMemoView
+        AllowVectorExport = True
         Left = 219.212740000000000000
         Top = 79.370130000000000000
         Width = 41.574830000000000000
@@ -2879,11 +3197,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Ano/Modelo')
         ParentFont = False
       end
       object Memo29: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 102.047310000000000000
         Width = 60.472480000000000000
@@ -2896,11 +3216,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Placa')
         ParentFont = False
       end
       object Memo30: TfrxMemoView
+        AllowVectorExport = True
         Left = 264.567100000000000000
         Top = 102.047310000000000000
         Width = 79.370130000000000000
@@ -2913,11 +3235,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Tipo de Atendimento')
         ParentFont = False
       end
       object Memo32: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 86.929190000000000000
         Width = 136.063080000000000000
@@ -2931,11 +3255,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."MARCA"]')
         ParentFont = False
       end
       object Memo33: TfrxMemoView
+        AllowVectorExport = True
         Left = 219.212740000000000000
         Top = 86.929190000000000000
         Width = 132.283550000000000000
@@ -2949,11 +3275,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."MODELO"]')
         ParentFont = False
       end
       object Memo34: TfrxMemoView
+        AllowVectorExport = True
         Left = 3.779530000000000000
         Top = 109.606370000000000000
         Width = 79.370130000000000000
@@ -2967,11 +3295,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."SERIAL"]')
         ParentFont = False
       end
       object Memo35: TfrxMemoView
+        AllowVectorExport = True
         Left = 264.567100000000000000
         Top = 109.606370000000000000
         Width = 86.929190000000000000
@@ -2985,11 +3315,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."ATENDIMENTO"]')
         ParentFont = False
       end
       object Memo92: TfrxMemoView
+        AllowVectorExport = True
         Left = 143.622140000000000000
         Top = 79.370130000000000000
         Width = 30.236240000000000000
@@ -3002,11 +3334,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Cor')
         ParentFont = False
       end
       object Memo93: TfrxMemoView
+        AllowVectorExport = True
         Left = 143.622140000000000000
         Top = 86.929190000000000000
         Width = 71.811070000000000000
@@ -3020,11 +3354,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."COR"]')
         ParentFont = False
       end
       object Memo94: TfrxMemoView
+        AllowVectorExport = True
         Left = 90.708720000000000000
         Top = 102.047310000000000000
         Width = 60.472480000000000000
@@ -3037,11 +3373,13 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -7
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           'Chassi')
         ParentFont = False
       end
       object Memo127: TfrxMemoView
+        AllowVectorExport = True
         Left = 90.708720000000000000
         Top = 109.606370000000000000
         Width = 170.078850000000000000
@@ -3055,6 +3393,7 @@ object frmos_impressao: Tfrmos_impressao
         Font.Height = -9
         Font.Name = 'Arial'
         Font.Style = []
+        Frame.Typ = []
         Memo.UTF8W = (
           '[fsos."CHASSI"]')
         ParentFont = False
@@ -3068,9 +3407,12 @@ object frmos_impressao: Tfrmos_impressao
       RightMargin = 10.000000000000000000
       TopMargin = 10.000000000000000000
       BottomMargin = 10.000000000000000000
+      Frame.Typ = []
+      MirrorMode = []
       PrintIfEmpty = False
       object MasterData1: TfrxMasterData
         FillType = ftBrush
+        Frame.Typ = []
         Height = 11.338590000000000000
         Top = 16.000000000000000000
         Width = 718.110700000000000000
@@ -3079,6 +3421,7 @@ object frmos_impressao: Tfrmos_impressao
         PrintChildIfInvisible = True
         RowCount = 11
         object Memo45: TfrxMemoView
+          AllowVectorExport = True
           Width = 30.236240000000000000
           Height = 11.338590000000000000
           DataField = 'CODSERVICO'
@@ -3090,11 +3433,13 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_servico_AUTO."CODSERVICO"]')
           ParentFont = False
         end
         object Memo47: TfrxMemoView
+          AllowVectorExport = True
           Left = 30.236240000000000000
           Width = 147.401670000000000000
           Height = 11.338590000000000000
@@ -3107,11 +3452,13 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_servico_AUTO."SERVICO"]')
           ParentFont = False
         end
         object Memo48: TfrxMemoView
+          AllowVectorExport = True
           Left = 181.417440000000000000
           Width = 170.078850000000000000
           Height = 11.338590000000000000
@@ -3124,11 +3471,13 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_servico_AUTO."COMPLEMENTO"]')
           ParentFont = False
         end
         object Memo49: TfrxMemoView
+          AllowVectorExport = True
           Left = 362.834880000000000000
           Width = 45.354360000000000000
           Height = 11.338590000000000000
@@ -3143,12 +3492,14 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haRight
           Memo.UTF8W = (
             '[fsos_servico_AUTO."VALOR"]')
           ParentFont = False
         end
         object Memo50: TfrxMemoView
+          AllowVectorExport = True
           Left = 411.968770000000000000
           Width = 94.488250000000000000
           Height = 11.338590000000000000
@@ -3161,6 +3512,7 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_servico_AUTO."TECNICO"]')
           ParentFont = False
@@ -3175,8 +3527,11 @@ object frmos_impressao: Tfrmos_impressao
       RightMargin = 10.000000000000000000
       TopMargin = 10.000000000000000000
       BottomMargin = 10.000000000000000000
+      Frame.Typ = []
+      MirrorMode = []
       object MasterData2: TfrxMasterData
         FillType = ftBrush
+        Frame.Typ = []
         Height = 11.338590000000000000
         Top = 18.897650000000000000
         Width = 718.110700000000000000
@@ -3185,6 +3540,7 @@ object frmos_impressao: Tfrmos_impressao
         PrintChildIfInvisible = True
         RowCount = 18
         object Memo65: TfrxMemoView
+          AllowVectorExport = True
           Width = 34.015770000000000000
           Height = 11.338590000000000000
           DataField = 'CODPRODUTO'
@@ -3196,11 +3552,13 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_produto_AUTO."CODPRODUTO"]')
           ParentFont = False
         end
         object Memo66: TfrxMemoView
+          AllowVectorExport = True
           Left = 34.015770000000000000
           Width = 287.244280000000000000
           Height = 11.338590000000000000
@@ -3213,11 +3571,13 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_produto_AUTO."produto"]')
           ParentFont = False
         end
         object Memo67: TfrxMemoView
+          AllowVectorExport = True
           Left = 325.039580000000000000
           Width = 18.897650000000000000
           Height = 11.338590000000000000
@@ -3230,11 +3590,13 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_produto_AUTO."UNIDADE"]')
           ParentFont = False
         end
         object Memo68: TfrxMemoView
+          AllowVectorExport = True
           Left = 359.055350000000000000
           Width = 45.354360000000000000
           Height = 11.338590000000000000
@@ -3249,12 +3611,14 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haRight
           Memo.UTF8W = (
             '[fsos_produto_AUTO."QTDE"]')
           ParentFont = False
         end
         object Memo69: TfrxMemoView
+          AllowVectorExport = True
           Left = 408.189240000000000000
           Width = 52.913420000000000000
           Height = 11.338590000000000000
@@ -3269,12 +3633,14 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haRight
           Memo.UTF8W = (
             '[fsos_produto_AUTO."UNITARIO"]')
           ParentFont = False
         end
         object Memo70: TfrxMemoView
+          AllowVectorExport = True
           Left = 464.882190000000000000
           Width = 52.913420000000000000
           Height = 11.338590000000000000
@@ -3289,6 +3655,7 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haRight
           Memo.UTF8W = (
             '[fsos_produto_AUTO."TOTAL"]')
@@ -3304,8 +3671,11 @@ object frmos_impressao: Tfrmos_impressao
       RightMargin = 10.000000000000000000
       TopMargin = 10.000000000000000000
       BottomMargin = 10.000000000000000000
+      Frame.Typ = []
+      MirrorMode = []
       object MasterData3: TfrxMasterData
         FillType = ftBrush
+        Frame.Typ = []
         Height = 11.338590000000000000
         Top = 18.897650000000000000
         Width = 718.110700000000000000
@@ -3314,6 +3684,7 @@ object frmos_impressao: Tfrmos_impressao
         PrintChildIfInvisible = True
         RowCount = 4
         object Memo99: TfrxMemoView
+          AllowVectorExport = True
           Left = 3.779530000000000000
           Width = 52.913420000000000000
           Height = 11.338590000000000000
@@ -3326,11 +3697,13 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_receber."DATA_VENCIMENTO"]')
           ParentFont = False
         end
         object Memo102: TfrxMemoView
+          AllowVectorExport = True
           Left = 204.094620000000000000
           Width = 49.133890000000000000
           Height = 11.338590000000000000
@@ -3344,12 +3717,14 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haRight
           Memo.UTF8W = (
             '[fsos_receber."VALOR_ORIGINAL"]')
           ParentFont = False
         end
         object Memo104: TfrxMemoView
+          AllowVectorExport = True
           Left = 64.252010000000000000
           Width = 56.692950000000000000
           Height = 11.338590000000000000
@@ -3362,11 +3737,13 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_receber."DOCUMENTO"]')
           ParentFont = False
         end
         object Memo105: TfrxMemoView
+          AllowVectorExport = True
           Left = 128.504020000000000000
           Width = 60.472480000000000000
           Height = 11.338590000000000000
@@ -3379,6 +3756,7 @@ object frmos_impressao: Tfrmos_impressao
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fsos_receber."TIPO"]')
           ParentFont = False

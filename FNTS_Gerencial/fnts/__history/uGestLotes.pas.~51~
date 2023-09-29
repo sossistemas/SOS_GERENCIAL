@@ -1,0 +1,227 @@
+unit uGestLotes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RzDBEdit, RzDBBnEd, Vcl.StdCtrls,
+  JvExMask, JvToolEdit, Vcl.Mask, RzEdit, RzBtnEdt, AdvGlowButton,
+  AdvMetroButton, Vcl.ExtCtrls, Data.DB, Datasnap.DBClient, Vcl.Grids,
+  Vcl.DBGrids, Data.FMTBcd, Data.SqlExpr, ZAbstractRODataset, ZAbstractDataset,
+  ZDataset;
+
+type
+  TfrmLotes = class(TForm)
+    Panel2: TPanel;
+    Label20: TLabel;
+    AdvMetroButton1: TAdvMetroButton;
+    Panel1: TPanel;
+    bincluir: TAdvGlowButton;
+    bcancelar: TAdvGlowButton;
+    bgravar: TAdvGlowButton;
+    bexcluir: TAdvGlowButton;
+    Panel3: TPanel;
+    Label2: TLabel;
+    Label4: TLabel;
+    Label1: TLabel;
+    tjDTLini: TJvDateEdit;
+    tjDTLfim: TJvDateEdit;
+    edNumero: TEdit;
+    bfiltrar: TAdvGlowButton;
+    Label5: TLabel;
+    ecodproduto: TRzDBButtonEdit;
+    Label6: TLabel;
+    DBGrid1: TDBGrid;
+    DBGrid2: TDBGrid;
+    dsLote: TDataSource;
+    qryLote: TZQuery;
+    qryLoteID: TIntegerField;
+    qryLoteDESCRED: TWideStringField;
+    qryLoteDATA_INICIO: TDateField;
+    qryLoteHORA_INICIO: TTimeField;
+    qryLoteDATA_FIM: TDateField;
+    qryLoteHORA_FIM: TTimeField;
+    qryItemLote: TZQuery;
+    dsItemLote: TDataSource;
+    Label3: TLabel;
+    tjDTVini: TJvDateEdit;
+    tjDTVfim: TJvDateEdit;
+    Label7: TLabel;
+    procedure ecodprodutoButtonClick(Sender: TObject);
+    procedure AdvMetroButton1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure bfiltrarClick(Sender: TObject);
+    procedure DBGrid1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure DBGrid1MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure DBGrid1Enter(Sender: TObject);
+  private
+    FID: Integer;
+    FCodProduto: string;
+    FdtLInicio: string;
+    FdtLFim: string;
+    FdtVInicio: string;
+    FdtVfim: string;
+
+    procedure validaCampos;
+    procedure Pesquisar;
+
+
+    property ID: Integer              read FID                 write FID;
+    property CodProduto: string       read FCodProduto         write FCodProduto;
+    property dtLInicio: string        read FdtLInicio          write FdtLInicio;
+    property dtLFim: string           read FdtLFim             write FdtLFim;
+    property dtVInicio: string        read FdtVInicio          write FdtVInicio;
+    property dtVfim: string           read FdtVfim             write FdtVfim;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmLotes: TfrmLotes;
+
+implementation
+
+uses modulo, xloc_produto;
+
+{$R *.dfm}
+
+procedure TfrmLotes.AdvMetroButton1Click(Sender: TObject);
+begin
+  frmLotes.Close;
+end;
+
+procedure TfrmLotes.bfiltrarClick(Sender: TObject);
+begin
+  validaCampos;
+  Pesquisar;
+  DBGrid1.SetFocus;
+end;
+
+
+procedure TfrmLotes.DBGrid1Enter(Sender: TObject);
+begin
+  if not (qryLote.IsEmpty) then
+    ShowMessage(qryLote.Fields[0].AsString);
+end;
+
+procedure TfrmLotes.DBGrid1KeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if not (qryLote.IsEmpty) then
+    ShowMessage(qryLote.Fields[0].AsString);
+end;
+
+procedure TfrmLotes.DBGrid1MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if not (qryLote.IsEmpty) then
+    ShowMessage(qryLote.Fields[0].AsString);
+end;
+
+procedure TfrmLotes.ecodprodutoButtonClick(Sender: TObject);
+begin
+  resultado_pesquisa1 := '';
+  frmxloc_produto := tfrmxloc_produto.create(self);
+  try
+    frmxloc_produto.showmodal;
+
+    if resultado_pesquisa1 <> '' then
+    begin
+      frmmodulo.qrproduto.close;
+      frmmodulo.qrproduto.sql.clear;
+      frmmodulo.qrproduto.sql.add('select * from c000025 where atb like :atb and codigo = ''' + resultado_pesquisa1 + '''');
+      frmmodulo.qrproduto.open;
+
+      if frmmodulo.qrproduto.RecordCount > 0 then
+      begin
+        frmLotes.ecodproduto.Text := frmmodulo.qrproduto.FieldByName('CODIGO').Value;
+      end;
+    end;
+
+
+  finally
+    FreeAndNil(frmxloc_produto);
+  end;
+
+end;
+
+procedure TfrmLotes.FormShow(Sender: TObject);
+begin
+//  tjDTLini.Date := Date - 60;
+//  tjDTLfim.Date := Date;
+end;
+
+procedure TfrmLotes.Pesquisar;
+begin
+  frmLotes.qryLote.Close;
+  frmLotes.qryLote.SQL.Clear;
+  frmLotes.qryLote.SQL.Add('select l.id,');
+  frmLotes.qryLote.SQL.Add('  l.descred,');
+  frmLotes.qryLote.SQL.Add('  l.data_inicio,');
+  frmLotes.qryLote.SQL.Add('  l.hora_inicio,');
+  frmLotes.qryLote.SQL.Add('  l.data_fim,');
+  frmLotes.qryLote.SQL.Add('  l.hora_fim');
+  frmLotes.qryLote.SQL.Add('from lote l');
+  frmLotes.qryLote.SQL.Add('left join lote_item li on li.id_lote = l.id');
+  frmLotes.qryLote.SQL.Add('where 1 = 1');
+  frmLotes.qryLote.SQL.Add('and (:id is null or (l.id =:id))');
+
+  frmLotes.qryLote.SQL.Add('and ((:dtLini is null and :dtLfim is null) or (l.data_inicio between :dtLini and :dtLfim))');
+  frmLotes.qryLote.SQL.Add('and ((:dtVini is null and :dtVfim is null) or (l.data_fim between :dtVini and :dtVfim))');
+  frmLotes.qryLote.SQL.Add('and (:codp is null or (li.codproduto =:codp))');
+  frmLotes.qryLote.SQL.Add('order by l.id');
+
+  if FID > 0 then
+    frmLotes.qryLote.ParamByName('id').AsInteger := FID;
+
+  if not (FdtLInicio = EmptyStr) then
+    frmLotes.qryLote.ParamByName('dtLini').Value :=  StrToDate(FdtLInicio);
+
+  if not (FdtLFim = EmptyStr) then
+    frmLotes.qryLote.ParamByName('dtLfim').Value := StrToDate(FdtLFim);
+
+  if not (FdtVInicio = EmptyStr) then
+    frmLotes.qryLote.ParamByName('dtVini').Value :=  StrToDate(FdtVInicio);
+
+  if not (FdtVfim = EmptyStr) then
+    frmLotes.qryLote.ParamByName('dtVfim').Value := StrToDate(FdtVfim);
+
+
+  if not (FCodProduto = EmptyStr) then
+    frmLotes.qryLote.ParamByName('codp').AsString := FCodProduto;
+
+  frmLotes.qryLote.Open;
+
+
+end;
+
+procedure TfrmLotes.validaCampos;
+begin
+//  if (frmLotes.edNumero.Text = EmptyStr) and (frmLotes.ecodproduto.Text = EmptyStr) and (frmLotes.DateEdit1.Text = '  /  /    ') and (frmLotes.DateEdit2.Text = '  /  /    ')  then
+//  begin
+//    Application.MessageBox('NENHUM VALOR INFORMADO PARA REALIZAR A PESQUISA','ATENÇÃO',MB_ICONWARNING);
+//    frmLotes.edNumero.SetFocus;
+//    Exit;
+//  end;
+
+  if not(Trim(edNumero.Text) = EmptyStr) then
+    FID := StrToInt(edNumero.Text);
+
+  FCodProduto := ecodproduto.Text;
+
+  if not (tjDTLini.Text = '  /  /    ') then
+    FdtLInicio  := tjDTLini.Text;
+
+  if not (tjDTLfim.Text = '  /  /    ') then
+    FdtLFim  := tjDTLfim.Text;
+
+  if not (tjDTVini.Text = '  /  /    ') then
+    FdtVInicio  := tjDTVini.Text;
+
+  if not (tjDTVfim.Text = '  /  /    ') then
+    FdtVfim  := tjDTVfim.Text;
+
+end;
+
+end.

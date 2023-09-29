@@ -982,6 +982,20 @@
             <Form>frmExportar_Sweada_Csd</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="fnts\uGestLotes.pas">
+            <Form>frmLotes</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fnts\uLancLotes.pas">
+            <Form>frmLancLotes</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="fnts\uLote.pas"/>
+        <DCCReference Include="fnts\uLoteItens.pas"/>
+        <DCCReference Include="fnts\uRelLotes.pas">
+            <Form>frmRelLotes</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -1017,7 +1031,13 @@
             </Platforms>
             <Deployment Version="3">
                 <DeployFile LocalName="C:\SOS\Server\Gerencial.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="..\Win32\SOS\Server\Gerencial.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\SOS\Server\Gerencial.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Gerencial.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="C:\SOS\Server\Gerencial.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Gerencial.exe</RemoteName>
                         <Overwrite>true</Overwrite>

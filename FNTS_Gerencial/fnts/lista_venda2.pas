@@ -438,6 +438,89 @@ type
     qrvenda_produto2IDONLINE: TIntegerField;
     qrvenda_produto2ATB: TWideStringField;
     qrvenda_produto2CUPOMPDV: TWideStringField;
+    lblAgrup: TLabel;
+    comboAgrupamento: TComboBox;
+    fsFiltra: TfrxDBDataset;
+    qryFiltra: TZQuery;
+    qryFiltraCODIGO: TWideStringField;
+    qryFiltraCODNOTA: TWideStringField;
+    qryFiltraCODPRODUTO: TWideStringField;
+    qryFiltraUNITARIO: TFloatField;
+    qryFiltraTOTAL: TFloatField;
+    qryFiltraICMS: TFloatField;
+    qryFiltraIPI: TFloatField;
+    qryFiltraCFOP: TWideStringField;
+    qryFiltraDATA: TDateField;
+    qryFiltraNUMERONOTA: TWideStringField;
+    qryFiltraCODCLIENTE: TWideStringField;
+    qryFiltraDESCONTO: TFloatField;
+    qryFiltraACRESCIMO: TFloatField;
+    qryFiltraMOVIMENTO: TIntegerField;
+    qryFiltraCODVENDEDOR: TWideStringField;
+    qryFiltraCODGRADE: TWideStringField;
+    qryFiltraSERIAL: TWideStringField;
+    qryFiltraUNIDADE: TWideStringField;
+    qryFiltraQTDE: TFloatField;
+    qryFiltraVALOR_ICMS: TFloatField;
+    qryFiltraICMS_REDUZIDO: TFloatField;
+    qryFiltraBASE_CALCULO: TFloatField;
+    qryFiltraVALOR_IPI: TFloatField;
+    qryFiltraSITUACAO: TIntegerField;
+    qryFiltraECF_SERIE: TWideStringField;
+    qryFiltraECF_CAIXA: TWideStringField;
+    qryFiltraCODALIQUOTA: TWideStringField;
+    qryFiltraCUPOM_NUMERO: TWideStringField;
+    qryFiltraCUPOM_MODELO: TWideStringField;
+    qryFiltraCUPOM_ITEM: TWideStringField;
+    qryFiltraALIQUOTA: TFloatField;
+    qryFiltraCST: TWideStringField;
+    qryFiltraLOTE_FABRICACAO: TWideStringField;
+    qryFiltraMOVIMENTO_ESTOQUE: TFloatField;
+    qryFiltraLANCADO: TIntegerField;
+    qryFiltraVENCIMENTO: TDateField;
+    qryFiltraCODBARRA: TWideStringField;
+    qryFiltraMARGEM_DESCONTO: TFloatField;
+    qryFiltraCREDITO_ICMS: TFloatField;
+    qryFiltraPIS: TFloatField;
+    qryFiltraCOFINS: TFloatField;
+    qryFiltraLOJA: TWideStringField;
+    qryFiltraCODSUBGRUPO: TWideStringField;
+    qryFiltraTIPO: TWideStringField;
+    qryFiltraCODUSUARIO: TWideStringField;
+    qryFiltraORIGEM: TWideStringField;
+    qryFiltraDESTINO: TWideStringField;
+    qryFiltraPRODUTO: TWideStringField;
+    qryFiltraCODFILIAL: TWideStringField;
+    qryFiltraAIDF: TWideStringField;
+    qryFiltraVALIDADE: TWideStringField;
+    qryFiltraCSOSN: TWideStringField;
+    qryFiltraNFCE: TWideStringField;
+    qryFiltraCLASSIFICACAO_FISCAL: TWideStringField;
+    qryFiltraBASE_SUB: TFloatField;
+    qryFiltraICMS_SUB: TFloatField;
+    qryFiltraISENTAS_ICMS: TFloatField;
+    qryFiltraOUTRAS_ICMS: TFloatField;
+    qryFiltraGEROU_SAT: TWideStringField;
+    qryFiltraNUMERO_SAT: TIntegerField;
+    qryFiltraXITEM: TWideStringField;
+    qryFiltraXPED: TWideStringField;
+    qryFiltraDEVOLVIDO: TWideStringField;
+    qryFiltraECF: TWideStringField;
+    qryFiltraPRECO_CUSTO: TFloatField;
+    qryFiltraIDONLINE: TIntegerField;
+    qryFiltraATB: TWideStringField;
+    qryFiltraQTD_VOLUME: TFloatField;
+    qryFiltraCODPRODUTOVOLUME: TWideStringField;
+    qryFiltraTOTALIZADO: TFloatField;
+    qryFiltraCUPOMPDV: TWideStringField;
+    qryFiltraNUMERO: TIntegerField;
+    qryFiltraMARCA: TWideStringField;
+    qryFiltraFORNECEDOR: TWideStringField;
+    qryFiltraCLIENTE: TWideStringField;
+    qryFiltraVEDEDOR: TWideStringField;
+    qrvenda_produto2QTD_VOLUME: TFloatField;
+    qrvenda_produto2CODPRODUTOVOLUME: TWideStringField;
+    qrvenda_produto2FORNECEDOR: TWideStringField;
     procedure combo_clienteChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -458,7 +541,9 @@ type
     procedure AdvMetroButton1Click(Sender: TObject);
     procedure qrVendaNFCECalcFields(DataSet: TDataSet);
   private
-    { Private declarations }
+    function Ordenacao: string;
+
+    procedure CompletarParametros;
   public
     { Public declarations }
   end;
@@ -466,6 +551,8 @@ type
 var
   frmlista_venda2: Tfrmlista_venda2;
   data_caixa: tdatetime;
+
+  VENDEDOR, FORNECEDOR, MARCA, cliente, PRODUTO, GRUPO, SITUACAO : string;
 
 implementation
 
@@ -525,11 +612,27 @@ begin
   DateEdit1.Date := data_caixa;
   DateEdit2.Date := data_caixa;
 
+  frmlista_venda2.Height := 478;
+  frmlista_venda2.Width  := 545;
 end;
 
 procedure Tfrmlista_venda2.AdvMetroButton1Click(Sender: TObject);
 begin
   close;
+end;
+
+function Tfrmlista_venda2.Ordenacao: string;
+begin
+  case frmlista_venda2.comboAgrupamento.ItemIndex of
+  //Cliente
+  1 : Result := 'CLI.nome, VEN.data, VEN.codigo';
+  //Vendedor
+  2 : Result := 'fu.nome, VEN.data, VEN.codigo';
+  //Fornecedor
+  3 : Result := 'fo.nome, VEN.data, VEN.codigo';
+  //Marca
+  4 : Result := 'ma.nome, VEN.data, VEN.codigo';
+  end;
 end;
 
 procedure Tfrmlista_venda2.bcancelarClick(Sender: TObject);
@@ -553,6 +656,79 @@ begin
     else
       combo_vendedor.ItemIndex := 0;
 
+  end;
+end;
+
+procedure Tfrmlista_venda2.CompletarParametros;
+begin
+  VENDEDOR   := EmptyStr;
+  FORNECEDOR := EmptyStr;
+  MARCA      := EmptyStr;
+  cliente    := EmptyStr;
+  PRODUTO    := EmptyStr;
+  GRUPO      := EmptyStr;
+  SITUACAO   := EmptyStr;
+
+
+  if (COMBO_SITUACAO.Visible) and (COMBO_SITUACAO.ItemIndex > 0) then
+  begin
+    case COMBO_SITUACAO.ItemIndex of
+    1 : SITUACAO := ' and (ven.situacao = 1 or ven.situacao is null) ';
+    2 : SITUACAO := ' and ven.situacao = 2';
+    3 : SITUACAO := ' and ven.total < 0'
+    end;
+
+    FRMMODULO.qrrelatorio.fieldbyname('LINHA5').asstring := FRMMODULO.qrrelatorio.fieldbyname('LINHA5').asstring + '  SITUAÇÃO: ' + COMBO_SITUACAO.Text;
+  end;
+
+  if not(combo_vendedor.Text = 'TODOS') then
+  begin
+    VENDEDOR := ' and VEN.CODVENDEDOR = ' + QuotedStr(copy(combo_vendedor.Text, 1, 6));
+    FRMMODULO.qrrelatorio.fieldbyname('LINHA4').asstring := 'VENDEDOR: ' + combo_vendedor.Text;
+  end;
+
+  if not(combo_fornecedor.Text = 'TODOS') then
+  begin
+    FORNECEDOR := ' and PR.CODFORNECEDOR = ''' + copy(combo_fornecedor.Text, 1, 6) + '''';
+    FRMMODULO.qrrelatorio.fieldbyname('LINHA4').asstring := 'FORNECEDOR: ' + combo_fornecedor.Text;
+  end;
+
+  if not (combo_marca.Text = 'TODOS') then
+  begin
+    MARCA := ' and PR.CODMARCA = ''' + copy(combo_marca.Text, 1, 6) + '''';
+    FRMMODULO.qrrelatorio.fieldbyname('LINHA4').asstring := 'MARCA: ' + combo_marca.Text;
+  end;
+
+  if combo_cliente.Visible then
+  begin
+    if combo_cliente.Text <> 'TODOS' then
+    begin
+      cliente := ' and VEN.codcliente = ''' + copy(combo_cliente.Text, 1, 6) + '''';
+      FRMMODULO.qrrelatorio.fieldbyname('LINHA3').asstring := 'CLIENTE: ' + combo_cliente.Text;
+    end;
+  end;
+
+  if not (combo_produto.Text = 'TODOS') then
+  begin
+    PRODUTO := ' and VEN.CODPRODUTO = ''' + copy(combo_produto.Text, 1, 6) + '''';
+    FRMMODULO.qrrelatorio.fieldbyname('LINHA5').asstring := FRMMODULO.qrrelatorio.fieldbyname('LINHA5').asstring + 'PRODUTO: ' + combo_produto.Text;
+  end;
+
+  if rserial.Checked = false then
+  begin
+    if not (combo_grupo.Text = 'TODOS') then
+    begin
+      GRUPO := ' and PR.codsubgrupo = ''' + copy(combo_grupo.Text, 1, 6) + '''';
+      FRMMODULO.qrrelatorio.fieldbyname('LINHA7').asstring := 'SUBGRUPO: ' + combo_grupo.Text;
+    end
+  end
+  else
+  begin
+   if not (combo_grupo.Text = 'TODOS') then
+   begin
+     GRUPO := ' and ven.codsubgrupo = ''' + copy(combo_grupo.Text, 1, 6) + '''';
+     FRMMODULO.qrrelatorio.fieldbyname('LINHA7').asstring := 'SUBGRUPO: ' + combo_grupo.Text;
+   end;
   end;
 end;
 
@@ -607,13 +783,13 @@ end;
 
 procedure Tfrmlista_venda2.bimprimirClick(Sender: TObject);
 var
-  cliente, cliente1, VENDEDOR, VENDEDOR1, caixa, PRODUTO, GRUPO, FORMA, periodo, periodo1, SITUACAO, ordem: string;
-  FORNECEDOR, MARCA, TIPO, TIPO32: string;
+  cliente1, VENDEDOR1, caixa, FORMA, periodo, periodo1, ordem, vAgrup: string;
+  TIPO, TIPO32: string;
   TOTAL_VENDA, VALOR_5, VALOR_3: REAL;
   TOTAL_VISTA_3, TOTAL_COMISSAO_3, TOTAL_VISTA_5, TOTAL_COMISSAO_5: REAL;
   TOTAL_PRAZO_3, TOTAL_COMISSAO_PRAZO_3, TOTAL_PRAZO_5, TOTAL_COMISSAO_PRAZO_5: REAL;
 begin
-
+  vAgrup := EmptyStr;
   QRCOMISSAO.CLOSE;
   QRCOMISSAO.SQL.CLEAR;
   QRCOMISSAO.SQL.Add('DELETE FROM COMISSAO');
@@ -1206,7 +1382,6 @@ begin
 
   if combo_relatorio.Text = 'RELAÇÃO ANALÍTICA' then
   begin
-
     qrvenda_produto2.CLOSE;
     qrvenda_produto2.SQL.CLEAR;
     qrvenda_produto2.SQL.Add('select c000032.*,');
@@ -1239,126 +1414,446 @@ begin
 
   if combo_relatorio.Text = 'VENDAS DE PRODUTOS' then
   begin
-    qrvenda_produto2.CLOSE;
-    qrvenda_produto2.SQL.CLEAR;
-
-    if (combo_grupo.Text = 'TODOS') and (combo_fornecedor.Text = 'TODOS') and (combo_marca.Text = 'TODOS') then
+    if frmlista_venda2.comboAgrupamento.ItemIndex = 0 then  //NENHUM
     begin
-      if bTodos_Produtos.Checked = false then begin
-        qrvenda_produto2.SQL.Add('select c000032.*,');
-        qrvenda_produto2.SQL.Add('   case');
-        qrvenda_produto2.SQL.Add('    when coalesce(c000032.nfce,''N'') = ''S'' then');
-        qrvenda_produto2.SQL.Add('      (Select FIRST 1 n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.numeronota)');
-        qrvenda_produto2.SQL.Add('    when coalesce(c000032.gerou_sat,''N'') = ''S'' then');
-        qrvenda_produto2.SQL.Add('      c000032.numero_sat');
-        qrvenda_produto2.SQL.Add('    when (coalesce(c000032.nfce,''N'') <> ''S'') and (coalesce(c000032.gerou_sat,''N'') <> ''S'') then');
-        qrvenda_produto2.SQL.Add('      ''''');
-        qrvenda_produto2.SQL.Add('  end cupompdv,');
-				qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.cupom_numero) as numero from c000032 where c000032.atb like :atbc000032 and movimento in (2,9, 7) and ' + periodo + cliente + VENDEDOR + PRODUTO + SITUACAO + ' order by data, codIGO');
-			end
-			else
-			begin
-        qrvenda_produto2.SQL.Add('select c000032.*,');
-        qrvenda_produto2.SQL.Add('   case');
-        qrvenda_produto2.SQL.Add('    when coalesce(c000032.nfce,''N'') = ''S'' then');
-        qrvenda_produto2.SQL.Add('      (Select FIRST 1 n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.numeronota)');
-        qrvenda_produto2.SQL.Add('    when coalesce(c000032.gerou_sat,''N'') = ''S'' then');
-        qrvenda_produto2.SQL.Add('      c000032.numero_sat');
-        qrvenda_produto2.SQL.Add('    when (coalesce(c000032.nfce,''N'') <> ''S'') and (coalesce(c000032.gerou_sat,''N'') <> ''S'') then');
-        qrvenda_produto2.SQL.Add('      ''''');
-        qrvenda_produto2.SQL.Add('  end cupompdv,');
-        qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.cupom_numero) as numero from c000032 where c000032.atb like :atbc000032 and movimento in (2,9,99,7) and ' + periodo + cliente + VENDEDOR + PRODUTO + SITUACAO + ' order by data, codIGO');
-      end;
-      qrvenda_produto2.ParamByName('atbc000032').Value := ME_FiltraATB('TB_MOVIMENTO');
-      qrvenda_produto2.ParamByName('atbn').Value := ME_FiltraATB('TB_NFCE');
-    end
-    else
-    begin
-      if combo_vendedor.Text = 'TODOS' then
-        VENDEDOR := ''
-      else
-      begin
-        VENDEDOR := ' and VEN.CODVENDEDOR = ''' + copy(combo_vendedor.Text, 1, 6) + '''';
-        FRMMODULO.qrrelatorio.fieldbyname('LINHA4').asstring := 'VENDEDOR: ' + combo_vendedor.Text;
-      end;
-      if combo_fornecedor.Text = 'TODOS' then
-        FORNECEDOR := ''
-      else
-      begin
-        FORNECEDOR := ' and PRO.CODFORNECEDOR = ''' + copy(combo_fornecedor.Text, 1, 6) + '''';
-        FRMMODULO.qrrelatorio.fieldbyname('LINHA4').asstring := 'FORNECEDOR: ' + combo_fornecedor.Text;
-      end;
-      if combo_marca.Text = 'TODOS' then
-        MARCA := ''
-      else
-      begin
-        MARCA := ' and PRO.CODMARCA = ''' + copy(combo_marca.Text, 1, 6) + '''';
-        FRMMODULO.qrrelatorio.fieldbyname('LINHA4').asstring := 'MARCA: ' + combo_marca.Text;
-      end;
+      qrvenda_produto2.CLOSE;
+      qrvenda_produto2.SQL.CLEAR;
 
-      if rserial.Checked = false then
-        if combo_grupo.Text = 'TODOS' then
+      if (combo_grupo.Text = 'TODOS') and (combo_fornecedor.Text = 'TODOS') and (combo_marca.Text = 'TODOS') then
+      begin
+        if bTodos_Produtos.Checked = false then
+        begin
+          qrvenda_produto2.SQL.Add('select c000032.*,');
+          qrvenda_produto2.SQL.Add('   case');
+          qrvenda_produto2.SQL.Add('    when coalesce(c000032.nfce,''N'') = ''S'' then');
+          qrvenda_produto2.SQL.Add('      (Select FIRST 1 n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.numeronota)');
+          qrvenda_produto2.SQL.Add('    when coalesce(c000032.gerou_sat,''N'') = ''S'' then');
+          qrvenda_produto2.SQL.Add('      c000032.numero_sat');
+          qrvenda_produto2.SQL.Add('    when (coalesce(c000032.nfce,''N'') <> ''S'') and (coalesce(c000032.gerou_sat,''N'') <> ''S'') then');
+          qrvenda_produto2.SQL.Add('      ''''');
+          qrvenda_produto2.SQL.Add('  end cupompdv,');
+//          qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.cupom_numero) as numero from c000032 where c000032.atb like :atbc000032 and movimento in (2,9, 7) and ' + periodo + cliente + VENDEDOR + PRODUTO + SITUACAO + ' order by data, codIGO');
+          qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.cupom_numero) as numero,');
+          qrvenda_produto2.SQL.Add('fo.nome fornecedor');
+          qrvenda_produto2.SQL.Add('from c000032, c000025 PRO');
+          qrvenda_produto2.SQL.Add('left join c000009 FO on FO.codigo = PRO.codfornecedor');
+          qrvenda_produto2.SQL.Add('where c000032.atb like :atbc000032 and PRO.atb like :atbPRO');
+          qrvenda_produto2.SQL.Add('and c000032.CODPRODUTO = PRO.CODIGO');
+          qrvenda_produto2.SQL.Add('and movimento in (2,9,7) and ');
+          qrvenda_produto2.SQL.Add('c000032.data >= :datai and c000032.data <= :dataf');
+          qrvenda_produto2.SQL.Add(cliente + VENDEDOR + PRODUTO + SITUACAO);
+          qrvenda_produto2.SQL.Add('order by c000032.data, c000032.codigo');
+        end
+        else
+        begin
+          qrvenda_produto2.SQL.Add('select c000032.*,');
+          qrvenda_produto2.SQL.Add('   case');
+          qrvenda_produto2.SQL.Add('    when coalesce(c000032.nfce,''N'') = ''S'' then');
+          qrvenda_produto2.SQL.Add('      (Select FIRST 1 n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.numeronota)');
+          qrvenda_produto2.SQL.Add('    when coalesce(c000032.gerou_sat,''N'') = ''S'' then');
+          qrvenda_produto2.SQL.Add('      c000032.numero_sat');
+          qrvenda_produto2.SQL.Add('    when (coalesce(c000032.nfce,''N'') <> ''S'') and (coalesce(c000032.gerou_sat,''N'') <> ''S'') then');
+          qrvenda_produto2.SQL.Add('      ''''');
+          qrvenda_produto2.SQL.Add('  end cupompdv,');
+//          qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.cupom_numero) as numero from c000032 where c000032.atb like :atbc000032 and movimento in (2,9,99,7) and ' + periodo + cliente + VENDEDOR + PRODUTO + SITUACAO + ' order by data, codIGO');
+          qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = c000032.cupom_numero) as numero,');
+          qrvenda_produto2.SQL.Add('fo.nome fornecedor');
+          qrvenda_produto2.SQL.Add('from c000032, c000025 PRO');
+          qrvenda_produto2.SQL.Add('left join c000009 FO on FO.codigo = PRO.codfornecedor');
+          qrvenda_produto2.SQL.Add('where c000032.atb like :atbc000032 and PRO.atb like :atbPRO');
+          qrvenda_produto2.SQL.Add('and c000032.CODPRODUTO = PRO.CODIGO');
+          qrvenda_produto2.SQL.Add('and movimento in (2,9,99,7) and ');
+          qrvenda_produto2.SQL.Add('c000032.data >= :datai and c000032.data <= :dataf');
+          qrvenda_produto2.SQL.Add(cliente + VENDEDOR + PRODUTO + SITUACAO);
+          qrvenda_produto2.SQL.Add('order by c000032.data, c000032.codigo');
+        end;
+
+        qrvenda_produto2.ParamByName('atbc000032').Value := ME_FiltraATB('TB_MOVIMENTO');
+        qrvenda_produto2.ParamByName('atbPRO').Value     := ME_FiltraATB('TB_PRODUTO');
+
+        qrvenda_produto2.ParamByName('atbn').Value := ME_FiltraATB('TB_NFCE');
+      end
+      else
+      begin
+        if combo_vendedor.Text = 'TODOS' then
+          VENDEDOR := ''
+        else
+        begin
+          VENDEDOR := ' and VEN.CODVENDEDOR = ''' + copy(combo_vendedor.Text, 1, 6) + '''';
+          FRMMODULO.qrrelatorio.fieldbyname('LINHA4').asstring := 'VENDEDOR: ' + combo_vendedor.Text;
+        end;
+        if combo_fornecedor.Text = 'TODOS' then
+          FORNECEDOR := ''
+        else
+        begin
+          FORNECEDOR := ' and PRO.CODFORNECEDOR = ''' + copy(combo_fornecedor.Text, 1, 6) + '''';
+          FRMMODULO.qrrelatorio.fieldbyname('LINHA4').asstring := 'FORNECEDOR: ' + combo_fornecedor.Text;
+        end;
+        if combo_marca.Text = 'TODOS' then
+          MARCA := ''
+        else
+        begin
+          MARCA := ' and PRO.CODMARCA = ''' + copy(combo_marca.Text, 1, 6) + '''';
+          FRMMODULO.qrrelatorio.fieldbyname('LINHA4').asstring := 'MARCA: ' + combo_marca.Text;
+        end;
+
+        if rserial.Checked = false then
+          if combo_grupo.Text = 'TODOS' then
+            GRUPO := ''
+          else
+          begin
+            GRUPO := ' and PRO.CODsubgrUpo = ''' + copy(combo_grupo.Text, 1, 6) + '''';
+            FRMMODULO.qrrelatorio.fieldbyname('LINHA7').asstring := 'SUBGRUPO: ' + combo_grupo.Text;
+          end
+        else if combo_grupo.Text = 'TODOS' then
           GRUPO := ''
         else
         begin
-          GRUPO := ' and PRO.CODsubgrUpo = ''' + copy(combo_grupo.Text, 1, 6) + '''';
+          GRUPO := ' and ven.CODsubgrUpo = ''' + copy(combo_grupo.Text, 1, 6) + '''';
           FRMMODULO.qrrelatorio.fieldbyname('LINHA7').asstring := 'SUBGRUPO: ' + combo_grupo.Text;
+        end;
+
+        if combo_produto.Text = 'TODOS' then
+          PRODUTO := ''
+        else
+        begin
+          PRODUTO := ' and VEN.CODPRODUTO = ''' + copy(combo_produto.Text, 1, 6) + '''';
+          FRMMODULO.qrrelatorio.fieldbyname('LINHA5').asstring := FRMMODULO.qrrelatorio.fieldbyname('LINHA5').asstring + 'PRODUTO: ' + combo_produto.Text;
+        end;
+
+        if bTodos_Produtos.Checked = false then
+        begin
+          qrvenda_produto2.SQL.Add('select VEN.*,');
+          qrvenda_produto2.SQL.Add('   case');
+          qrvenda_produto2.SQL.Add('    when coalesce(VEN.nfce,''N'') = ''S'' then');
+          qrvenda_produto2.SQL.Add('      (Select FIRST 1 n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.numeronota)');
+          qrvenda_produto2.SQL.Add('    when coalesce(VEN.gerou_sat,''N'') = ''S'' then');
+          qrvenda_produto2.SQL.Add('      VEN.numero_sat');
+          qrvenda_produto2.SQL.Add('    when (coalesce(VEN.nfce,''N'') <> ''S'') and (coalesce(VEN.gerou_sat,''N'') <> ''S'') then');
+          qrvenda_produto2.SQL.Add('      ''''');
+          qrvenda_produto2.SQL.Add('  end cupompdv,');
+//          qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.cupom_numero) as numero, PRO.CODSUBGRUPO, PRO.CODFORNECEDOR, PRO.CODMARCA ');
+//          qrvenda_produto2.SQL.Add('from c000032 VEN, c000025 PRO where VEN.atb like :atbVEN and PRO.atb like :atbPRO and VEN.CODPRODUTO = PRO.CODIGO AND movimento in (2,9,7) and ' + periodo + cliente + VENDEDOR + FORNECEDOR + MARCA + PRODUTO + GRUPO + ' order by data, codIGO')
+          qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.cupom_numero) as numero,');
+          qrvenda_produto2.SQL.Add('PRO.CODSUBGRUPO, PRO.CODFORNECEDOR, PRO.CODMARCA,');
+          qrvenda_produto2.SQL.Add('fo.nome fornecedor');
+          qrvenda_produto2.SQL.Add('from c000032 VEN, c000025 PRO');
+          qrvenda_produto2.SQL.Add('left join c000009 FO on FO.codigo = PRO.codfornecedor');
+          qrvenda_produto2.SQL.Add('where VEN.atb like :atbVEN and PRO.atb like :atbPRO');
+          qrvenda_produto2.SQL.Add('and VEN.CODPRODUTO = PRO.CODIGO');
+          qrvenda_produto2.SQL.Add('and movimento in (2,9,7) and ');
+          qrvenda_produto2.SQL.Add('VEN.data >= :datai and VEN.data <= :dataf');
+          qrvenda_produto2.SQL.Add(cliente + VENDEDOR + FORNECEDOR + MARCA + PRODUTO + GRUPO);
+          qrvenda_produto2.SQL.Add('order by VEN.data, VEN.codigo');
         end
-      else if combo_grupo.Text = 'TODOS' then
-        GRUPO := ''
+        else
+        begin
+          qrvenda_produto2.SQL.Add('select VEN.*,');
+          qrvenda_produto2.SQL.Add('   case');
+          qrvenda_produto2.SQL.Add('    when coalesce(VEN.nfce,''N'') = ''S'' then');
+          qrvenda_produto2.SQL.Add('      (Select FIRST 1 n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.numeronota)');
+          qrvenda_produto2.SQL.Add('    when coalesce(VEN.gerou_sat,''N'') = ''S'' then');
+          qrvenda_produto2.SQL.Add('      VEN.numero_sat');
+          qrvenda_produto2.SQL.Add('    when (coalesce(VEN.nfce,''N'') <> ''S'') and (coalesce(VEN.gerou_sat,''N'') <> ''S'') then');
+          qrvenda_produto2.SQL.Add('      ''''');
+          qrvenda_produto2.SQL.Add('  end cupompdv,');
+//          qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.cupom_numero) as numero, PRO.CODSUBGRUPO, PRO.CODFORNECEDOR, PRO.CODMARCA ');
+//          qrvenda_produto2.SQL.Add('from c000032 VEN, c000025 PRO where VEN.atb like :atbVEN and PRO.atb like :atbPRO and VEN.CODPRODUTO = PRO.CODIGO AND movimento in (2,9,7,99) and ' + periodo + cliente + VENDEDOR + FORNECEDOR + MARCA + PRODUTO + GRUPO + ' order by data, codIGO');
+          qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.cupom_numero) as numero,');
+          qrvenda_produto2.SQL.Add('PRO.CODSUBGRUPO, PRO.CODFORNECEDOR, PRO.CODMARCA,');
+          qrvenda_produto2.SQL.Add('fo.nome fornecedor');
+          qrvenda_produto2.SQL.Add('from c000032 VEN, c000025 PRO');
+          qrvenda_produto2.SQL.Add('left join c000009 FO on FO.codigo = PRO.codfornecedor');
+          qrvenda_produto2.SQL.Add('where VEN.atb like :atbVEN and PRO.atb like :atbPRO');
+          qrvenda_produto2.SQL.Add('and VEN.CODPRODUTO = PRO.CODIGO');
+          qrvenda_produto2.SQL.Add('and movimento in (2,9,7,99) and ');
+          qrvenda_produto2.SQL.Add('VEN.data >= :datai and VEN.data <= :dataf');
+          qrvenda_produto2.SQL.Add(cliente + VENDEDOR + FORNECEDOR + MARCA + PRODUTO + GRUPO);
+          qrvenda_produto2.SQL.Add('order by VEN.data, VEN.codigo');
+        end;
+        qrvenda_produto2.ParamByName('atbVEN').Value := ME_FiltraATB('TB_MOVIMENTO');
+        qrvenda_produto2.ParamByName('atbPRO').Value := ME_FiltraATB('TB_PRODUTO');
+        qrvenda_produto2.ParamByName('atbn').Value := ME_FiltraATB('TB_NFCE');
+
+      end;
+      qrvenda_produto2.Params.ParamByName('datai').asdatetime := DateEdit1.Date;
+      qrvenda_produto2.Params.ParamByName('dataf').asdatetime := DateEdit2.Date;
+
+      qrvenda_produto2.OPEN;
+
+      FRMMODULO.qrrelatorio.fieldbyname('linha2').asstring := 'PERÍODO: ' + DateEdit1.Text + ' a ' + DateEdit2.Text;
+      FRMMODULO.qrrelatorio.fieldbyname('LINHA1').asstring := 'VENDA DE PRODUTOS';
+      fxvenda.LoadFromFile('C:\SOS\server\REL\F000036.fr3');
+    end
+    else // POSSUI AGRUPAMENTO SELECIONADO
+    begin
+      qryFiltra.Close;
+      qryFiltra.SQL.Clear;
+
+      if (combo_grupo.Text = 'TODOS') and (COMBO_SITUACAO.ItemIndex = 0) and (combo_fornecedor.Text = 'TODOS') and (combo_marca.Text = 'TODOS') and (combo_cliente.Text = 'TODOS') and (combo_produto.Text = 'TODOS') and (combo_vendedor.Text = 'TODOS') then
+      begin
+        if bTodos_Produtos.Checked = false then
+        begin
+          qryFiltra.SQL.Add('select VEN.*, ');
+          qryFiltra.SQL.Add('sum(((VEN.unitario * VEN.qtde) + VEN.acrescimo) - VEN.desconto) as totalizado,');
+          qryFiltra.SQL.Add('case');
+          qryFiltra.SQL.Add('  when coalesce(VEN.nfce,''N'') = ''S'' then');
+          qryFiltra.SQL.Add('    (select first 1 n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.numeronota)');
+          qryFiltra.SQL.Add('  when coalesce(VEN.gerou_sat,''N'') = ''S'' then');
+          qryFiltra.SQL.Add('    VEN.numero_sat');
+          qryFiltra.SQL.Add('  when (coalesce(VEN.nfce,''N'') <> ''S'') and (coalesce(VEN.gerou_sat,''N'') <> ''S'') then');
+          qryFiltra.SQL.Add('    '''' ');
+          qryFiltra.SQL.Add('end cupompdv,');
+          qryFiltra.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.cupom_numero) as numero,');
+          qryFiltra.SQL.Add('ma.nome marca,');
+          qryFiltra.SQL.Add('fo.nome fornecedor,');
+          qryFiltra.SQL.Add('CLI.nome cliente,');
+          qryFiltra.SQL.Add('fu.nome vededor');
+          qryFiltra.SQL.Add('from c000032 VEN');
+          qryFiltra.SQL.Add('join c000025 PR on PR.codigo = VEN.codproduto');
+          qryFiltra.SQL.Add('join C000019 MA on MA.codigo = pr.codmarca');
+          qryFiltra.SQL.Add('left join c000009 FO on FO.codigo = pr.codfornecedor');
+          qryFiltra.SQL.Add('left join c000007 CLI on CLI.codigo = VEN.codcliente');
+          qryFiltra.SQL.Add('join c000008 FU on fu.codigo = VEN.codvendedor');
+          qryFiltra.SQL.Add('where VEN.atb like :atbc000032');
+          qryFiltra.SQL.Add('and VEN.movimento in (2,9, 7)');
+          qryFiltra.SQL.Add('and VEN.data >= :datai and VEN.data <= :dataf');
+          qryFiltra.SQL.Add('group by VEN.codigo,     '+
+                            'VEN.codnota,             '+
+                            'VEN.codproduto,          '+
+                            'VEN.unitario,            '+
+                            'VEN.total,               '+
+                            'VEN.icms,                '+
+                            'VEN.ipi,                 '+
+                            'VEN.cfop,                '+
+                            'VEN.data,                '+
+                            'VEN.numeronota,          '+
+                            'VEN.codcliente,          '+
+                            'VEN.desconto,            '+
+                            'VEN.acrescimo,           '+
+                            'VEN.movimento,           '+
+                            'VEN.codvendedor,         '+
+                            'VEN.codgrade,            '+
+                            'VEN.serial,              '+
+                            'VEN.unidade,             '+
+                            'VEN.qtde,                '+
+                            'VEN.valor_icms,          '+
+                            'VEN.icms_reduzido,       '+
+                            'VEN.base_calculo,        '+
+                            'VEN.valor_ipi,           '+
+                            'VEN.situacao,            '+
+                            'VEN.ecf_serie,           '+
+                            'VEN.ecf_caixa,           '+
+                            'VEN.codaliquota,         '+
+                            'VEN.cupom_numero,        '+
+                            'VEN.cupom_modelo,        '+
+                            'VEN.cupom_item,          '+
+                            'VEN.aliquota,            '+
+                            'VEN.cst,                 '+
+                            'VEN.lote_fabricacao,     '+
+                            'VEN.movimento_estoque,   '+
+                            'VEN.lancado,             '+
+                            'VEN.vencimento,          '+
+                            'VEN.codbarra,            '+
+                            'VEN.margem_desconto,     '+
+                            'VEN.credito_icms,        '+
+                            'VEN.pis,                 '+
+                            'VEN.cofins,              '+
+                            'VEN.loja,                '+
+                            'VEN.codsubgrupo,         '+
+                            'VEN.tipo,                '+
+                            'VEN.codusuario,          '+
+                            'VEN.origem,              '+
+                            'VEN.destino,             '+
+                            'VEN.produto,             '+
+                            'VEN.codfilial,           '+
+                            'VEN.aidf,                '+
+                            'VEN.validade,            '+
+                            'VEN.csosn,               '+
+                            'VEN.nfce,                '+
+                            'VEN.classificacao_fiscal,'+
+                            'VEN.base_sub,            '+
+                            'VEN.icms_sub,            '+
+                            'VEN.isentas_icms,        '+
+                            'VEN.outras_icms,         '+
+                            'VEN.gerou_sat,           '+
+                            'VEN.numero_sat,          '+
+                            'VEN.xitem,               '+
+                            'VEN.xped,                '+
+                            'VEN.devolvido,           '+
+                            'VEN.ecf,                 '+
+                            'VEN.preco_custo,         '+
+                            'VEN.idonline,            '+
+                            'VEN.atb,                 '+
+                            'VEN.qtd_volume,          '+
+                            'VEN.codprodutovolume,    '+
+                            'ma.nome, fo.nome, CLI.nome, fu.nome');
+          qryFiltra.SQL.Add('order by ' +  Ordenacao );
+          qryFiltra.ParamByName('atbc000032').Value := ME_FiltraATB('TB_MOVIMENTO');
+          qryFiltra.ParamByName('atbn').Value := ME_FiltraATB('TB_NFCE');
+          qryFiltra.Params.ParamByName('datai').asdatetime := DateEdit1.Date;
+          qryFiltra.Params.ParamByName('dataf').asdatetime := DateEdit2.Date;
+
+          qryFiltra.OPEN;
+        end;
+      end
       else
       begin
-        GRUPO := ' and ven.CODsubgrUpo = ''' + copy(combo_grupo.Text, 1, 6) + '''';
-        FRMMODULO.qrrelatorio.fieldbyname('LINHA7').asstring := 'SUBGRUPO: ' + combo_grupo.Text;
+        CompletarParametros;
+
+        if bTodos_Produtos.Checked = false then
+        begin
+          qryFiltra.SQL.Add('select VEN.*, ');
+          qryFiltra.SQL.Add('sum(((VEN.unitario * VEN.qtde) + VEN.acrescimo) - VEN.desconto) as totalizado,');
+          qryFiltra.SQL.Add('case');
+          qryFiltra.SQL.Add('  when coalesce(VEN.nfce,''N'') = ''S'' then');
+          qryFiltra.SQL.Add('    (select first 1 n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.numeronota)');
+          qryFiltra.SQL.Add('  when coalesce(VEN.gerou_sat,''N'') = ''S'' then');
+          qryFiltra.SQL.Add('    VEN.numero_sat');
+          qryFiltra.SQL.Add('  when (coalesce(VEN.nfce,''N'') <> ''S'') and (coalesce(VEN.gerou_sat,''N'') <> ''S'') then');
+          qryFiltra.SQL.Add('    '''' ');
+          qryFiltra.SQL.Add('end cupompdv,');
+          qryFiltra.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.cupom_numero) as numero,');
+          qryFiltra.SQL.Add('ma.nome marca,');
+          qryFiltra.SQL.Add('fo.nome fornecedor,');
+          qryFiltra.SQL.Add('CLI.nome cliente,');
+          qryFiltra.SQL.Add('fu.nome vededor');
+          qryFiltra.SQL.Add('from c000032 VEN');
+          qryFiltra.SQL.Add('join c000025 PR on PR.codigo = VEN.codproduto');
+          qryFiltra.SQL.Add('join C000019 MA on MA.codigo = pr.codmarca');
+          qryFiltra.SQL.Add('left join c000009 FO on FO.codigo = pr.codfornecedor');
+          qryFiltra.SQL.Add('left join c000007 CLI on CLI.codigo = VEN.codcliente');
+          qryFiltra.SQL.Add('join c000008 FU on fu.codigo = VEN.codvendedor');
+          qryFiltra.SQL.Add('where VEN.atb like :atbc000032');
+          qryFiltra.SQL.Add('and VEN.movimento in (2,9, 7)');
+          qryFiltra.SQL.Add('and VEN.data >= :datai and VEN.data <= :dataf');
+          if not (PRODUTO = EmptyStr) then
+            qryFiltra.SQL.Add(PRODUTO);
+          if not (VENDEDOR = EmptyStr) then
+            qryFiltra.SQL.Add(VENDEDOR);
+          if not (FORNECEDOR = EmptyStr) then
+            qryFiltra.SQL.Add(FORNECEDOR);
+          if not (MARCA = EmptyStr) then
+            qryFiltra.SQL.Add(MARCA);
+          if not (cliente = EmptyStr) then
+            qryFiltra.SQL.Add(cliente);
+          if not (GRUPO = EmptyStr) then
+            qryFiltra.SQL.Add(GRUPO);
+          if not (SITUACAO = EmptyStr) then
+            qryFiltra.SQL.Add(SITUACAO);
+
+          qryFiltra.SQL.Add('group by VEN.codigo,     '+
+                            'VEN.codnota,             '+
+                            'VEN.codproduto,          '+
+                            'VEN.unitario,            '+
+                            'VEN.total,               '+
+                            'VEN.icms,                '+
+                            'VEN.ipi,                 '+
+                            'VEN.cfop,                '+
+                            'VEN.data,                '+
+                            'VEN.numeronota,          '+
+                            'VEN.codcliente,          '+
+                            'VEN.desconto,            '+
+                            'VEN.acrescimo,           '+
+                            'VEN.movimento,           '+
+                            'VEN.codvendedor,         '+
+                            'VEN.codgrade,            '+
+                            'VEN.serial,              '+
+                            'VEN.unidade,             '+
+                            'VEN.qtde,                '+
+                            'VEN.valor_icms,          '+
+                            'VEN.icms_reduzido,       '+
+                            'VEN.base_calculo,        '+
+                            'VEN.valor_ipi,           '+
+                            'VEN.situacao,            '+
+                            'VEN.ecf_serie,           '+
+                            'VEN.ecf_caixa,           '+
+                            'VEN.codaliquota,         '+
+                            'VEN.cupom_numero,        '+
+                            'VEN.cupom_modelo,        '+
+                            'VEN.cupom_item,          '+
+                            'VEN.aliquota,            '+
+                            'VEN.cst,                 '+
+                            'VEN.lote_fabricacao,     '+
+                            'VEN.movimento_estoque,   '+
+                            'VEN.lancado,             '+
+                            'VEN.vencimento,          '+
+                            'VEN.codbarra,            '+
+                            'VEN.margem_desconto,     '+
+                            'VEN.credito_icms,        '+
+                            'VEN.pis,                 '+
+                            'VEN.cofins,              '+
+                            'VEN.loja,                '+
+                            'VEN.codsubgrupo,         '+
+                            'VEN.tipo,                '+
+                            'VEN.codusuario,          '+
+                            'VEN.origem,              '+
+                            'VEN.destino,             '+
+                            'VEN.produto,             '+
+                            'VEN.codfilial,           '+
+                            'VEN.aidf,                '+
+                            'VEN.validade,            '+
+                            'VEN.csosn,               '+
+                            'VEN.nfce,                '+
+                            'VEN.classificacao_fiscal,'+
+                            'VEN.base_sub,            '+
+                            'VEN.icms_sub,            '+
+                            'VEN.isentas_icms,        '+
+                            'VEN.outras_icms,         '+
+                            'VEN.gerou_sat,           '+
+                            'VEN.numero_sat,          '+
+                            'VEN.xitem,               '+
+                            'VEN.xped,                '+
+                            'VEN.devolvido,           '+
+                            'VEN.ecf,                 '+
+                            'VEN.preco_custo,         '+
+                            'VEN.idonline,            '+
+                            'VEN.atb,                 '+
+                            'VEN.qtd_volume,          '+
+                            'VEN.codprodutovolume,    '+
+                            'ma.nome, fo.nome, CLI.nome, fu.nome');
+          qryFiltra.SQL.Add('order by ' +  Ordenacao );
+          qryFiltra.ParamByName('atbc000032').Value := ME_FiltraATB('TB_MOVIMENTO');
+          qryFiltra.ParamByName('atbn').Value := ME_FiltraATB('TB_NFCE');
+          qryFiltra.Params.ParamByName('datai').asdatetime := DateEdit1.Date;
+          qryFiltra.Params.ParamByName('dataf').asdatetime := DateEdit2.Date;
+
+          qryFiltra.OPEN;
+        end;
       end;
 
-      if combo_produto.Text = 'TODOS' then
-        PRODUTO := ''
-      else
-      begin
-        PRODUTO := ' and VEN.CODPRODUTO = ''' + copy(combo_produto.Text, 1, 6) + '''';
-        FRMMODULO.qrrelatorio.fieldbyname('LINHA5').asstring := FRMMODULO.qrrelatorio.fieldbyname('LINHA5').asstring + 'PRODUTO: ' + combo_produto.Text;
+      FRMMODULO.qrrelatorio.fieldbyname('linha2').asstring := 'PERÍODO: ' + DateEdit1.Text + ' a ' + DateEdit2.Text;
+      FRMMODULO.qrrelatorio.fieldbyname('LINHA1').asstring := 'VENDA DE PRODUTOS';
+
+      case frmlista_venda2.comboAgrupamento.ItemIndex of
+        1://CLIENTE
+        begin
+         fxvenda.LoadFromFile('C:\SOS\server\REL\F000036_CLI.fr3');
+         fxvenda.PrepareReport;
+         fxvenda.Variables['vAgrupado'] := QuotedStr('CLIENTE:');
+        end;
+        2: //VENDEDOR
+        begin
+          fxvenda.LoadFromFile('C:\SOS\server\REL\F000036_VEN.fr3');
+          fxvenda.PrepareReport;
+          fxvenda.Variables['vAgrupado'] := QuotedStr('VENDEDOR:');
+        end;
+        3: //Fornecedor
+        begin
+          fxvenda.LoadFromFile('C:\SOS\server\REL\F000036_FOR.fr3');
+          fxvenda.PrepareReport;
+          fxvenda.Variables['vAgrupado'] := QuotedStr('FORNECEDOR:');
+        end;
+        4: //MARCA
+        begin
+          fxvenda.LoadFromFile('C:\SOS\server\REL\F000036_MAR.fr3');
+          fxvenda.PrepareReport;
+          fxvenda.Variables['vAgrupado'] := QuotedStr('MARCA:');
+        end;
       end;
+    end;
 
-      if bTodos_Produtos.Checked = false then begin
-        qrvenda_produto2.SQL.Add('select VEN.*,');
-        qrvenda_produto2.SQL.Add('   case');
-        qrvenda_produto2.SQL.Add('    when coalesce(VEN.nfce,''N'') = ''S'' then');
-        qrvenda_produto2.SQL.Add('      (Select FIRST 1 n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.numeronota)');
-        qrvenda_produto2.SQL.Add('    when coalesce(VEN.gerou_sat,''N'') = ''S'' then');
-        qrvenda_produto2.SQL.Add('      VEN.numero_sat');
-        qrvenda_produto2.SQL.Add('    when (coalesce(VEN.nfce,''N'') <> ''S'') and (coalesce(VEN.gerou_sat,''N'') <> ''S'') then');
-        qrvenda_produto2.SQL.Add('      ''''');
-        qrvenda_produto2.SQL.Add('  end cupompdv,');
-        qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.cupom_numero) as numero, PRO.CODSUBGRUPO, PRO.CODFORNECEDOR, PRO.CODMARCA ');
-        qrvenda_produto2.SQL.Add('from c000032 VEN, c000025 PRO where VEN.atb like :atbVEN and PRO.atb like :atbPRO and VEN.CODPRODUTO = PRO.CODIGO AND movimento in (2,9,7) and ' + periodo + cliente + VENDEDOR + FORNECEDOR + MARCA + PRODUTO + GRUPO + ' order by data, codIGO')
-      end else begin
-        qrvenda_produto2.SQL.Add('select VEN.*,');
-        qrvenda_produto2.SQL.Add('   case');
-        qrvenda_produto2.SQL.Add('    when coalesce(VEN.nfce,''N'') = ''S'' then');
-        qrvenda_produto2.SQL.Add('      (Select FIRST 1 n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.numeronota)');
-        qrvenda_produto2.SQL.Add('    when coalesce(VEN.gerou_sat,''N'') = ''S'' then');
-        qrvenda_produto2.SQL.Add('      VEN.numero_sat');
-        qrvenda_produto2.SQL.Add('    when (coalesce(VEN.nfce,''N'') <> ''S'') and (coalesce(VEN.gerou_sat,''N'') <> ''S'') then');
-        qrvenda_produto2.SQL.Add('      ''''');
-        qrvenda_produto2.SQL.Add('  end cupompdv,');
-        qrvenda_produto2.SQL.Add('(select n.numero from nfce n where n.atb like :atbn and n.cupom = VEN.cupom_numero) as numero, PRO.CODSUBGRUPO, PRO.CODFORNECEDOR, PRO.CODMARCA ');
-        qrvenda_produto2.SQL.Add('from c000032 VEN, c000025 PRO where VEN.atb like :atbVEN and PRO.atb like :atbPRO and VEN.CODPRODUTO = PRO.CODIGO AND movimento in (2,9,7,99) and ' + periodo + cliente + VENDEDOR + FORNECEDOR + MARCA + PRODUTO + GRUPO + ' order by data, codIGO');
-      end;
-      qrvenda_produto2.ParamByName('atbVEN').Value := ME_FiltraATB('TB_MOVIMENTO');
-      qrvenda_produto2.ParamByName('atbPRO').Value := ME_FiltraATB('TB_PRODUTO');
-			qrvenda_produto2.ParamByName('atbn').Value := ME_FiltraATB('TB_NFCE');
-
-		end;
-    qrvenda_produto2.Params.ParamByName('datai').asdatetime := DateEdit1.Date;
-    qrvenda_produto2.Params.ParamByName('dataf').asdatetime := DateEdit2.Date;
-
-
-		qrvenda_produto2.OPEN;
-
-    FRMMODULO.qrrelatorio.fieldbyname('linha2').asstring := 'PERÍODO: ' + DateEdit1.Text + ' a ' + DateEdit2.Text;
-    FRMMODULO.qrrelatorio.fieldbyname('LINHA1').asstring := 'VENDA DE PRODUTOS';
-		fxvenda.LoadFromFile('C:\SOS\server\REL\F000036.fr3');
+//    fxvenda.DesignReport;
 		fxvenda.ShowReport;
   end;
 	if combo_relatorio.Text = 'RESUMO DE VENDAS POR VENDEDOR' then
@@ -2018,6 +2513,9 @@ begin
     combo_tipo.visible := false;
     lsituacao.visible := False;
     COMBO_SITUACAO.visible := False;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
 
   if combo_relatorio.Text = 'RELAÇÃO SINTÉTICA' then
@@ -2043,6 +2541,9 @@ begin
     bTodos_Produtos.visible := false;
     Ltipo.visible := True;
     combo_tipo.visible := True;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
 
   if combo_relatorio.Text = 'RESUMO DE VENDAS POR VENDEDOR' then
@@ -2066,6 +2567,9 @@ begin
     bTodos_Produtos.visible := false;
     Ltipo.visible := False;
     combo_tipo.visible := False;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
 
   if combo_relatorio.Text = 'RELAÇÃO ANALÍTICA' then
@@ -2089,6 +2593,9 @@ begin
     bTodos_Produtos.visible := false;
     Ltipo.visible := True;
     combo_tipo.visible := True;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
 
   if combo_relatorio.Text = 'VENDAS DE PRODUTOS' then
@@ -2112,6 +2619,10 @@ begin
     bTodos_Produtos.visible := TRUE;
     Ltipo.visible := False;
     combo_tipo.visible := false;
+
+    lblAgrup.Visible           := True;
+    comboAgrupamento.Visible   := True;
+    comboAgrupamento.ItemIndex := 0;
   end;
   if combo_relatorio.Text = 'RESUMO DE VENDAS DE PRODUTOS' then
   begin
@@ -2136,6 +2647,9 @@ begin
     bTodos_Produtos.visible := TRUE;
     Ltipo.visible := False;
     combo_tipo.visible := false;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
   if combo_relatorio.Text = 'VENDAS / COMISSÃO' then
   begin
@@ -2161,6 +2675,9 @@ begin
     combo_tipo.visible := false;
     lsituacao.Visible := False;
     COMBO_SITUACAO.Visible := false;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
 
   if combo_relatorio.Text = 'VENDAS / RECEBIMENTO' then
@@ -2193,6 +2710,9 @@ begin
     combo_tipo.visible := false;
     COMBO_SITUACAO.visible := false;
     lsituacao.visible := false;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
 
   if combo_relatorio.Text = 'RESUMO DE VENDAS / RECEBIMENTO' then
@@ -2223,6 +2743,9 @@ begin
     bTodos_Produtos.visible := false;
     Ltipo.visible := False;
     combo_tipo.visible := false;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
 
   if combo_relatorio.Text = 'CURVA ABC DE PRODUTOS' then
@@ -2247,6 +2770,9 @@ begin
     bTodos_Produtos.visible := false;
     Ltipo.visible := False;
     combo_tipo.visible := false;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
 
   if combo_relatorio.Text = 'RESUMO DE VENDAS / META POR VENDEDOR' then
@@ -2272,6 +2798,9 @@ begin
     bTodos_Produtos.visible := false;
     Ltipo.visible := False;
     combo_tipo.visible := false;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
 
   if combo_relatorio.Text = 'VENDAS DE PRODUTOS AGRUPADOS POR DIA' then
@@ -2295,6 +2824,9 @@ begin
     bTodos_Produtos.visible := false;
     Ltipo.visible := False;
     combo_tipo.visible := false;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end;
   if combo_relatorio.Text = 'FECHAMENTO DA TAXA DE GARÇON' then
   begin
@@ -2319,9 +2851,17 @@ begin
     rserial.Visible := False;
     combo_tipo.visible := false;
     Ltipo.visible := false;
+
+    lblAgrup.Visible         := False;
+    comboAgrupamento.Visible := False;
   end
   else
+  begin
     lvendedor.Caption := 'Vendedor:';
+
+//    lblAgrup.Visible         := False;
+//    comboAgrupamento.Visible := False;
+  end;
 
 end;
 

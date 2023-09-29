@@ -1,0 +1,120 @@
+unit uLoteItens;
+
+interface
+
+uses ZDataset, modulo, System.SysUtils, Data.SqlExpr, Datasnap.DBClient, Data.DB, System.Classes, System.Variants;
+
+const
+  SPLOTE = 'LOTE_ITEM_IU';
+
+type
+  TLoteItens = class(TObject)
+  private
+    FcdsItensLote: TClientDataSet;
+    FSPLote_ItemIU : TSQLStoredProc;
+    procedure CamposItensLote;
+
+  public
+
+    constructor Create;
+
+    destructor Destroy; override;
+
+    function CarregarItensDataSet(aDataset :TClientDataSet): Boolean;
+    function GravarItens(aDataSet:TClientDataSet):Boolean;
+    
+  published
+
+    property cdsItensLote: TClientDataSet read FcdsItensLote write FcdsItensLote;
+
+  end;
+
+implementation
+
+{ TLoteItens }
+
+procedure TLoteItens.CamposItensLote;
+begin
+  with FcdsItensLote do
+  begin
+    FieldDefs.Add('ID', ftInteger);
+    FieldDefs.Add('CODPRODUTO',ftString, 10);
+    FieldDefs.Add('DESCPRODUTO', ftString, 65);
+    FieldDefs.Add('UN',ftString, 2);
+    FieldDefs.Add('QTD',ftFloat);
+    FieldDefs.Add('PRECUSTO', ftCurrency);
+    FieldDefs.Add('TOTALCUSTO',ftCurrency);
+    FieldDefs.Add('CODFORNEC', ftString, 10);
+    FieldDefs.Add('DESCFORNEC',ftString, 65);
+    FieldDefs.Add('FABRICACAO',ftDate);
+    FieldDefs.Add('VALIDADE', ftDate);
+    FieldDefs.Add('IDLOTE', ftInteger);
+
+    CreateDataSet;
+    Open;
+  end;
+end;
+
+function TLoteItens.CarregarItensDataSet(aDataset: TClientDataSet): Boolean;
+begin
+//  aDataset.First;
+//
+//  while not (aDataset.Eof) do
+//  begin
+//
+//  end;
+
+end;
+
+constructor TLoteItens.Create;
+begin
+  FcdsItensLote  := TClientDataSet.Create(nil);
+
+  FSPLote_ItemIU := TSQLStoredProc.Create(nil);
+  FSPLote_ItemIU.SQLConnection := frmmodulo.conn;
+
+  Self.CamposItensLote;
+end;
+
+destructor TLoteItens.Destroy;
+begin
+  FreeAndNil(FcdsItensLote);
+  FreeAndNil(FSPLote_ItemIU);
+  inherited Destroy;
+end;
+
+function TLoteItens.GravarItens(aDataSet: TClientDataSet): Boolean;
+begin
+  try
+    Result := True;
+
+    aDataSet.First;
+
+    while not (aDataSet.Eof) do
+    begin
+      with FSPLote_ItemIU do
+      begin
+        ParamByName('ID').AsInteger           := aDataSet.FieldByName('ID').AsInteger;
+        ParamByName('CODPRODUTO').AsString    := aDataSet.FieldByName('CODPRODUTO').AsString;
+        ParamByName('SALDO').AsFloat          := aDataSet.FieldByName('QTD').AsFloat;
+        ParamByName('FABRICACAOPROD').Value   := aDataSet.FieldByName('FABRICACAO').Value;
+        ParamByName('PRECUSTO').AsCurrency    := aDataSet.FieldByName('PRECUSTO').AsCurrency;
+        ParamByName('CODFORNECEDOR').AsString := aDataSet.FieldByName('CODFORNEC').AsString;
+        ParamByName('VALIDADEPRODUTO').Value  := aDataSet.FieldByName('VALIDADE').Value;
+        ParamByName('ID_LOTE').AsInteger      := aDataSet.FieldByName('IDLOTE').AsInteger;
+        ExecProc;
+      end;
+
+
+      aDataSet.Next;
+    end;
+  except on E: Exception do
+  begin
+    Result := False;
+  end;
+
+  end;
+
+end;
+
+end.

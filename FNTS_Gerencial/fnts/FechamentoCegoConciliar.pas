@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvGlowButton, Vcl.ExtCtrls,
   Vcl.StdCtrls, Vcl.Mask, JvExMask, JvToolEdit, JvBaseEdits, AdvShapeButton,
   AdvMetroButton, AdvSmoothPanel, AdvSmoothExpanderPanel, Data.DB,
-  ZAbstractRODataset, ZAbstractDataset, ZDataset;
+  ZAbstractRODataset, ZAbstractDataset, ZDataset, acPNG;
 
 type
   TfrmFechamentoCegoConciliar = class(TForm)
@@ -53,6 +53,11 @@ type
     edCegoDebitoRea: TJvCalcEdit;
     edCegoCrediarioRea: TJvCalcEdit;
     edCegoConvenioRea: TJvCalcEdit;
+    Image1: TImage;
+    Label12: TLabel;
+    edcegoPix: TJvCalcEdit;
+    edcegoPixRea: TJvCalcEdit;
+    edCegoPixDif: TJvCalcEdit;
     procedure bfecharClick(Sender: TObject);
     procedure btnSalvarConciliarClick(Sender: TObject);
   private

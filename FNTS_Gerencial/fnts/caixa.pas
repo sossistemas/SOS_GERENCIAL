@@ -36,6 +36,8 @@ unit caixa;
   40 - VENDA CONVENIO
   41 - VENDA CONVENIO VIDALINK
   42 - VENDA FINANCEIRA
+  43 - VENDA PIX
+  44 - O.S. PIX
 }
 
 
@@ -48,7 +50,8 @@ uses
   PageView, Menus, ImgList, DBGrids, DBCtrls, AdvToolBar, AdvGlowButton,
   AdvShapeButton, UCBase, dxGDIPlusClasses, RzPanel,
   AdvReflectionImage, AdvMetroButton, AdvSmoothPanel,
-  AdvSmoothExpanderPanel, System.ImageList, JvExMask, JvToolEdit, JvBaseEdits;
+  AdvSmoothExpanderPanel, System.ImageList, JvExMask, JvToolEdit, JvBaseEdits,
+  RzButton, acPNG;
 
 type
   Tfrmcaixa = class(TForm)
@@ -71,9 +74,7 @@ type
     qrresumo: TZQuery;
     Bevel2: TBevel;
     Bevel3: TBevel;
-    Label8: TLabel;
     Bevel4: TBevel;
-    LSITOPERADOR: TLabel;
     PageView1: TPageView;
     PageSheet1: TPageSheet;
     PageSheet2: TPageSheet;
@@ -215,7 +216,7 @@ type
     balterar: TAdvGlowButton;
     bexcluir: TAdvGlowButton;
     brelatorio: TAdvGlowButton;
-    LMDButton1: TAdvGlowMenuButton;
+//    LMDButton1: TAdvGlowMenuButton;
     RzPanel1: TRzPanel;
     Label9: TLabel;
     LSITCAIXA: TLabel;
@@ -271,6 +272,12 @@ type
     qrcaixa_movHORA: TWideStringField;
     qrcaixa_movIDONLINE: TIntegerField;
     qrcaixa_movATB: TWideStringField;
+    LMDButton1: TRzMenuButton;
+    Label23: TLabel;
+    Image1: TImage;
+    rvenda_pix: TJvCalcEdit;
+    Label8: TLabel;
+    LSITOPERADOR: TLabel;
     procedure qrcaixa_movCalcFields(DataSet: TDataSet);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -384,6 +391,7 @@ begin
       qrcaixa_mov.FieldByName('descricao_movimento').asstring := 'PAGTO - BANCO';
     27:
       qrcaixa_mov.FieldByName('descricao_movimento').asstring := 'PAGTO - CHEQUE TERC.';
+    43:qrcaixa_mov.FieldByName('descricao_movimento').asstring := 'VENDA PIX';
 
   end;
 end;
@@ -417,7 +425,8 @@ begin
       '(select sum(VALOR) VALOR_12 from c000044 where ATB like :ATB AND movimento = 40 and data = :data_caixa), ' + // sum_12
       '(select sum(VALOR) VALOR_13 from c000044 where ATB like :ATB AND movimento = 01 and data = :data_caixa), ' + // sum_13
       '(select sum(VALOR) VALOR_14 from c000044 where ATB like :ATB AND movimento = 02 and data = :data_caixa), ' + // sum_14
-      '(select sum(VALOR) VALOR_15 from c000044 where ATB like :ATB AND movimento = 42 and data = :data_caixa) ' + // sum_15
+      '(select sum(VALOR) VALOR_15 from c000044 where ATB like :ATB AND movimento = 42 and data = :data_caixa), ' + // sum_15
+      '(select sum(VALOR) VALOR_16 from c000044 where ATB like :ATB AND movimento = 43 and data = :data_caixa) ' + // sum_16
       'from c000044 where data = :data_caixa AND ATB like :ATB');
 
     Qrsoma.Params.ParamByName('data_caixa').asdatetime := FRMMODULO.qrcaixa_operador.FieldByName('data').asdatetime;
@@ -427,14 +436,15 @@ begin
     RSAIDA.value := Qrsoma.FieldByName('total_saida').asfloat;
     RSALDO.value := RENTRADA.value - RSAIDA.value;
 
-    rvenda_dinheiro.value := Qrsoma.FieldByName('VALOR').asfloat;
-    rvenda_crediario.value := Qrsoma.FieldByName('VALOR_1').asfloat;
-    rvenda_chequeav.value := Qrsoma.FieldByName('VALOR_2').asfloat;
-    rvenda_chequeap.value := Qrsoma.FieldByName('VALOR_3').asfloat;
+    rvenda_dinheiro.value   := Qrsoma.FieldByName('VALOR').asfloat;
+    rvenda_crediario.value  := Qrsoma.FieldByName('VALOR_1').asfloat;
+    rvenda_chequeav.value   := Qrsoma.FieldByName('VALOR_2').asfloat;
+    rvenda_chequeap.value   := Qrsoma.FieldByName('VALOR_3').asfloat;
     rvenda_cartaocred.value := Qrsoma.FieldByName('VALOR_4').asfloat;
-    rvenda_cartaodeb.value := Qrsoma.FieldByName('VALOR_5').asfloat;
-    rvenda_convenio.value := Qrsoma.FieldByName('VALOR_12').asfloat;
+    rvenda_cartaodeb.value  := Qrsoma.FieldByName('VALOR_5').asfloat;
+    rvenda_convenio.value   := Qrsoma.FieldByName('VALOR_12').asfloat;
     rvenda_financeira.value := Qrsoma.FieldByName('VALOR_15').asfloat;
+    rvenda_pix.Value        := qrsoma.FieldByName('VALOR_16').AsFloat;
 
     ros_dinheiro.value := Qrsoma.FieldByName('VALOR_6').asfloat;
     ros_crediario.value := Qrsoma.FieldByName('VALOR_7').asfloat;
@@ -446,7 +456,7 @@ begin
     routro_entrada.value := Qrsoma.FieldByName('VALOR_13').asfloat;
     routro_saida.value := Qrsoma.FieldByName('VALOR_14').asfloat;
 
-    rvenda_total.value := rvenda_dinheiro.value + rvenda_crediario.value + rvenda_chequeav.value + rvenda_chequeap.value + rvenda_cartaocred.value + rvenda_cartaodeb.value + rvenda_convenio.value + rvenda_financeira.value;
+    rvenda_total.value := rvenda_dinheiro.value + rvenda_crediario.value + rvenda_chequeav.value + rvenda_chequeap.value + rvenda_cartaocred.value + rvenda_cartaodeb.value + rvenda_convenio.value + rvenda_financeira.value + rvenda_pix.Value;
     ros_total.value := ros_dinheiro.value + ros_crediario.value + ros_chequeav.value + ros_chequeap.value + ros_cartaocred.value + ros_cartaodeb.value;
 
     qrcaixa_mov.Close;
@@ -462,20 +472,18 @@ begin
 
     if FRMMODULO.qrcaixa_operador.FieldByName('SITUACAO').asinteger > 1 then
     begin
-      LSITOPERADOR.Caption := 'FECHADO';
-      LSITCAIXA.Caption := 'FECHADO';
+      LSITOPERADOR.Caption    := 'FECHADO';
+      LSITCAIXA.Caption       := 'FECHADO';
       LSITOPERADOR.Font.Color := CLRED;
-      LSITCAIXA.Font.Color := CLRED;
+      LSITCAIXA.Font.Color    := CLRED;
       bcaixafechadoClick(frmcaixa);
-
     end
     else
     begin
-
-      LSITOPERADOR.Caption := 'ABERTO';
-      LSITCAIXA.Caption := 'ABERTO';
+      LSITOPERADOR.Caption    := 'ABERTO';
+      LSITCAIXA.Caption       := 'ABERTO';
       LSITOPERADOR.Font.Color := CLBLUE;
-      LSITCAIXA.Font.Color := CLBLUE;
+      LSITCAIXA.Font.Color    := CLBLUE;
       bcaixaabertoClick(frmcaixa);
     end;
   end
@@ -488,13 +496,24 @@ begin
     Qrsoma.Close;
     Qrsoma.SQL.clear;
     Qrsoma.SQL.add('select sum(entrada) total_entrada, sum(saida) total_saida, ' + // total_entrada e total_saida
-      '(select sum(VALOR) VALOR    from c000044 where ATB like :ATB AND movimento = 03 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_1  from c000044 where ATB like :ATB AND movimento = 04 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_2  from c000044 where ATB like :ATB AND movimento = 05 and data = :data_caixa and codoperador = '''
-      + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_3  from c000044 where ATB like :ATB AND movimento = 06 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_4  from c000044 where ATB like :ATB AND movimento = 07 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-      '(select sum(VALOR) VALOR_5  from c000044 where ATB like :ATB AND movimento = 08 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_6  from c000044 where ATB like :ATB AND movimento = 18 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_7  from c000044 where ATB like :ATB AND movimento = 19 and data = :data_caixa and codoperador = '''
-      + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_8  from c000044 where ATB like :ATB AND movimento = 20 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_9  from c000044 where ATB like :ATB AND movimento = 21 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-      '(select sum(VALOR) VALOR_10 from c000044 where ATB like :ATB AND movimento = 22 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_11 from c000044 where ATB like :ATB AND movimento = 23 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_12 from c000044 where ATB like :ATB AND movimento = 40 and data = :data_caixa and codoperador = '''
-      + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_13 from c000044 where ATB like :ATB AND movimento = 01 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) VALOR_14 from c000044 where ATB like :ATB AND movimento = 02 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-      '(select sum(VALOR) VALOR_15 from c000044 where ATB like :ATB AND movimento = 42 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + ''') ' + 'from c000044 where ATB like :ATB AND data = :data_caixa AND ATB like :ATB and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''');
+      '(select sum(VALOR) VALOR    from c000044 where ATB like :ATB AND movimento = 03 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_1  from c000044 where ATB like :ATB AND movimento = 04 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_2  from c000044 where ATB like :ATB AND movimento = 05 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_3  from c000044 where ATB like :ATB AND movimento = 06 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_4  from c000044 where ATB like :ATB AND movimento = 07 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_5  from c000044 where ATB like :ATB AND movimento = 08 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_6  from c000044 where ATB like :ATB AND movimento = 18 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_7  from c000044 where ATB like :ATB AND movimento = 19 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_8  from c000044 where ATB like :ATB AND movimento = 20 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_9  from c000044 where ATB like :ATB AND movimento = 21 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_10 from c000044 where ATB like :ATB AND movimento = 22 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_11 from c000044 where ATB like :ATB AND movimento = 23 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_12 from c000044 where ATB like :ATB AND movimento = 40 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_13 from c000044 where ATB like :ATB AND movimento = 01 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_14 from c000044 where ATB like :ATB AND movimento = 02 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_15 from c000044 where ATB like :ATB AND movimento = 42 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+      '(select sum(VALOR) VALOR_16 from c000044 where ATB like :ATB AND movimento = 43 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + ''') '  +
+      'from c000044 where ATB like :ATB AND data = :data_caixa AND ATB like :ATB and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''');
     Qrsoma.Params.ParamByName('data_caixa').asdatetime := FRMMODULO.qrcaixa_operador.FieldByName('data').asdatetime;
     Qrsoma.ParamByName('atb').Value := ME_FiltraATB('TB_MOVIMENTO_CAIXA');
     Qrsoma.open;
@@ -502,13 +521,14 @@ begin
     RSAIDA.value := Qrsoma.FieldByName('total_saida').asfloat;
     RSALDO.value := RENTRADA.value - RSAIDA.value;
 
-    rvenda_dinheiro.value := Qrsoma.FieldByName('VALOR').asfloat;
-    rvenda_crediario.value := Qrsoma.FieldByName('VALOR_1').asfloat;
-    rvenda_chequeav.value := Qrsoma.FieldByName('VALOR_2').asfloat;
-    rvenda_chequeap.value := Qrsoma.FieldByName('VALOR_3').asfloat;
+    rvenda_dinheiro.value   := Qrsoma.FieldByName('VALOR').asfloat;
+    rvenda_crediario.value  := Qrsoma.FieldByName('VALOR_1').asfloat;
+    rvenda_chequeav.value   := Qrsoma.FieldByName('VALOR_2').asfloat;
+    rvenda_chequeap.value   := Qrsoma.FieldByName('VALOR_3').asfloat;
     rvenda_cartaocred.value := Qrsoma.FieldByName('VALOR_4').asfloat;
-    rvenda_cartaodeb.value := Qrsoma.FieldByName('VALOR_5').asfloat;
+    rvenda_cartaodeb.value  := Qrsoma.FieldByName('VALOR_5').asfloat;
     rvenda_financeira.value := Qrsoma.FieldByName('VALOR_15').asfloat;
+    rvenda_pix.value        := Qrsoma.FieldByName('VALOR_16').asfloat;
 
     ros_dinheiro.value := Qrsoma.FieldByName('VALOR_6').asfloat;
     ros_crediario.value := Qrsoma.FieldByName('VALOR_7').asfloat;
@@ -521,7 +541,7 @@ begin
     routro_entrada.value := Qrsoma.FieldByName('VALOR_13').asfloat;
     routro_saida.value := Qrsoma.FieldByName('VALOR_14').asfloat;
 
-    rvenda_total.value := rvenda_dinheiro.value + rvenda_crediario.value + rvenda_chequeav.value + rvenda_chequeap.value + rvenda_cartaocred.value + rvenda_cartaodeb.value + rvenda_convenio.value + rvenda_financeira.value;
+    rvenda_total.value := rvenda_dinheiro.value + rvenda_crediario.value + rvenda_chequeav.value + rvenda_chequeap.value + rvenda_cartaocred.value + rvenda_cartaodeb.value + rvenda_convenio.value + rvenda_financeira.value + rvenda_pix.Value;
     ros_total.value := ros_dinheiro.value;
 
     qrcaixa_mov.Close;
@@ -537,23 +557,21 @@ begin
 
     if FRMMODULO.qrcaixa_operador.FieldByName('SITUACAO').asstring = '1' then
     begin
-      LSITOPERADOR.Caption := 'ABERTO';
-      LSITCAIXA.Caption := 'ABERTO';
+      LSITOPERADOR.Caption    := 'ABERTO';
+      LSITCAIXA.Caption       := 'ABERTO';
       LSITOPERADOR.Font.Color := CLBLUE;
-      LSITCAIXA.Font.Color := CLBLUE;
+      LSITCAIXA.Font.Color    := CLBLUE;
       bcaixaabertoClick(frmcaixa);
     end
     else
     begin
-      LSITCAIXA.Caption := 'ABERTO';
-      LSITCAIXA.Font.Color := CLBLUE;
-      LSITOPERADOR.Caption := 'FECHADO';
+      LSITOPERADOR.Caption    := 'FECHADO';
+      LSITCAIXA.Caption       := 'ABERTO';
+      LSITCAIXA.Font.Color    := CLBLUE;
       LSITOPERADOR.Font.Color := CLRED;
       bcaixafechadoClick(frmcaixa);
     end;
-
   end;
-
 end;
 
 procedure Tfrmcaixa.PageView1Change(Sender: TObject);
@@ -585,7 +603,8 @@ begin
         '(select sum(VALOR) valor_12 from c000044 where ATB like :ATB AND movimento = 40 and data = :data_caixa), ' + // sum_12
         '(select sum(VALOR) valor_13 from c000044 where ATB like :ATB AND movimento = 01 and data = :data_caixa), ' + // sum_13
         '(select sum(VALOR) valor_14 from c000044 where ATB like :ATB AND movimento = 02 and data = :data_caixa), ' + // sum_14
-        '(select sum(VALOR) valor_15 from c000044 where ATB like :ATB AND movimento = 42 and data = :data_caixa) ' + // sum_15
+        '(select sum(VALOR) valor_15 from c000044 where ATB like :ATB AND movimento = 42 and data = :data_caixa), ' + // sum_15
+        '(select sum(VALOR) valor_16 from c000044 where ATB like :ATB AND movimento = 43 and data = :data_caixa) ' + // sum_16
         'from c000044 where data = :data_caixa AND ATB like :ATB');
 
       Qrsoma.Params.ParamByName('data_caixa').asdatetime := FRMMODULO.qrcaixa_operador.FieldByName('data').asdatetime;
@@ -595,14 +614,15 @@ begin
       RSAIDA.value := Qrsoma.FieldByName('total_saida').asfloat;
       RSALDO.value := RENTRADA.value - RSAIDA.value;
 
-      rvenda_dinheiro.value := Qrsoma.FieldByName('valor').asfloat;
-      rvenda_crediario.value := Qrsoma.FieldByName('valor_1').asfloat;
-      rvenda_chequeav.value := Qrsoma.FieldByName('valor_2').asfloat;
-      rvenda_chequeap.value := Qrsoma.FieldByName('valor_3').asfloat;
+      rvenda_dinheiro.value   := Qrsoma.FieldByName('valor').asfloat;
+      rvenda_crediario.value  := Qrsoma.FieldByName('valor_1').asfloat;
+      rvenda_chequeav.value   := Qrsoma.FieldByName('valor_2').asfloat;
+      rvenda_chequeap.value   := Qrsoma.FieldByName('valor_3').asfloat;
       rvenda_cartaocred.value := Qrsoma.FieldByName('valor_4').asfloat;
-      rvenda_cartaodeb.value := Qrsoma.FieldByName('valor_5').asfloat;
-      rvenda_convenio.value := Qrsoma.FieldByName('valor_12').asfloat;
+      rvenda_cartaodeb.value  := Qrsoma.FieldByName('valor_5').asfloat;
+      rvenda_convenio.value   := Qrsoma.FieldByName('valor_12').asfloat;
       rvenda_financeira.value := Qrsoma.FieldByName('valor_15').asfloat;
+      rvenda_pix.value        := Qrsoma.FieldByName('valor_16').asfloat;
 
       ros_dinheiro.value := Qrsoma.FieldByName('valor_6').asfloat;
       ros_crediario.value := Qrsoma.FieldByName('valor_7').asfloat;
@@ -614,7 +634,7 @@ begin
       routro_entrada.value := Qrsoma.FieldByName('valor_13').asfloat;
       routro_saida.value := Qrsoma.FieldByName('valor_14').asfloat;
 
-      rvenda_total.value := rvenda_dinheiro.value + rvenda_crediario.value + rvenda_chequeav.value + rvenda_chequeap.value + rvenda_cartaocred.value + rvenda_cartaodeb.value + rvenda_convenio.value + rvenda_financeira.value;
+      rvenda_total.value := rvenda_dinheiro.value + rvenda_crediario.value + rvenda_chequeav.value + rvenda_chequeap.value + rvenda_cartaocred.value + rvenda_cartaodeb.value + rvenda_convenio.value + rvenda_financeira.value + rvenda_pix.Value;
       ros_total.value := ros_dinheiro.value + ros_crediario.value + ros_chequeav.value + ros_chequeap.value + ros_cartaocred.value + ros_cartaodeb.value;
 
       qrcaixa_mov.Close;
@@ -630,24 +650,20 @@ begin
 
       if FRMMODULO.qrcaixa_operador.FieldByName('SITUACAO').asinteger > 1 then
       begin
-        LSITOPERADOR.Caption := 'FECHADO';
-        LSITCAIXA.Caption := 'FECHADO';
+        LSITOPERADOR.Caption    := 'FECHADO';
+        LSITCAIXA.Caption       := 'FECHADO';
         LSITOPERADOR.Font.Color := CLRED;
-        LSITCAIXA.Font.Color := CLRED;
+        LSITCAIXA.Font.Color    := CLRED;
         bcaixafechadoClick(frmcaixa);
-
       end
       else
       begin
-
-        LSITOPERADOR.Caption := 'ABERTO';
-        LSITCAIXA.Caption := 'ABERTO';
+        LSITOPERADOR.Caption    := 'ABERTO';
+        LSITCAIXA.Caption       := 'ABERTO';
         LSITOPERADOR.Font.Color := CLBLUE;
-        LSITCAIXA.Font.Color := CLBLUE;
+        LSITCAIXA.Font.Color    := CLBLUE;
         bcaixaabertoClick(frmcaixa);
-
       end;
-
     end
     else
     // caixa individual  //*********************************************************
@@ -658,14 +674,25 @@ begin
 
       Qrsoma.Close;
       Qrsoma.SQL.clear;
-      Qrsoma.SQL.add('select sum(entrada) total_entrada, sum(saida) total_saida, ' + '(select sum(VALOR) valor    from c000044 where ATB like :ATB AND movimento = 03 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) valor_1  from c000044 where ATB like :ATB AND movimento = 04 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-        '(select sum(VALOR) valor_2  from c000044 where ATB like :ATB AND movimento = 05 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) valor_3  from c000044 where ATB like :ATB AND movimento = 06 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-        '(select sum(VALOR) valor_4  from c000044 where ATB like :ATB AND movimento = 07 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) valor_5  from c000044 where ATB like :ATB AND movimento = 08 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-        '(select sum(VALOR) valor_6  from c000044 where ATB like :ATB AND movimento = 18 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) valor_7  from c000044 where ATB like :ATB AND movimento = 19 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-        '(select sum(VALOR) valor_8  from c000044 where ATB like :ATB AND movimento = 20 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) valor_9  from c000044 where ATB like :ATB AND movimento = 21 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-        '(select sum(VALOR) valor_10 from c000044 where ATB like :ATB AND movimento = 22 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) valor_11 from c000044 where ATB like :ATB AND movimento = 23 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-        '(select sum(VALOR) valor_12 from c000044 where ATB like :ATB AND movimento = 40 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) valor_13 from c000044 where ATB like :ATB AND movimento = 01 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
-        '(select sum(VALOR) valor_14 from c000044 where ATB like :ATB AND movimento = 02 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' + '(select sum(VALOR) valor_15 from c000044 where ATB like :ATB AND movimento = 42 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + ''')  ' + 'from c000044 where ATB like :ATB AND data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''');
+      Qrsoma.SQL.add('select sum(entrada) total_entrada, sum(saida) total_saida, ' +
+        '(select sum(VALOR) valor    from c000044 where ATB like :ATB AND movimento = 03 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_1  from c000044 where ATB like :ATB AND movimento = 04 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_2  from c000044 where ATB like :ATB AND movimento = 05 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_3  from c000044 where ATB like :ATB AND movimento = 06 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_4  from c000044 where ATB like :ATB AND movimento = 07 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_5  from c000044 where ATB like :ATB AND movimento = 08 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_6  from c000044 where ATB like :ATB AND movimento = 18 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_7  from c000044 where ATB like :ATB AND movimento = 19 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_8  from c000044 where ATB like :ATB AND movimento = 20 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_9  from c000044 where ATB like :ATB AND movimento = 21 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_10 from c000044 where ATB like :ATB AND movimento = 22 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_11 from c000044 where ATB like :ATB AND movimento = 23 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_12 from c000044 where ATB like :ATB AND movimento = 40 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_13 from c000044 where ATB like :ATB AND movimento = 01 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_14 from c000044 where ATB like :ATB AND movimento = 02 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_15 from c000044 where ATB like :ATB AND movimento = 42 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''), ' +
+        '(select sum(VALOR) valor_16 from c000044 where ATB like :ATB AND movimento = 43 and data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + ''') ' +
+        'from c000044 where ATB like :ATB AND data = :data_caixa and codoperador = ''' + FRMMODULO.qrcaixa_operador.FieldByName('codigo').asstring + '''');
       Qrsoma.Params.ParamByName('data_caixa').asdatetime := FRMMODULO.qrcaixa_operador.FieldByName('data').asdatetime;
       Qrsoma.ParamByName('atb').Value := ME_FiltraATB('TB_MOVIMENTO_CAIXA');
       Qrsoma.open;
@@ -673,14 +700,15 @@ begin
       RSAIDA.value := Qrsoma.FieldByName('total_saida').asfloat;
       RSALDO.value := RENTRADA.value - RSAIDA.value;
 
-      rvenda_dinheiro.value := Qrsoma.FieldByName('valor').asfloat;
-      rvenda_crediario.value := Qrsoma.FieldByName('valor_1').asfloat;
-      rvenda_chequeav.value := Qrsoma.FieldByName('valor_2').asfloat;
-      rvenda_chequeap.value := Qrsoma.FieldByName('valor_3').asfloat;
+      rvenda_dinheiro.value   := Qrsoma.FieldByName('valor').asfloat;
+      rvenda_crediario.value  := Qrsoma.FieldByName('valor_1').asfloat;
+      rvenda_chequeav.value   := Qrsoma.FieldByName('valor_2').asfloat;
+      rvenda_chequeap.value   := Qrsoma.FieldByName('valor_3').asfloat;
       rvenda_cartaocred.value := Qrsoma.FieldByName('valor_4').asfloat;
-      rvenda_cartaodeb.value := Qrsoma.FieldByName('valor_5').asfloat;
-      rvenda_convenio.value := Qrsoma.FieldByName('valor_12').asfloat;
+      rvenda_cartaodeb.value  := Qrsoma.FieldByName('valor_5').asfloat;
+      rvenda_convenio.value   := Qrsoma.FieldByName('valor_12').asfloat;
       rvenda_financeira.value := Qrsoma.FieldByName('valor_15').asfloat;
+      rvenda_pix.value        := Qrsoma.FieldByName('valor_16').asfloat;
 
       ros_dinheiro.value := Qrsoma.FieldByName('valor_6').asfloat;
       ros_crediario.value := Qrsoma.FieldByName('valor_7').asfloat;
@@ -692,7 +720,7 @@ begin
       routro_entrada.value := Qrsoma.FieldByName('valor_13').asfloat;
       routro_saida.value := Qrsoma.FieldByName('valor_14').asfloat;
 
-      rvenda_total.value := rvenda_dinheiro.value + rvenda_crediario.value + rvenda_chequeav.value + rvenda_chequeap.value + rvenda_cartaocred.value + rvenda_cartaodeb.value + rvenda_convenio.value + rvenda_financeira.value;
+      rvenda_total.value := rvenda_dinheiro.value + rvenda_crediario.value + rvenda_chequeav.value + rvenda_chequeap.value + rvenda_cartaocred.value + rvenda_cartaodeb.value + rvenda_convenio.value + rvenda_financeira.value + rvenda_pix.Value;
       ros_total.value := ros_dinheiro.value;
 
       qrcaixa_mov.Close;
@@ -708,18 +736,17 @@ begin
 
       if FRMMODULO.qrcaixa_operador.FieldByName('SITUACAO').asstring = '1' then
       begin
-        LSITOPERADOR.Caption := 'ABERTO';
-        LSITCAIXA.Caption := 'ABERTO';
+        LSITOPERADOR.Caption    := 'ABERTO';
+        LSITCAIXA.Caption       := 'ABERTO';
         LSITOPERADOR.Font.Color := CLBLUE;
-        LSITCAIXA.Font.Color := CLBLUE;
+        LSITCAIXA.Font.Color    := CLBLUE;
         bcaixaabertoClick(frmcaixa);
       end
       else
       begin
-
-        LSITCAIXA.Caption := 'ABERTO';
-        LSITCAIXA.Font.Color := CLBLUE;
-        LSITOPERADOR.Caption := 'FECHADO';
+        LSITOPERADOR.Caption    := 'FECHADO';
+        LSITCAIXA.Caption       := 'ABERTO';
+        LSITCAIXA.Font.Color    := CLBLUE;
         LSITOPERADOR.Font.Color := CLRED;
         bcaixafechadoClick(frmcaixa);
       end;
@@ -1296,52 +1323,62 @@ end;
 procedure Tfrmcaixa.btnConciliarClick(Sender: TObject);
 begin
   Application.CreateForm(TfrmFechamentoCegoConciliar, frmFechamentoCegoConciliar);
-  with frmFechamentoCegoConciliar do
-  begin
-    Qrsoma.Close;
-    Qrsoma.SQL.clear;
-    Qrsoma.SQL.add('select * from FECHAMENTO_CEGO where ATB like :ATB AND data = :Data and operador = :operador and conciliado = ' + QuotedStr('N'));
-    Qrsoma.ParamByName('Data').AsDateTime := FRMMODULO.qrcaixa_operador.FieldByName('data').asdatetime;
-    Qrsoma.ParamByName('operador').AsInteger := FRMMODULO.qrcaixa_operador.FieldByName('codigo').AsInteger;
-    Qrsoma.ParamByName('atb').Value := ME_FiltraATB('TB_FECHAMENTO_CEGO');
-    Qrsoma.Open;
-    if not Qrsoma.IsEmpty then
+
+  try
+    with frmFechamentoCegoConciliar do
     begin
-      edCegoDinheiro.Value := Qrsoma.FieldByName('DINHEIRO').AsFloat;
-      edCegoCheque.Value := Qrsoma.FieldByName('CHEQUE').AsFloat;
-      edCegoCredito.Value := Qrsoma.FieldByName('cartao_credito').AsFloat;
-      edCegoDebito.Value := Qrsoma.FieldByName('cartao_debito').AsFloat;
-      edCegoCrediario.Value := Qrsoma.FieldByName('crediario').AsFloat;
-      edCegoConvenio.Value := Qrsoma.FieldByName('convenio').AsFloat;
-    end
-    else
-    begin
-      edCegoDinheiro.Value := 0;
-      edCegoCheque.Value := 0;
-      edCegoCredito.Value := 0;
-      edCegoDebito.Value := 0;
-      edCegoCrediario.Value := 0;
-      edCegoConvenio.Value := 0;
+      Qrsoma.Close;
+      Qrsoma.SQL.clear;
+      Qrsoma.SQL.add('select * from FECHAMENTO_CEGO where ATB like :ATB AND data = :Data and operador = :operador and conciliado = ' + QuotedStr('N'));
+      Qrsoma.ParamByName('Data').AsDateTime := FRMMODULO.qrcaixa_operador.FieldByName('data').asdatetime;
+      Qrsoma.ParamByName('operador').AsInteger := FRMMODULO.qrcaixa_operador.FieldByName('codigo').AsInteger;
+      Qrsoma.ParamByName('atb').Value := ME_FiltraATB('TB_FECHAMENTO_CEGO');
+      Qrsoma.Open;
+      if not Qrsoma.IsEmpty then
+      begin
+        edCegoDinheiro.Value  := Qrsoma.FieldByName('DINHEIRO').AsFloat;
+        edCegoCheque.Value    := Qrsoma.FieldByName('CHEQUE').AsFloat;
+        edCegoCredito.Value   := Qrsoma.FieldByName('cartao_credito').AsFloat;
+        edCegoDebito.Value    := Qrsoma.FieldByName('cartao_debito').AsFloat;
+        edCegoCrediario.Value := Qrsoma.FieldByName('crediario').AsFloat;
+        edCegoConvenio.Value  := Qrsoma.FieldByName('convenio').AsFloat;
+        edcegoPix.Value       := Qrsoma.FieldByName('Pix').AsFloat;
+      end
+      else
+      begin
+        edCegoDinheiro.Value  := 0;
+        edCegoCheque.Value    := 0;
+        edCegoCredito.Value   := 0;
+        edCegoDebito.Value    := 0;
+        edCegoCrediario.Value := 0;
+        edCegoConvenio.Value  := 0;
+        edcegoPix.Value       := 0;
+      end;
+
+      edCegoDinheiroRea.Value  := rvenda_dinheiro.value;
+      edCegoChequeRea.Value    := rvenda_chequeav.value + rvenda_chequeap.value;
+      edCegoCreditoRea.Value   := rvenda_cartaocred.value;
+      edCegoDebitoRea.Value    := rvenda_cartaodeb.value;
+      edCegoCrediarioRea.Value := rvenda_crediario.value;
+      edCegoConvenioRea.Value  := rvenda_convenio.value;
+      edcegoPixRea.Value       := rvenda_pix.Value;
+
+      edCegoDinheiroDif.Value  := edCegoDinheiro.Value - rvenda_dinheiro.value;
+      edCegoChequeDif.Value    := edCegoCheque.Value - (rvenda_chequeav.Value + rvenda_chequeap.Value);
+      edCegoCreditoDif.Value   := edCegoCredito.Value - rvenda_cartaocred.Value;
+      edCegoDebitoDif.Value    := edCegoDebito.Value - rvenda_cartaodeb.Value;
+      edCegoCrediarioDif.Value := edCegoCrediario.Value - rvenda_crediario.Value;
+      edCegoConvenioDif.Value  := edCegoConvenio.Value - rvenda_convenio.Value;
+      edCegoPixDif.Value       := edcegoPix.Value - rvenda_pix.Value;
+
+      edCegoDifTotal.Value := edCegoDinheiroDif.Value + edCegoChequeDif.Value + edCegoCreditoDif.Value + edCegoDebitoDif.Value + edCegoCrediarioDif.Value + edCegoConvenioDif.Value + edCegoPixDif.Value;
+      btnSalvarConciliar.Enabled := Qrsoma.FieldByName('VERIFICADO').AsString = 'N';
+      ShowModal;
     end;
-    edCegoDinheiroRea.Value := rvenda_dinheiro.value;
-    edCegoChequeRea.Value := rvenda_chequeav.value + rvenda_chequeap.value;
-    edCegoCreditoRea.Value := rvenda_cartaocred.value;
-    edCegoDebitoRea.Value := rvenda_cartaodeb.value;
-    edCegoCrediarioRea.Value := rvenda_crediario.value;
-    edCegoConvenioRea.Value := rvenda_convenio.value;
-
-    edCegoDinheiroDif.Value := edCegoDinheiro.Value - rvenda_dinheiro.value;
-    edCegoChequeDif.Value := edCegoCheque.Value - (rvenda_chequeav.Value + rvenda_chequeap.Value);
-    edCegoCreditoDif.Value := edCegoCredito.Value - rvenda_cartaocred.Value;
-    edCegoDebitoDif.Value := edCegoDebito.Value - rvenda_cartaodeb.Value;
-    edCegoCrediarioDif.Value := edCegoCrediario.Value - rvenda_crediario.Value;
-    edCegoConvenioDif.Value := edCegoConvenio.Value - rvenda_convenio.Value;
-
-    edCegoDifTotal.Value := edCegoDinheiroDif.Value + edCegoChequeDif.Value + edCegoCreditoDif.Value + edCegoDebitoDif.Value + edCegoCrediarioDif.Value + edCegoConvenioDif.Value;
-    btnSalvarConciliar.Enabled := Qrsoma.FieldByName('VERIFICADO').AsString = 'N';
-    ShowModal;
+  finally
+    FreeAndNil(frmFechamentoCegoConciliar);
   end;
-  FreeAndNil(frmFechamentoCegoConciliar);
+
 end;
 
 procedure Tfrmcaixa.AdvMetroButton1Click(Sender: TObject);

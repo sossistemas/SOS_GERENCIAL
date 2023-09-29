@@ -4,7 +4,7 @@ object frmos_fechamento: Tfrmos_fechamento
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'O.S. | Fechamento'
-  ClientHeight = 450
+  ClientHeight = 470
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -28,7 +28,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Shape6: TShape
     Left = 7
-    Top = 292
+    Top = 316
     Width = 145
     Height = 53
     Pen.Color = 8623776
@@ -110,7 +110,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Label10: TLabel
     Left = 15
-    Top = 297
+    Top = 321
     Width = 47
     Height = 13
     Caption = 'Credi'#225'rio:'
@@ -153,7 +153,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object ecrediario: TShape
     Left = 151
-    Top = 292
+    Top = 316
     Width = 145
     Height = 53
     Pen.Color = 8623776
@@ -204,7 +204,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Shape15: TShape
     Left = 7
-    Top = 344
+    Top = 368
     Width = 145
     Height = 25
     Brush.Color = 11796479
@@ -212,7 +212,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Shape16: TShape
     Left = 151
-    Top = 344
+    Top = 368
     Width = 145
     Height = 25
     Brush.Color = 11796479
@@ -220,7 +220,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Label13: TLabel
     Left = 15
-    Top = 349
+    Top = 373
     Width = 66
     Height = 13
     Caption = 'SOMAT'#211'RIO:'
@@ -228,7 +228,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Shape17: TShape
     Left = 7
-    Top = 368
+    Top = 392
     Width = 145
     Height = 25
     Brush.Color = 14811135
@@ -236,7 +236,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Shape18: TShape
     Left = 151
-    Top = 368
+    Top = 392
     Width = 145
     Height = 25
     Brush.Color = 14811135
@@ -244,7 +244,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Label14: TLabel
     Left = 15
-    Top = 373
+    Top = 397
     Width = 61
     Height = 13
     Caption = 'DIFEREN'#199'A:'
@@ -252,7 +252,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Label15: TLabel
     Left = 14
-    Top = 312
+    Top = 336
     Width = 112
     Height = 12
     Caption = 'LIMITE DISPON'#205'VEL'
@@ -266,7 +266,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object Bevel2: TBevel
     Left = 0
-    Top = 398
+    Top = 418
     Width = 302
     Height = 3
     Align = alBottom
@@ -278,6 +278,28 @@ object frmos_fechamento: Tfrmos_fechamento
     Width = 302
     Height = 3
     Align = alTop
+  end
+  object Shape7: TShape
+    Left = 7
+    Top = 292
+    Width = 145
+    Height = 25
+    Pen.Color = 8623776
+  end
+  object ePix: TShape
+    Left = 151
+    Top = 292
+    Width = 145
+    Height = 25
+    Pen.Color = 8623776
+  end
+  object Label16: TLabel
+    Left = 15
+    Top = 297
+    Width = 18
+    Height = 13
+    Caption = 'Pix:'
+    Transparent = True
   end
   object Panel3: TPanel
     Left = 0
@@ -471,7 +493,7 @@ object frmos_fechamento: Tfrmos_fechamento
       ParentBackground = False
       ParentFont = False
       TabOrder = 6
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object rdesconto2: TJvCalcEdit
       Left = 194
@@ -745,7 +767,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object rcrediario: TJvCalcEdit
     Left = 168
-    Top = 311
+    Top = 335
     Width = 121
     Height = 21
     Margins.Top = 0
@@ -760,7 +782,7 @@ object frmos_fechamento: Tfrmos_fechamento
     NumGlyphs = 2
     ParentFont = False
     ShowButton = False
-    TabOrder = 6
+    TabOrder = 7
     DecimalPlacesAlwaysShown = False
     OnEnter = rcrediarioEnter
     OnExit = rcrediarioExit
@@ -768,7 +790,7 @@ object frmos_fechamento: Tfrmos_fechamento
   end
   object rsoma: TJvCalcEdit
     Left = 168
-    Top = 347
+    Top = 371
     Width = 121
     Height = 21
     Margins.Left = 0
@@ -785,12 +807,12 @@ object frmos_fechamento: Tfrmos_fechamento
     NumGlyphs = 2
     ParentFont = False
     ShowButton = False
-    TabOrder = 7
+    TabOrder = 8
     DecimalPlacesAlwaysShown = False
   end
   object rdiferenca: TJvCalcEdit
     Left = 168
-    Top = 371
+    Top = 395
     Width = 121
     Height = 21
     Margins.Top = 0
@@ -806,28 +828,28 @@ object frmos_fechamento: Tfrmos_fechamento
     NumGlyphs = 2
     ParentFont = False
     ShowButton = False
-    TabOrder = 8
+    TabOrder = 9
     DecimalPlacesAlwaysShown = False
   end
   object FlatPanel2: TFlatPanel
     Left = 14
-    Top = 324
+    Top = 348
     Width = 113
     Height = 16
     Caption = 'R$ 1.500,00'
     ParentColor = True
-    TabOrder = 9
+    TabOrder = 10
   end
   object Panel4: TPanel
     Left = 0
-    Top = 401
+    Top = 421
     Width = 302
     Height = 49
     Align = alBottom
     BevelOuter = bvNone
     Color = clWhite
     ParentBackground = False
-    TabOrder = 10
+    TabOrder = 11
     object bgravar: TAdvGlowButton
       Left = 42
       Top = 6
@@ -1077,7 +1099,7 @@ object frmos_fechamento: Tfrmos_fechamento
     BevelOuter = bvNone
     Color = 11647157
     ParentBackground = False
-    TabOrder = 11
+    TabOrder = 12
     object rcaixa: TCheckBox
       Left = 8
       Top = 2
@@ -1094,6 +1116,29 @@ object frmos_fechamento: Tfrmos_fechamento
       TabOrder = 0
       OnClick = rcaixaClick
     end
+  end
+  object rPix: TJvCalcEdit
+    Left = 168
+    Top = 295
+    Width = 121
+    Height = 21
+    Margins.Top = 0
+    AutoSize = False
+    BorderStyle = bsNone
+    DisplayFormat = '###,###,##0.00'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    NumGlyphs = 2
+    ParentFont = False
+    ShowButton = False
+    TabOrder = 6
+    DecimalPlacesAlwaysShown = False
+    OnEnter = rPixEnter
+    OnExit = rPixExit
+    OnKeyPress = rPixKeyPress
   end
   object PopupMenu1: TPopupMenu
     Left = 8
@@ -1119,8 +1164,8 @@ object frmos_fechamento: Tfrmos_fechamento
     Font.Name = 'Tahoma'
     Font.Style = []
     HintHelpText = 'Pressione F1 para obter ajuda...'
-    Version = '1.7.0.1'
-    Left = 8
-    Top = 248
+    Version = '1.7.0.4'
+    Left = 136
+    Top = 216
   end
 end

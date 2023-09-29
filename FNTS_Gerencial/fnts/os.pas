@@ -1033,7 +1033,9 @@ begin
       FRMMODULO.cdsos.Cancel;
     FRMMODULO.Conexao.Rollback;
   end;
+
   Action := cafree;
+  Self   := nil;
 end;
 
 procedure Tfrmos.Laudo1Click(Sender: TObject);
@@ -1053,7 +1055,6 @@ var
   continua: string;
   i: integer;
 begin
-
   if not BGRAVAR.Visible then
     EXIT;
 
@@ -1111,10 +1112,22 @@ begin
   begin // ABERTA
     if APPLICATION.MESSAGEBOX('Confirma o encerramento desta O.S.?', 'Atenção', mb_yesno + mb_iconquestion) = Idno then
       exit;
+
     if combosituacao.Text = 'ABERTA - Aguardando Confirmação' then
+    begin
+      if FRMMODULO.cdsos.STATE <> dsEdit then
+        FRMMODULO.cdsos.Edit;
+
       frmmodulo.cdsos.fieldbyname('st').asinteger := 2;
+    end;
+
     if combosituacao.Text = 'ABERTA - Executando Serviços' then
+    begin
+      if FRMMODULO.cdsos.STATE <> dsEdit then
+        FRMMODULO.cdsos.Edit;
+
       frmmodulo.cdsos.fieldbyname('st').asinteger := 3;
+    end;
 
     if FRMMODULO.cdsos.STATE = DSINSERT then
       FRMMODULO.cdsos.FIELDBYNAME('HORA').ASSTRING := TIMETOSTR(TIME);
@@ -1134,7 +1147,7 @@ begin
 
     FRMMODULO.Conexao.Commit;
     FINALIZADO := TRUE;
-    FRMMODULO.cdsos.Prior;
+    //FRMMODULO.cdsos.Prior;
     CLOSE;
   end;
 end;
@@ -1812,6 +1825,11 @@ begin
     item := item + 1;
     qros_produtos.next;
   end;
+
+
+  if frmmodulo.cdsos.State <> dsEdit then
+    frmmodulo.cdsos.Edit;
+
   frmmodulo.cdsos.fieldbyname('produto_subtotal').asfloat := total;
   frmmodulo.cdsos.fieldbyname('produto_total').asfloat := frmmodulo.cdsos.fieldbyname('produto_subtotal').asfloat - frmmodulo.cdsos.fieldbyname('produto_desconto').asfloat;
   qros_produtos.Refresh;
@@ -1822,7 +1840,6 @@ begin
 
   if application.messagebox('Confirma a exclusão do registro?', 'Aviso', mb_yesno + MB_ICONWARNING) = idyes then
   begin
-
     if qros_produtos.fieldbyname('serial').asstring <> '' then
     begin
       frmmodulo.qrserial_produto.Open;
@@ -1835,6 +1852,9 @@ begin
         frmmodulo.qrserial_produto.ExecSQL;
       end;
     end;
+
+    if frmmodulo.cdsos.State <> dsEdit then
+      frmmodulo.cdsos.Edit;
 
     frmmodulo.cdsos.fieldbyname('produto_subtotal').ASFLOAT := frmmodulo.cdsos.fieldbyname('produto_subtotal').ASFLOAT - qros_produtos.fieldbyname('total').asfloat;
 

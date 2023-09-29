@@ -1,0 +1,81 @@
+unit uLote;
+
+interface
+
+uses ZDataset;
+
+type
+  TLote = class(TObject)
+  private
+    FDESCRED: string;
+    FID: integer;
+    FDATAFIM: TDate;
+    FSTATUS: string;
+    FDATAINICIO: TDate;
+    FHORAFIM: TTime;
+    FHORAINICIO: TTime;
+
+    qryAUX: TZQuery;
+    procedure SetDATAFIM(const Value: TDate);
+    procedure SetDATAINICIO(const Value: TDate);
+    procedure SetDESCRED(const Value: string);
+    procedure SetHORAFIM(const Value: TTime);
+    procedure SetHORAINICIO(const Value: TTime);
+    procedure SetID(const Value: integer);
+    procedure SetSTATUS(const Value: string);
+    { private declarations }
+  protected
+    { protected declarations }
+  public
+    { public declarations }
+
+  published
+    property ID         : integer  read FID         write SetID;
+    property DESCRED    : string   read FDESCRED    write SetDESCRED;
+    property DATAINICIO : Tdate    read FDATAINICIO write SetDATAINICIO;
+    property HORAINICIO : TTime    read FHORAINICIO write SetHORAINICIO;
+    property DATAFIM    : TDate    read FDATAFIM    write SetDATAFIM;
+    property HORAFIM    : TTime    read FHORAFIM    write SetHORAFIM;
+    property STATUS     : string   read FSTATUS     write SetSTATUS;
+  end;
+
+implementation
+
+{ TLote }
+
+procedure TLote.SetDATAFIM(const Value: Tdate);
+begin
+  FDATAFIM := Value;
+end;
+
+procedure TLote.SetDATAINICIO(const Value: Tdate);
+begin
+  FDATAINICIO := Value;
+end;
+
+procedure TLote.SetDESCRED(const Value: string);
+begin
+  FDESCRED := Value;
+end;
+
+procedure TLote.SetHORAFIM(const Value: Ttime);
+begin
+  FHORAFIM := Value;
+end;
+
+procedure TLote.SetHORAINICIO(const Value: Ttime);
+begin
+  FHORAINICIO := Value;
+end;
+
+procedure TLote.SetID(const Value: integer);
+begin
+  FID := Value;
+end;
+
+procedure TLote.SetSTATUS(const Value: string);
+begin
+  FSTATUS := Value;
+end;
+
+end.

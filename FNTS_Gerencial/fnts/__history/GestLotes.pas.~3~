@@ -1,0 +1,50 @@
+unit GestLotes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RzDBEdit, RzDBBnEd, Vcl.StdCtrls,
+  JvExMask, JvToolEdit, Vcl.Mask, RzEdit, RzBtnEdt, AdvGlowButton,
+  AdvMetroButton, Vcl.ExtCtrls;
+
+type
+  TfrmLotes = class(TForm)
+    Panel2: TPanel;
+    Label20: TLabel;
+    AdvMetroButton1: TAdvMetroButton;
+    Panel1: TPanel;
+    bincluir: TAdvGlowButton;
+    bcancelar: TAdvGlowButton;
+    bgravar: TAdvGlowButton;
+    bexcluir: TAdvGlowButton;
+    Panel3: TPanel;
+    Label8: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label1: TLabel;
+    efornecedor: TRzButtonEdit;
+    DateEdit1: TJvDateEdit;
+    DateEdit2: TJvDateEdit;
+    ENUMERO: TEdit;
+    bfiltrar: TAdvGlowButton;
+    Label5: TLabel;
+    ecodproduto: TRzDBButtonEdit;
+    Label6: TLabel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmLotes: TfrmLotes;
+
+implementation
+
+uses modulo;
+
+{$R *.dfm}
+
+end.

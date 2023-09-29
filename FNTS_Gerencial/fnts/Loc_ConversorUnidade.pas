@@ -10,7 +10,8 @@ uses
   cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, cxButtonEdit,
   Vcl.Menus, cxButtons, ZAbstractRODataset, ZAbstractDataset, ZDataset,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxClasses, cxGridCustomView, cxGrid;
+  cxClasses, cxGridCustomView, cxGrid, dxSkinsCore, dxSkinsDefaultPainters,
+  dxDateRanges, cxDataControllerConditionalFormattingRulesManagerDialog;
 
 type
   tRetLocConversaoUnidade = record

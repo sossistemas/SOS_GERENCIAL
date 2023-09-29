@@ -80,8 +80,8 @@ uses
   lista_transportador2 in 'fnts\lista_transportador2.pas' {frmlista_transportador2},
   xloc_funcionario in 'fnts\xloc_funcionario.pas' {frmxloc_Funcionario},
   lista_venda2 in 'fnts\lista_venda2.pas' {frmlista_venda2},
-	lista_produto2 in 'fnts\lista_produto2.pas' {frmlista_produto2},
-	extenso1 in 'fnts\extenso1.pas',
+  lista_produto2 in 'fnts\lista_produto2.pas' {frmlista_produto2},
+  extenso1 in 'fnts\extenso1.pas',
   xloc_cliente in 'fnts\xloc_cliente.pas' {frmxloc_cliente},
   lista_cliente2 in 'fnts\lista_cliente2.pas' {frmlista_cliente2},
   xloc_produto_entrada in 'fnts\xloc_produto_entrada.pas' {frmxloc_produto_entrada},
@@ -284,7 +284,12 @@ uses
   ResultadoWebService in '..\FNTS_Comuns\ResultadoWebService.pas' {frmResultadoWebService},
   SelecionaNFeDevolucao in 'fnts\SelecionaNFeDevolucao.pas' {frmSelecionaNFeDevolucao},
   LiberaPDV in 'fnts\LiberaPDV.pas' {frmLiberaPDV},
-  Exportar_Sweada_Csd in 'Exportar_Sweada_Csd.pas' {frmExportar_Sweada_Csd};
+  Exportar_Sweada_Csd in 'Exportar_Sweada_Csd.pas' {frmExportar_Sweada_Csd},
+  uGestLotes in 'fnts\uGestLotes.pas' {frmLotes},
+  uLancLotes in 'fnts\uLancLotes.pas' {frmLancLotes},
+  uLote in 'fnts\uLote.pas',
+  uLoteItens in 'fnts\uLoteItens.pas',
+  uRelLotes in 'fnts\uRelLotes.pas' {frmRelLotes};
 
 {$R *.res}
 
@@ -294,8 +299,8 @@ begin
   frmsplash.show;
   frmsplash.Update;
   Application.Title := 'SOS - 5.1';
-  Application.CreateForm(TfrmPrincipal, frmPrincipal);
   Application.CreateForm(Tfrmmodulo, frmmodulo);
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
   Application.CreateForm(TFrmMaster, FrmMaster);
   frmsplash.Close;
   FreeAndNil(frmsplash);

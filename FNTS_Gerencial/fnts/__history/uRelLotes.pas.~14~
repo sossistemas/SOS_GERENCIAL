@@ -1,0 +1,335 @@
+unit uRelLotes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, frxClass, frxExportBaseDialog, frxExportPDF,
+  Vcl.StdCtrls, Data.DB, frxDBSet, ZAbstractRODataset, ZAbstractDataset,
+  ZDataset, frxDesgn, AdvGlowButton, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  Vcl.Mask, JvExMask, JvToolEdit, Vcl.ExtCtrls, AdvMetroButton, AdvSmoothPanel,
+  AdvSmoothExpanderPanel;
+
+type
+  TfrmRelLotes = class(TForm)
+    AdvSmoothExpanderPanel1: TAdvSmoothExpanderPanel;
+    Label53: TLabel;
+    AdvMetroButton1: TAdvMetroButton;
+    Panel1: TPanel;
+    GroupBox1: TGroupBox;
+    Label10: TLabel;
+    dtLIni: TJvDateEdit;
+    Label11: TLabel;
+    dtLfim: TJvDateEdit;
+    GroupBox2: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    dtVfim: TJvDateEdit;
+    Label6: TLabel;
+    cxBProduto: TcxButtonEdit;
+    Panel2: TPanel;
+    bimprimir: TAdvGlowButton;
+    bitbtn1: TAdvGlowButton;
+    Label5: TLabel;
+    cxBFornecedor: TcxButtonEdit;
+    fxRelatorio: TfrxReport;
+    frxDesigner1: TfrxDesigner;
+    qryPesqLotes: TZQuery;
+    fsqryPesqLotes: TfrxDBDataset;
+    qryPesqLotesID: TIntegerField;
+    qryPesqLotesDESCRED: TWideStringField;
+    qryPesqLotesDATA_INICIO: TDateField;
+    qryPesqLotesHORA_INICIO: TTimeField;
+    qryPesqLotesDATA_FIM: TDateField;
+    qryPesqLotesHORA_FIM: TTimeField;
+    qryPesqLotesSTATUS: TWideStringField;
+    qryPesqLotesIDLI: TIntegerField;
+    qryPesqLotesCODPRODUTO: TWideStringField;
+    qryPesqLotesSALDO: TFloatField;
+    qryPesqLotesFABRICACAOPROD: TDateField;
+    qryPesqLotesPRECUSTO: TFloatField;
+    qryPesqLotesCODFORNECEDOR: TWideStringField;
+    qryPesqLotesVALIDADEPRODUTO: TDateField;
+    qryPesqLotesTOTAL_CUSTO: TFloatField;
+    qryPesqLotesPRODUTO: TWideStringField;
+    qryPesqLotesUNIDADE: TWideStringField;
+    qryPesqLotesFORNECEDOR: TWideStringField;
+    lblAgrup: TLabel;
+    comboAgrupamento: TComboBox;
+    frxPDFExport1: TfrxPDFExport;
+    dtVIni: TJvDateEdit;
+    procedure bimprimirClick(Sender: TObject);
+    procedure cxBProdutoPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure cxBProdutoKeyPress(Sender: TObject; var Key: Char);
+    procedure cxBProdutoKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure cxBFornecedorPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure cxBFornecedorKeyPress(Sender: TObject; var Key: Char);
+    procedure cxBFornecedorKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure AdvMetroButton1Click(Sender: TObject);
+  private
+    FDTLancINI: TDate;
+    FDTLancFim: TDate;
+    FDTValINI: TDate;
+    FdtValFim: TDate;
+    FCodProd: string;
+    FCodForn: string;
+
+    procedure CarregarCampos;
+  public
+
+  published
+    property DTLancINI: TDate read FDTLancINI write FDTLancINI;
+    property DTLancFim: TDate read FDTLancFim write FDTLancFim;
+    property DTValINI: TDate read FDTValINI write FDTValINI;
+    property dtValFim: TDate read FdtValFim write FdtValFim;
+    property CodProd: string read FCodProd write FCodProd;
+    property CodForn: string read FCodForn write FCodForn;
+  end;
+
+var
+  frmRelLotes: TfrmRelLotes;
+
+implementation
+
+{$R *.dfm}
+
+uses modulo, xloc_produto, xloc_fornecedor;
+
+procedure TfrmRelLotes.AdvMetroButton1Click(Sender: TObject);
+begin
+  frmRelLotes.Close;
+end;
+
+procedure TfrmRelLotes.bimprimirClick(Sender: TObject);
+begin
+  qryPesqLotes.Close;
+  qryPesqLotes.SQL.Clear;
+  qryPesqLotes.SQL.Add('select l.id,');
+  qryPesqLotes.SQL.Add('       l.descred,');
+  qryPesqLotes.SQL.Add('       l.data_inicio,');
+  qryPesqLotes.SQL.Add('       l.hora_inicio,');
+  qryPesqLotes.SQL.Add('       l.data_fim,');
+  qryPesqLotes.SQL.Add('       l.hora_fim,');
+  qryPesqLotes.SQL.Add('       l.status,');
+  qryPesqLotes.SQL.Add('       li.id idLI,');
+  qryPesqLotes.SQL.Add('       li.codproduto,');
+  qryPesqLotes.SQL.Add('       li.saldo,');
+  qryPesqLotes.SQL.Add('       li.fabricacaoprod,');
+  qryPesqLotes.SQL.Add('       li.precusto,');
+  qryPesqLotes.SQL.Add('       li.codfornecedor,');
+  qryPesqLotes.SQL.Add('       li.validadeproduto,');
+  qryPesqLotes.SQL.Add('       li.total_custo,');
+  qryPesqLotes.SQL.Add('       pr.produto,');
+  qryPesqLotes.SQL.Add('       pr.unidade,');
+  qryPesqLotes.SQL.Add('       fo.nome fornecedor');
+  qryPesqLotes.SQL.Add('from  lote l');
+  qryPesqLotes.SQL.Add('join lote_item li on li.id_lote = l.id');
+  qryPesqLotes.SQL.Add('join c000025 PR on pr.codigo = li.codproduto');
+  qryPesqLotes.SQL.Add('left join c000009 FO on FO.codigo = li.codfornecedor');
+  qryPesqLotes.SQL.Add('where 1 = 1');
+  qryPesqLotes.SQL.Add('and (:id is null or (l.id =:id))');
+  qryPesqLotes.SQL.Add('and ((:dtLini is null and :dtLfim is null) or (l.data_inicio between :dtLini and :dtLfim))');
+  qryPesqLotes.SQL.Add('and ((:dtVini is null and :dtVfim is null) or (l.data_fim between :dtVini and :dtVfim))');
+  qryPesqLotes.SQL.Add('and ((:dtVProd is null and :dtVProd is null) or (li.validadeproduto between :dtVProd and :dtVProd))');
+  qryPesqLotes.SQL.Add('and (:codp is null or (li.codproduto =:codp))');
+  qryPesqLotes.SQL.Add('and (:codfo is null or (li.codfornecedor =:codfo))');
+  qryPesqLotes.SQL.Add('order by li.id, pr.produto');
+  qryPesqLotes.Open;
+
+  fxRelatorio.LoadFromFile('C:\SOS\server\REL\F000223.fr3');
+  fxRelatorio.PrepareReport;
+  fxRelatorio.Variables['vAgrupado'] := QuotedStr('N° LOTE:');
+  fxRelatorio.Variables['vDescred']  := QuotedStr('Descrição:');
+
+//  fxRelatorio.ShowReport;
+
+  fxRelatorio.DesignReport;
+
+end;
+
+procedure TfrmRelLotes.CarregarCampos;
+begin
+  FDTLancINI := Null;
+  FDTLancFim := Null;
+  FDTValINI  := Null;
+  FdtValFim  := Null;
+
+  if not (dtLIni.Text = '  /  /    ')  then
+    FDTLancINI := StrToDate(dtLIni.Text);
+
+  if not(dtLfim.Text = '  /  /    ') then
+    FDTLancFim := StrToDate(dtLfim.Text);
+
+  if not(dtVfim.Text = '  /  /    ') then
+    FDTValINI := StrToDate(dtVIni.Text);
+
+  if not(dtVfim.Text = '  /  /    ') then
+    FdtValFim := StrToDate(dtVfim.Text);
+end;
+
+procedure TfrmRelLotes.cxBFornecedorKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  begin
+    if FCodForn = EmptyStr then
+      cxBFornecedorPropertiesButtonClick(Sender,0)
+    else
+      comboAgrupamento.SetFocus;
+  end;
+end;
+
+procedure TfrmRelLotes.cxBFornecedorKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  texto : string;
+  p     : integer;
+begin
+  with cxBFornecedor do
+  begin
+    if key = 13 then
+    begin
+      if not (Text = EmptyStr) then
+        SelStart := Length(Text); //Completa o texto
+    end;
+
+    if key = 27 then  //ESC
+    begin
+      Clear;
+      FCodForn := EmptyStr;
+    end
+    else
+    begin
+      if not((key = 08) or (key = 46) or (key = 09)) then // se não for espaço ou delete ou apagar
+      begin
+        if not (Text = EmptyStr) then
+        begin
+          p:= SelStart;
+          texto := Copy(Text,0,p);
+        end;
+      end
+      else
+        FCodForn := EmptyStr;
+    end;
+  end;
+
+end;
+
+procedure TfrmRelLotes.cxBFornecedorPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  FCodForn := EmptyStr;
+
+  resultado_pesquisa1 := EmptyStr;
+  frmxloc_fornecedor := Tfrmxloc_fornecedor.create(self);
+
+  try
+    if not(cxBFornecedor.Text = EmptyStr) then
+      frmxloc_fornecedor.loc.Text := cxBFornecedor.Text;
+
+    frmxloc_fornecedor.ShowModal;
+
+    frmmodulo.qrfornecedor.close;
+    frmmodulo.qrfornecedor.sql.clear;
+    frmmodulo.qrfornecedor.sql.add('select * from c000009 where atb like :atb and codigo = ''' + resultado_pesquisa1 + '''');
+    frmmodulo.qrfornecedor.ParamByName('atb').Value := ME_FiltraATB('TB_FORNECEDOR');
+    frmmodulo.qrfornecedor.open;
+
+    if frmmodulo.qrfornecedor.RecordCount > 0 then
+    begin
+      cxBFornecedor.Text := frmmodulo.qrfornecedor.FieldByName('NOME').Value;
+      FCodForn           := frmmodulo.qrfornecedor.FieldByName('CODIGO').Value;
+      comboAgrupamento.SetFocus;
+    end;
+
+  finally
+    FreeAndNil(frmxloc_fornecedor);
+  end;
+end;
+
+procedure TfrmRelLotes.cxBProdutoKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  begin
+    if FCodProd = EmptyStr then
+      cxBProdutoPropertiesButtonClick(Sender, 0)
+    else
+      cxBFornecedor.SetFocus;
+  end;
+end;
+
+procedure TfrmRelLotes.cxBProdutoKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  texto : string;
+  p     : integer;
+begin
+  with cxBProduto do
+  begin
+    if key = 13 then
+    begin
+      if not (Text = EmptyStr) then
+        SelStart := Length(Text); //Completa o texto
+    end;
+
+    if key = 27 then  //ESC
+    begin
+      Clear;
+      FCodProd := EmptyStr;
+    end
+    else
+    begin
+      if not((key = 08) or (key = 46) or (key = 09)) then // se não for espaço ou delete ou apagar
+      begin
+        if not (Text = EmptyStr) then
+        begin
+          p:= SelStart;
+          texto := Copy(Text,0,p);
+        end;
+      end
+      else
+        FCodProd := EmptyStr;
+    end;
+
+  end;
+
+end;
+
+procedure TfrmRelLotes.cxBProdutoPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  FCodProd := EmptyStr;
+
+  resultado_pesquisa1 := EmptyStr;
+  frmxloc_produto := tfrmxloc_produto.create(self);
+  try
+    if not (cxBProduto.Text = EmptyStr) then
+      frmxloc_produto.loc.Text := cxBProduto.Text;
+
+    frmxloc_produto.showmodal;
+
+    if resultado_pesquisa1 <> '' then
+    begin
+      frmmodulo.qrproduto.close;
+      frmmodulo.qrproduto.sql.clear;
+      frmmodulo.qrproduto.sql.add('select * from c000025 where atb like :atb and codigo = ''' + resultado_pesquisa1 + '''');
+      frmmodulo.qrproduto.open;
+
+      if frmmodulo.qrproduto.RecordCount > 0 then
+      begin
+        cxBProduto.Text := frmmodulo.qrproduto.FieldByName('PRODUTO').Value;
+        FCodProd        := frmmodulo.qrproduto.FieldByName('CODIGO').AsString;
+      end;
+    end;
+
+  finally
+    FreeAndNil(frmxloc_produto);
+  end;
+end;
+
+end.

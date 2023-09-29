@@ -225,6 +225,24 @@ type
     Label9: TLabel;
     AdvMetroButton1: TAdvMetroButton;
     qros_servicoTECNICO: TStringField;
+    qros_produtoAIDF: TWideStringField;
+    qros_produtoVALIDADE: TWideStringField;
+    qros_produtoCSOSN: TWideStringField;
+    qros_produtoNFCE: TWideStringField;
+    qros_produtoCLASSIFICACAO_FISCAL: TWideStringField;
+    qros_produtoBASE_SUB: TFloatField;
+    qros_produtoICMS_SUB: TFloatField;
+    qros_produtoISENTAS_ICMS: TFloatField;
+    qros_produtoOUTRAS_ICMS: TFloatField;
+    qros_produtoGEROU_SAT: TWideStringField;
+    qros_produtoNUMERO_SAT: TIntegerField;
+    qros_produtoXITEM: TWideStringField;
+    qros_produtoXPED: TWideStringField;
+    qros_produtoDEVOLVIDO: TWideStringField;
+    qros_produtoECF: TWideStringField;
+    qros_produtoPRECO_CUSTO: TFloatField;
+    qros_produtoIDONLINE: TIntegerField;
+    qros_produtoATB: TWideStringField;
     procedure DBDateEdit1Enter(Sender: TObject);
     procedure DBDateEdit1Exit(Sender: TObject);
     procedure DBDateEdit1KeyPress(Sender: TObject; var Key: Char);
@@ -314,6 +332,7 @@ type
     procedure bincluir_produtoClick(Sender: TObject);
     procedure bexcluir_produtoClick(Sender: TObject);
     procedure AdvMetroButton1Click(Sender: TObject);
+    procedure qros_produtoNewRecord(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -403,6 +422,7 @@ begin
   PageView1.ActivePageindex := 0;
 
   FINALIZADO := FALSE;
+
 
   rnivel.Value := frmmodulo.cdsos.fieldbyname('combustivel_nivel').asinteger;
 
@@ -569,11 +589,13 @@ begin
   begin
     if frmmodulo.qrcliente_veiculo.Locate('veiculo', combomarca.Text, [loPartialKey]) then
     begin
+      if not (frmmodulo.cdsos.State in [dsEdit]) then
+        frmmodulo.cdsos.Edit;
+
       frmmodulo.cdsos.FieldByName('modelo').asstring := frmmodulo.qrcliente_veiculo.fieldbyname('ano').asstring;
       frmmodulo.cdsos.FieldByName('serial').asstring := frmmodulo.qrcliente_veiculo.fieldbyname('placa').asstring;
       frmmodulo.cdsos.FieldByName('chassi').asstring := frmmodulo.qrcliente_veiculo.fieldbyname('chassi').asstring;
       frmmodulo.cdsos.FieldByName('cor').asstring := frmmodulo.qrcliente_veiculo.fieldbyname('cor').asstring;
-
     end;
   end;
 end;
@@ -752,6 +774,9 @@ begin
   if (qros_produto.State in [dsEdit, dsInsert]) then
     qros_produto.Post;
 
+  if not (frmmodulo.cdsos.State in [dsEdit]) then
+    frmmodulo.cdsos.Edit;
+
   frmmodulo.cdsos.fieldbyname('combustivel_nivel').asinteger := rnivel.Value;
 
   if not BGRAVAR.Visible then
@@ -848,6 +873,10 @@ begin
     item := item + 1;
     qros_produto.next;
   end;
+
+  if not (frmmodulo.cdsos.State in [dsEdit]) then
+    frmmodulo.cdsos.Edit;
+
   frmmodulo.cdsos.fieldbyname('produto_subtotal').asfloat := total;
   frmmodulo.cdsos.fieldbyname('produto_total').asfloat := frmmodulo.cdsos.fieldbyname('produto_subtotal').asfloat - frmmodulo.cdsos.fieldbyname('produto_desconto').asfloat;
   qros_produto.Refresh;
@@ -947,8 +976,10 @@ begin
       end;
     end;
 
-    frmmodulo.cdsos.fieldbyname('produto_subtotal').ASFLOAT := frmmodulo.cdsos.fieldbyname('produto_subtotal').ASFLOAT - qros_produto.fieldbyname('total').asfloat;
+    if not (frmmodulo.cdsos.State in [dsEdit]) then
+      frmmodulo.cdsos.Edit;
 
+    frmmodulo.cdsos.fieldbyname('produto_subtotal').ASFLOAT := frmmodulo.cdsos.fieldbyname('produto_subtotal').ASFLOAT - qros_produto.fieldbyname('total').asfloat;
     frmmodulo.cdsos.fieldbyname('produto_total').asfloat := frmmodulo.cdsos.fieldbyname('produto_subtotal').asfloat - frmmodulo.cdsos.fieldbyname('produto_desconto').asfloat;
 
     qros_produto.Delete;
@@ -987,6 +1018,11 @@ end;
 procedure TfrmOS_Auto.qros_servicoBeforeInsert(DataSet: TDataSet);
 begin
   valor_anterior := 0;
+end;
+
+procedure TfrmOS_Auto.qros_produtoNewRecord(DataSet: TDataSet);
+begin
+  qros_produtoATB.AsString := ME_GravaATB('TB_MOVIMENTO');
 end;
 
 procedure TfrmOS_Auto.qros_servicoAfterPost(DataSet: TDataSet);
@@ -1134,6 +1170,7 @@ begin
     bgravar.setfocus;
 end;
 
+
 procedure TfrmOS_Auto.DBEdit8KeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
@@ -1166,7 +1203,6 @@ begin
   if (frmmodulo.cdsos.State = dsinsert) or (frmmodulo.cdsos.State = dsedit) then
   begin
     frmmodulo.cdsos.fieldbyname('subtotal').asfloat := frmmodulo.cdsos.fieldbyname('PRODUTO_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('SERVICO_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('DESLOC_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('TERCEIRO_TOTAL').asfloat;
-
     frmmodulo.cdsos.fieldbyname('total').asfloat := frmmodulo.cdsos.fieldbyname('subtotal').asfloat + frmmodulo.cdsos.fieldbyname('acrescimo').asfloat - frmmodulo.cdsos.fieldbyname('desconto').asfloat;
   end;
 end;
@@ -1176,9 +1212,7 @@ begin
   if (frmmodulo.cdsos.State = dsinsert) or (frmmodulo.cdsos.State = dsedit) then
   begin
     frmmodulo.cdsos.fieldbyname('subtotal').asfloat := frmmodulo.cdsos.fieldbyname('PRODUTO_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('SERVICO_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('DESLOC_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('TERCEIRO_TOTAL').asfloat;
-
     frmmodulo.cdsos.fieldbyname('total').asfloat := frmmodulo.cdsos.fieldbyname('subtotal').asfloat + frmmodulo.cdsos.fieldbyname('acrescimo').asfloat - frmmodulo.cdsos.fieldbyname('desconto').asfloat;
-
   end;
 end;
 
@@ -1187,9 +1221,7 @@ begin
   if (frmmodulo.cdsos.State = dsinsert) or (frmmodulo.cdsos.State = dsedit) then
   begin
     frmmodulo.cdsos.fieldbyname('subtotal').asfloat := frmmodulo.cdsos.fieldbyname('PRODUTO_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('SERVICO_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('DESLOC_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('TERCEIRO_TOTAL').asfloat;
-
     frmmodulo.cdsos.fieldbyname('total').asfloat := frmmodulo.cdsos.fieldbyname('subtotal').asfloat + frmmodulo.cdsos.fieldbyname('acrescimo').asfloat - frmmodulo.cdsos.fieldbyname('desconto').asfloat;
-
   end;
 end;
 
@@ -1199,7 +1231,6 @@ begin
   begin
     frmmodulo.cdsos.fieldbyname('subtotal').asfloat := frmmodulo.cdsos.fieldbyname('PRODUTO_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('SERVICO_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('DESLOC_TOTAL').asfloat + frmmodulo.cdsos.fieldbyname('TERCEIRO_TOTAL').asfloat;
     frmmodulo.cdsos.fieldbyname('total').asfloat := frmmodulo.cdsos.fieldbyname('subtotal').asfloat + frmmodulo.cdsos.fieldbyname('acrescimo').asfloat - frmmodulo.cdsos.fieldbyname('desconto').asfloat;
-
   end;
 end;
 

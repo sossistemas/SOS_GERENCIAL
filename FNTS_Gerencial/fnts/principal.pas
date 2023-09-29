@@ -19,7 +19,7 @@ uses
   AdvMenuStylers, System.ImageList, Vcl.ImgList, AdvOfficeHint, ExeInfo, vcl.wwdbigrd,
   vcl.wwdbgrid, RzLabel, AdvReflectionImage, cyBaseSpeedButton, cySpeedButton,
   dxGDIPlusClasses, AdvOfficeStatusBar, AdvSmoothButton, cyCustomImage, System.IniFiles,
-  acPNG, frxExportPDF, frxExportBaseDialog;
+  acPNG, frxExportPDF, frxExportBaseDialog, Vcl.StdStyleActnCtrls;
 
 type
   TRamoAtividade = (raComecioGeral, raOficinaMecanica);
@@ -461,6 +461,8 @@ type
     frxPDFExport1: TfrxPDFExport;
     AdvSmoothButton84: TAdvSmoothButton;
     AdvSmoothButton85: TAdvSmoothButton;
+    AdvSmoothButton86: TAdvSmoothButton;
+    btRelLote: TAdvSmoothButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -557,7 +559,9 @@ type
     procedure btnFecharClick(Sender: TObject);
     procedure tbLiberaPDVTimer(Sender: TObject);
     procedure AdvSmoothButton84Click(Sender: TObject);
+    procedure AdvSmoothButton86Click(Sender: TObject);
     procedure AdvSmoothButton85Click(Sender: TObject);
+    procedure btRelLoteClick(Sender: TObject);
   private
     { Private declarations }
     procedure GravaIni(sArquivo, Secao, Linha, Valor: string);
@@ -612,7 +616,8 @@ uses
   sobre, Unit_ativar, ExportaXML, GridOrcamentos, ManutencaoProduto,
   AtualizaIBPT, IcmsUF, PartilhaICMS, carta_cobranca, TabelaANP, Exportar_Sweada_Csd,
   CadastroEtiquetas, ImpressaoEtiquetas, Unidades, OnLine, TabelaPrecoGrupo,
-  Boleto, Empresas, ConfigTabelas, SelecionaEmpresa, MenuTransferencia, LiberaPDV;
+  Boleto, Empresas, ConfigTabelas, SelecionaEmpresa, MenuTransferencia, LiberaPDV,
+  uGestLotes, uRelLotes;
 
 {$R *.dfm}
 
@@ -1494,7 +1499,7 @@ begin
     end
     else
     begin
-      if application.messagebox(Pchar('A Data do Caixa está diferente da atual!' + #13 + 'Deseja fechar o caixa do dia ' + qrcx.FIELDBYNAME('data').asstring + '?'), 'Atenção', MB_IconInformation + MB_YESNO) = idYes then
+      if application.messagebox(Pchar('A Data do Caixa "GERAL" está diferente da atual!' + #13 + 'Deseja fechar o caixa do dia ' + qrcx.FIELDBYNAME('data').asstring + '?'), 'Atenção', MB_IconInformation + MB_YESNO) = idYes then
       begin
         Action5.Execute
       end;
@@ -1916,9 +1921,12 @@ begin
   barra_financeiro.Visible := False;
   if not ME_PermiteAcesso('TB_CONTA_RECEBER') then
     Exit;
-  frmcontasreceber := tfrmcontasreceber.create(self);
-  frmcontasreceber.showmodal;
-  FreeAndNil(frmcontasreceber);
+  try
+    frmcontasreceber := tfrmcontasreceber.create(self);
+    frmcontasreceber.showmodal;
+  finally
+    FreeAndNil(frmcontasreceber);
+  end;
 end;
 
 procedure TfrmPrincipal.Action24Execute(Sender: TObject);
@@ -2242,12 +2250,15 @@ begin
     begin
       if frmmodulo.qrcaixa_operador.FIELDBYNAME('situacao').AsInteger = 1 then
       begin
-
         frmVENDA_INICIO := tfrmVENDA_INICIO.create(self);
-        frmVENDA_INICIO.showmodal;
-        FreeAndNil(frmVENDA_INICIO);
-        if frmmodulo.qrconfigINICIAR_NOVA_VENDA.AsString = 'S' then
-          Action45Execute(Action45);
+
+        try
+          frmVENDA_INICIO.showmodal;
+        finally
+          FreeAndNil(frmVENDA_INICIO);
+          if frmmodulo.qrconfigINICIAR_NOVA_VENDA.AsString = 'S' then
+            Action45Execute(Action45);
+        end;
       end
       else
       begin
@@ -2658,6 +2669,30 @@ begin
     tcr.ShowModal;
   finally
     freeandnil(tcr);
+  end;
+end;
+
+procedure TfrmPrincipal.AdvSmoothButton86Click(Sender: TObject);
+begin
+  barra_estoque.Visible := False;
+
+  Application.CreateForm(TfrmLotes,frmLotes);
+  try
+    frmLotes.ShowModal;
+  finally
+    FreeAndNil(frmLotes);
+  end;
+end;
+
+procedure TfrmPrincipal.btRelLoteClick(Sender: TObject);
+begin
+  barra_relatorios.Visible := False;
+
+  Application.CreateForm(TfrmRelLotes,frmRelLotes);
+  try
+    frmRelLotes.ShowModal;
+  finally
+    FreeAndNil(frmRelLotes);
   end;
 end;
 

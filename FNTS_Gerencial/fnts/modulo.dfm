@@ -1828,7 +1828,6 @@ object frmmodulo: Tfrmmodulo
     Connection = Conexao
     BeforeOpen = qrclienteBeforeOpen
     OnNewRecord = qrclienteNewRecord
-    Active = True
     SQL.Strings = (
       'select * from c000007 where atb like :atb'
       '')
@@ -2326,7 +2325,6 @@ object frmmodulo: Tfrmmodulo
   end
   object qrregiao: TZQuery
     Connection = Conexao
-    Active = True
     SQL.Strings = (
       'select * from c000005')
     Params = <>
@@ -2350,7 +2348,6 @@ object frmmodulo: Tfrmmodulo
     Connection = Conexao
     BeforeOpen = qrfunciBeforeOpen
     OnNewRecord = qrfunciNewRecord
-    Active = True
     SQL.Strings = (
       'select * from c000008 where atb like :atb')
     Params = <
@@ -2565,7 +2562,6 @@ object frmmodulo: Tfrmmodulo
     Connection = Conexao
     BeforeOpen = qrfornecedorBeforeOpen
     OnNewRecord = qrfornecedorNewRecord
-    Active = True
     SQL.Strings = (
       'select * from c000009 where atb like :atb'
       '')
@@ -3272,7 +3268,6 @@ object frmmodulo: Tfrmmodulo
     Connection = Conexao
     BeforeOpen = qrgrupoBeforeOpen
     OnNewRecord = qrgrupoNewRecord
-    Active = True
     SQL.Strings = (
       'select * from c000017 WHERE atb like :atb')
     Params = <
@@ -3334,7 +3329,6 @@ object frmmodulo: Tfrmmodulo
     BeforeOpen = qrsubgrupoBeforeOpen
     BeforePost = qrsubgrupoBeforePost
     OnNewRecord = qrsubgrupoNewRecord
-    Active = True
     SQL.Strings = (
       'select * from c000018 WHERE atb like :atb')
     Params = <
@@ -3393,7 +3387,6 @@ object frmmodulo: Tfrmmodulo
     Connection = Conexao
     BeforeOpen = qrmarcaBeforeOpen
     OnNewRecord = qrmarcaNewRecord
-    Active = True
     SQL.Strings = (
       'select * from c000019 where atb like :atb')
     Params = <
@@ -3567,7 +3560,6 @@ object frmmodulo: Tfrmmodulo
     Connection = Conexao
     BeforeOpen = qremitenteBeforeOpen
     OnNewRecord = qremitenteNewRecord
-    Active = True
     SQL.Strings = (
       
         'select CODIGO, FILIAL NOME, FANTASIA, ENDERECO, BAIRRO, CIDADE, ' +
@@ -7585,7 +7577,6 @@ object frmmodulo: Tfrmmodulo
   object qrrelatorio: TZQuery
     Connection = ConexaoLocal
     AfterPost = qrrelatorioAfterPost
-    Active = True
     SQL.Strings = (
       'select * from L000003')
     Params = <>
@@ -7743,9 +7734,6 @@ object frmmodulo: Tfrmmodulo
     object qrrelatorioTP: TIntegerField
       FieldName = 'TP'
     end
-    object qrrelatorioVALOR_PIX: TFloatField
-      FieldName = 'VALOR_PIX'
-    end
   end
   object qrcliente_veiculo: TZQuery
     Connection = Conexao
@@ -7842,7 +7830,6 @@ object frmmodulo: Tfrmmodulo
     Connection = Conexao
     BeforeOpen = qrconvenioBeforeOpen
     OnNewRecord = qrconvenioNewRecord
-    Active = True
     SQL.Strings = (
       'select * from c000071 WHERE atb like :atb ')
     Params = <
@@ -7996,7 +7983,6 @@ object frmmodulo: Tfrmmodulo
     BeforePost = qrfiscal_cstBeforePost
     AfterPost = qrfiscal_cstAfterPost
     AfterDelete = qrfiscal_cstAfterDelete
-    Active = True
     SQL.Strings = (
       'select * from c000083')
     Params = <>
@@ -8820,6 +8806,7 @@ object frmmodulo: Tfrmmodulo
     ControlsCodePage = cCP_UTF16
     Catalog = ''
     TransactIsolationLevel = tiReadCommitted
+    Connected = True
     HostName = ''
     Port = 0
     Database = 'C:\SOS\Server\BD\BASE.FDB'
@@ -9056,6 +9043,7 @@ object frmmodulo: Tfrmmodulo
     UserName = 'fxrelatorio'
     CloseDataSource = False
     FieldAliases.Strings = (
+      'TEXTO_GRANDE=TEXTO_GRANDE'
       'LINHA1=LINHA1'
       'LINHA2=LINHA2'
       'LINHA3=LINHA3'
@@ -9100,10 +9088,7 @@ object frmmodulo: Tfrmmodulo
       'VALOR32=VALOR32'
       'VALOR33=VALOR33'
       'VALOR34=VALOR34'
-      'VALOR35=VALOR35'
-      'TEXTO_GRANDE=TEXTO_GRANDE'
-      'TP=TP'
-      'VALOR_PIX=VALOR_PIX')
+      'VALOR35=VALOR35')
     DataSet = qrrelatorio
     BCDToCurrency = False
     Left = 159
@@ -10857,6 +10842,7 @@ object frmmodulo: Tfrmmodulo
       'RoleName=RoleName'
       'ServerCharSet='
       'Trim Char=False')
+    Connected = True
     Left = 207
     Top = 11
   end

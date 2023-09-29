@@ -356,7 +356,7 @@ object frmVenda_Entrega: TfrmVenda_Entrega
     Top = 264
   end
   object rel_entrega: TfrxReport
-    Version = '5.3.16'
+    Version = '6.3.7'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
@@ -412,19 +412,24 @@ object frmVenda_Entrega: TfrmVenda_Entrega
       BottomMargin = 5.000000000000000000
       Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
       Frame.Width = 0.500000000000000000
+      MirrorMode = []
       OnAfterPrint = 'Page2OnAfterPrint'
       object PageHeader1: TfrxPageHeader
         FillType = ftBrush
+        Frame.Typ = []
         Height = 83.149660000000000000
         Top = 18.897650000000000000
         Width = 733.228820000000000000
         object Shape11: TfrxShapeView
+          AllowVectorExport = True
           Top = 64.929190000000000000
           Width = 733.228820000000000000
           Height = 15.118120000000000000
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
         end
         object Memo34: TfrxMemoView
+          AllowVectorExport = True
           Left = 5.559060000000000000
           Top = 66.708720000000000000
           Width = 41.574830000000000000
@@ -437,11 +442,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'C'#211'DIGO')
           ParentFont = False
         end
         object Memo35: TfrxMemoView
+          AllowVectorExport = True
           Left = 64.252010000000000000
           Top = 66.708720000000000000
           Width = 336.378170000000000000
@@ -454,12 +461,14 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haCenter
           Memo.UTF8W = (
             'PRODUTO')
           ParentFont = False
         end
         object Memo36: TfrxMemoView
+          AllowVectorExport = True
           Left = 589.606680000000000000
           Top = 66.708720000000000000
           Width = 52.913420000000000000
@@ -472,12 +481,14 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haCenter
           Memo.UTF8W = (
             'UNID.')
           ParentFont = False
         end
         object Memo37: TfrxMemoView
+          AllowVectorExport = True
           Left = 646.299630000000000000
           Top = 66.708720000000000000
           Width = 83.149660000000000000
@@ -490,12 +501,14 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haCenter
           Memo.UTF8W = (
             'QTDE.')
           ParentFont = False
         end
         object Memo24: TfrxMemoView
+          AllowVectorExport = True
           Left = 268.346630000000000000
           Top = 1.000000000000000000
           Width = 464.882190000000000000
@@ -506,6 +519,7 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -12
           Font.Name = 'Courier New'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Fill.BackColor = 14211288
           HAlign = haRight
           Memo.UTF8W = (
@@ -513,30 +527,37 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           ParentFont = False
         end
         object Line14: TfrxLineView
+          AllowVectorExport = True
           Left = 53.913420000000000000
           Top = 66.141732280000000000
           Height = 457.322839530000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Line17: TfrxLineView
+          AllowVectorExport = True
           Left = 589.606680000000000000
           Top = 66.141732280000000000
           Height = 457.322839530000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Line18: TfrxLineView
+          AllowVectorExport = True
           Left = 642.520100000000000000
           Top = 66.141732280000000000
           Height = 457.322839530001000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo4: TfrxMemoView
+          AllowVectorExport = True
           Left = 1.133858270000000000
           Top = 15.118120000000000000
           Width = 94.488250000000000000
@@ -547,18 +568,22 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Cliente')
           ParentFont = False
         end
         object Line4: TfrxLineView
+          AllowVectorExport = True
           Top = 37.795300000000000000
           Width = 733.228820000000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo87: TfrxMemoView
+          AllowVectorExport = True
           Left = 0.755905510000000000
           Top = 22.677180000000000000
           Width = 442.205010000000000000
@@ -569,19 +594,23 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[FSCLIENTE."CODIGO"]  [FSCLIENTE."NOME"]')
           ParentFont = False
         end
         object Line6: TfrxLineView
+          AllowVectorExport = True
           Left = 449.764070000000000000
           Top = 37.795300000000000000
           Height = -22.677180000000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo5: TfrxMemoView
+          AllowVectorExport = True
           Left = 453.543600000000000000
           Top = 15.118120000000000000
           Width = 90.708720000000000000
@@ -592,19 +621,23 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'CPF/CNPJ')
           ParentFont = False
         end
         object Line7: TfrxLineView
+          AllowVectorExport = True
           Left = 566.929500000000000000
           Top = 37.795300000000000000
           Height = -22.677180000000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo6: TfrxMemoView
+          AllowVectorExport = True
           Left = 570.709030000000000000
           Top = 15.118120000000000000
           Width = 86.929190000000000000
@@ -615,19 +648,23 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Identidade / Insc.Estadual')
           ParentFont = False
         end
         object Line19: TfrxLineView
+          AllowVectorExport = True
           Left = 661.417750000000000000
           Top = 37.795300000000000000
           Height = -22.677180000000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo7: TfrxMemoView
+          AllowVectorExport = True
           Left = 665.197280000000000000
           Top = 15.118120000000000000
           Width = 71.811070000000000000
@@ -638,11 +675,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Data da Compra')
           ParentFont = False
         end
         object Memo93: TfrxMemoView
+          AllowVectorExport = True
           Left = 664.197280000000000000
           Top = 23.677180000000000000
           Width = 64.252010000000000000
@@ -656,11 +695,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fxrelatorio."LINHA6"]')
           ParentFont = False
         end
         object Memo8: TfrxMemoView
+          AllowVectorExport = True
           Left = 452.543600000000000000
           Top = 24.456710000000000000
           Width = 109.606370000000000000
@@ -671,11 +712,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[FSCLIENTE."CPF"]')
           ParentFont = False
         end
         object Memo9: TfrxMemoView
+          AllowVectorExport = True
           Left = 568.709030000000000000
           Top = 24.677180000000000000
           Width = 109.606370000000000000
@@ -687,11 +730,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[FSCLIENTE."RG"]')
           ParentFont = False
         end
         object Memo10: TfrxMemoView
+          AllowVectorExport = True
           Left = 1.133858270000000000
           Top = 37.795300000000000000
           Width = 34.015770000000000000
@@ -702,19 +747,23 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Endere'#231'o:')
           ParentFont = False
         end
         object Line20: TfrxLineView
+          AllowVectorExport = True
           Left = 245.669450000000000000
           Top = 64.252010000000000000
           Height = -26.456710000000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo11: TfrxMemoView
+          AllowVectorExport = True
           Left = 2.779530000000000000
           Top = 44.354360000000000000
           Width = 234.330860000000000000
@@ -726,11 +775,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -8
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[FSCLIENTE."ENDERECO"]')
           ParentFont = False
         end
         object Memo12: TfrxMemoView
+          AllowVectorExport = True
           Left = 3.000000000000000000
           Top = 53.692949999999990000
           Width = 234.330860000000000000
@@ -742,11 +793,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -8
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[FSCLIENTE."BAIRRO"]')
           ParentFont = False
         end
         object Memo13: TfrxMemoView
+          AllowVectorExport = True
           Left = 249.448980000000000000
           Top = 37.795300000000000000
           Width = 34.015770000000000000
@@ -757,19 +810,23 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Cidade/UF')
           ParentFont = False
         end
         object Line21: TfrxLineView
+          AllowVectorExport = True
           Left = 355.275820000000000000
           Top = 64.252010000000000000
           Height = -26.456710000000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo14: TfrxMemoView
+          AllowVectorExport = True
           Left = 245.669450000000000000
           Top = 49.133889999999990000
           Width = 105.826840000000000000
@@ -780,11 +837,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -8
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[FSCLIENTE."CIDADE"] / [FSCLIENTE."UF"]')
           ParentFont = False
         end
         object Memo15: TfrxMemoView
+          AllowVectorExport = True
           Left = 359.055350000000000000
           Top = 37.795300000000000000
           Width = 45.354360000000000000
@@ -795,11 +854,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Complemento')
           ParentFont = False
         end
         object Memo16: TfrxMemoView
+          AllowVectorExport = True
           Left = 358.055350000000000000
           Top = 44.354360000000000000
           Width = 139.842610000000000000
@@ -811,19 +872,23 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -8
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[FSCLIENTE."COMPLEMENTO"]')
           ParentFont = False
         end
         object Line22: TfrxLineView
+          AllowVectorExport = True
           Left = 502.677490000000000000
           Top = 64.252010000000000000
           Height = -26.456710000000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo17: TfrxMemoView
+          AllowVectorExport = True
           Left = 507.457020000000000000
           Top = 37.795300000000000000
           Width = 45.354360000000000000
@@ -834,11 +899,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Telefones')
           ParentFont = False
         end
         object Memo18: TfrxMemoView
+          AllowVectorExport = True
           Left = 506.457020000000000000
           Top = 44.354360000000000000
           Width = 113.385900000000000000
@@ -849,6 +916,7 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -8
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             
               '[FSCLIENTE."TELEFONE1"]  [FSCLIENTE."TELEFONE2"]  [FSCLIENTE."CE' +
@@ -856,14 +924,17 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           ParentFont = False
         end
         object Line23: TfrxLineView
+          AllowVectorExport = True
           Left = 623.622450000000000000
           Top = 64.252010000000000000
           Height = -26.456710000000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo19: TfrxMemoView
+          AllowVectorExport = True
           Left = 625.401980000000000000
           Top = 39.795300000000000000
           Width = 26.456710000000000000
@@ -874,19 +945,23 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Caixa:')
           ParentFont = False
         end
         object Line24: TfrxLineView
+          AllowVectorExport = True
           Left = 623.622450000000000000
           Top = 51.913420000000000000
           Width = 109.606370000000000000
           Color = clBlack
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Diagonal = True
         end
         object Memo100: TfrxMemoView
+          AllowVectorExport = True
           Left = 659.638220000000000000
           Top = 39.795300000000000000
           Width = 71.811070000000000000
@@ -900,11 +975,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -8
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fxrelatorio."LINHA9"]')
           ParentFont = False
         end
         object Memo20: TfrxMemoView
+          AllowVectorExport = True
           Left = 625.401980000000000000
           Top = 53.133889999999990000
           Width = 34.015770000000000000
@@ -915,11 +992,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -7
           Font.Name = 'Tahoma'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Vendedor:')
           ParentFont = False
         end
         object Memo96: TfrxMemoView
+          AllowVectorExport = True
           Left = 660.417750000000000000
           Top = 53.133889999999990000
           Width = 68.031540000000000000
@@ -933,11 +1012,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -8
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fxrelatorio."LINHA8"]')
           ParentFont = False
         end
         object Memo1: TfrxMemoView
+          AllowVectorExport = True
           Left = 1.000000000000000000
           Top = 1.000000000000000000
           Width = 268.346630000000000000
@@ -951,6 +1032,7 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -12
           Font.Name = 'Courier New'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Fill.BackColor = 14211288
           Memo.UTF8W = (
             '[fxemitente."FANTASIA"]')
@@ -959,16 +1041,20 @@ object frmVenda_Entrega: TfrmVenda_Entrega
       end
       object PageFooter1: TfrxPageFooter
         FillType = ftBrush
+        Frame.Typ = []
         Height = 52.913420000000000000
         Top = 238.110390000000000000
         Width = 733.228820000000000000
         object Shape1: TfrxShapeView
+          AllowVectorExport = True
           Width = 733.228820000000000000
           Height = 52.913420000000000000
           Fill.BackColor = clWhite
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
         end
         object Memo2: TfrxMemoView
+          AllowVectorExport = True
           Left = 7.559060000000000000
           Top = 3.779529999999994000
           Width = 347.716760000000000000
@@ -979,6 +1065,7 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             
               'Reconhe'#231'o que recebi a(s) mercadoria(s) acima relacionada(s) em ' +
@@ -986,6 +1073,7 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           ParentFont = False
         end
         object Memo3: TfrxMemoView
+          AllowVectorExport = True
           Left = 7.559060000000000000
           Top = 30.236239999999900000
           Width = 26.456710000000000000
@@ -996,18 +1084,22 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             'Data:')
           ParentFont = False
         end
         object Line1: TfrxLineView
+          AllowVectorExport = True
           Left = 41.574830000000000000
           Top = 41.574830000000020000
           Width = 192.756030000000000000
           Color = clBlack
+          Frame.Typ = []
           Diagonal = True
         end
         object Memo21: TfrxMemoView
+          AllowVectorExport = True
           Left = 325.039580000000000000
           Top = 26.456709999999820000
           Width = 60.472480000000000000
@@ -1018,37 +1110,45 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haRight
           Memo.UTF8W = (
             'Assinatura:')
           ParentFont = False
         end
         object Line2: TfrxLineView
+          AllowVectorExport = True
           Left = 393.071120000000000000
           Top = 37.795299999999880000
           Width = 328.819110000000000000
           Color = clBlack
+          Frame.Typ = []
           Diagonal = True
         end
         object Line3: TfrxLineView
+          AllowVectorExport = True
           Left = 94.488250000000000000
           Top = 41.574830000000020000
           Width = 15.118120000000000000
           Height = -18.897650000000000000
           Color = clBlack
+          Frame.Typ = []
           Diagonal = True
         end
         object Line5: TfrxLineView
+          AllowVectorExport = True
           Left = 147.401670000000000000
           Top = 41.574830000000020000
           Width = 15.118120000000000000
           Height = -18.897650000000000000
           Color = clBlack
+          Frame.Typ = []
           Diagonal = True
         end
       end
       object MasterData1: TfrxMasterData
         FillType = ftBrush
+        Frame.Typ = []
         Height = 15.118120000000000000
         Top = 162.519790000000000000
         Width = 733.228820000000000000
@@ -1056,6 +1156,7 @@ object frmVenda_Entrega: TfrmVenda_Entrega
         DataSetName = 'fs_entrega'
         RowCount = 0
         object Memo22: TfrxMemoView
+          AllowVectorExport = True
           Left = 5.779530000000000000
           Top = 1.779529999999994000
           Width = 41.574830000000000000
@@ -1069,11 +1170,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fs_entrega."Codigo"]')
           ParentFont = False
         end
         object Memo23: TfrxMemoView
+          AllowVectorExport = True
           Left = 64.472480000000000000
           Top = 1.779529999999994000
           Width = 514.016080000000000000
@@ -1087,11 +1190,13 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           Memo.UTF8W = (
             '[fs_entrega."PRODUTO"]')
           ParentFont = False
         end
         object Memo25: TfrxMemoView
+          AllowVectorExport = True
           Left = 589.827150000000000000
           Top = 1.779529999999994000
           Width = 52.913420000000000000
@@ -1105,12 +1210,14 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haCenter
           Memo.UTF8W = (
             '[fs_entrega."Unidade"]')
           ParentFont = False
         end
         object Memo26: TfrxMemoView
+          AllowVectorExport = True
           Left = 646.520100000000000000
           Top = 1.779529999999994000
           Width = 83.149660000000000000
@@ -1126,6 +1233,7 @@ object frmVenda_Entrega: TfrmVenda_Entrega
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
+          Frame.Typ = []
           HAlign = haCenter
           Memo.UTF8W = (
             '[fs_entrega."qtde_entregue"]')

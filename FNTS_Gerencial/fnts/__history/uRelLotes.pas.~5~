@@ -1,0 +1,121 @@
+unit uRelLotes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, frxClass, frxExportBaseDialog, frxExportPDF,
+  Vcl.StdCtrls, Data.DB, frxDBSet, ZAbstractRODataset, ZAbstractDataset,
+  ZDataset, frxDesgn, AdvGlowButton, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  Vcl.Mask, JvExMask, JvToolEdit, Vcl.ExtCtrls, AdvMetroButton, AdvSmoothPanel,
+  AdvSmoothExpanderPanel;
+
+type
+  TfrmRelLotes = class(TForm)
+    AdvSmoothExpanderPanel1: TAdvSmoothExpanderPanel;
+    Label53: TLabel;
+    AdvMetroButton1: TAdvMetroButton;
+    Panel1: TPanel;
+    GroupBox1: TGroupBox;
+    Label10: TLabel;
+    DateEdit1: TJvDateEdit;
+    Label11: TLabel;
+    DateEdit2: TJvDateEdit;
+    GroupBox2: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    JvDateEdit2: TJvDateEdit;
+    Label6: TLabel;
+    cxBProduto: TcxButtonEdit;
+    Panel2: TPanel;
+    bimprimir: TAdvGlowButton;
+    bitbtn1: TAdvGlowButton;
+    Label5: TLabel;
+    cxBFornecedor: TcxButtonEdit;
+    fxRel: TfrxReport;
+    frxDesigner1: TfrxDesigner;
+    qryPesqLotes: TZQuery;
+    fsqryPesqLotes: TfrxDBDataset;
+    qryPesqLotesID: TIntegerField;
+    qryPesqLotesDESCRED: TWideStringField;
+    qryPesqLotesDATA_INICIO: TDateField;
+    qryPesqLotesHORA_INICIO: TTimeField;
+    qryPesqLotesDATA_FIM: TDateField;
+    qryPesqLotesHORA_FIM: TTimeField;
+    qryPesqLotesSTATUS: TWideStringField;
+    qryPesqLotesIDLI: TIntegerField;
+    qryPesqLotesCODPRODUTO: TWideStringField;
+    qryPesqLotesSALDO: TFloatField;
+    qryPesqLotesFABRICACAOPROD: TDateField;
+    qryPesqLotesPRECUSTO: TFloatField;
+    qryPesqLotesCODFORNECEDOR: TWideStringField;
+    qryPesqLotesVALIDADEPRODUTO: TDateField;
+    qryPesqLotesTOTAL_CUSTO: TFloatField;
+    qryPesqLotesPRODUTO: TWideStringField;
+    qryPesqLotesUNIDADE: TWideStringField;
+    qryPesqLotesFORNECEDOR: TWideStringField;
+    lblAgrup: TLabel;
+    comboAgrupamento: TComboBox;
+    frxPDFExport1: TfrxPDFExport;
+    procedure bimprimirClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmRelLotes: TfrmRelLotes;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmRelLotes.bimprimirClick(Sender: TObject);
+begin
+  qryPesqLotes.Close;
+  qryPesqLotes.SQL.Clear;
+  qryPesqLotes.SQL.Add('select l.id,');
+  qryPesqLotes.SQL.Add('       l.descred,');
+  qryPesqLotes.SQL.Add('       l.data_inicio,');
+  qryPesqLotes.SQL.Add('       l.hora_inicio,');
+  qryPesqLotes.SQL.Add('       l.data_fim,');
+  qryPesqLotes.SQL.Add('       l.hora_fim,');
+  qryPesqLotes.SQL.Add('       l.status,');
+  qryPesqLotes.SQL.Add('       li.id idLI,');
+  qryPesqLotes.SQL.Add('       li.codproduto,');
+  qryPesqLotes.SQL.Add('       li.saldo,');
+  qryPesqLotes.SQL.Add('       li.fabricacaoprod,');
+  qryPesqLotes.SQL.Add('       li.precusto,');
+  qryPesqLotes.SQL.Add('       li.codfornecedor,');
+  qryPesqLotes.SQL.Add('       li.validadeproduto,');
+  qryPesqLotes.SQL.Add('       li.total_custo,');
+  qryPesqLotes.SQL.Add('       pr.produto,');
+  qryPesqLotes.SQL.Add('       pr.unidade,');
+  qryPesqLotes.SQL.Add('       fo.nome fornecedor');
+  qryPesqLotes.SQL.Add('from  lote l');
+  qryPesqLotes.SQL.Add('join lote_item li on li.id_lote = l.id');
+  qryPesqLotes.SQL.Add('join c000025 PR on pr.codigo = li.codproduto');
+  qryPesqLotes.SQL.Add('left join c000009 FO on FO.codigo = li.codfornecedor');
+  qryPesqLotes.SQL.Add('where 1 = 1');
+  qryPesqLotes.SQL.Add('and (:id is null or (l.id =:id))');
+  qryPesqLotes.SQL.Add('and ((:dtLini is null and :dtLfim is null) or (l.data_inicio between :dtLini and :dtLfim))');
+  qryPesqLotes.SQL.Add('and ((:dtVini is null and :dtVfim is null) or (l.data_fim between :dtVini and :dtVfim))');
+  qryPesqLotes.SQL.Add('and ((:dtVProd is null and :dtVProd is null) or (li.validadeproduto between :dtVProd and :dtVProd))');
+//  qryPesqLotes.SQL.Add('and (:codp is null or (li.codproduto =:codp))');
+//  qryPesqLotes.SQL.Add('and (:codfo is null or (li.codfornecedor =:codfo))');
+  qryPesqLotes.SQL.Add('order by li.id');
+  qryPesqLotes.Open;
+
+  fxRel.LoadFromFile('C:\SOS\server\REL\F000223.fr3');
+  fxRel.PrepareReport;
+  fxRel.Variables['vAgrupado'] := QuotedStr('N° LOTE:');
+  fxRel.Variables['vDescred']  := QuotedStr('Descrição:');
+
+  fxRel.ShowReport;
+
+end;
+
+end.

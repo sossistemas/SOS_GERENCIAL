@@ -239,7 +239,6 @@ procedure Tfrmvenda.bincluirClick(Sender: TObject);
 var
   item, qtde, total: real;
 begin
-
   frmmodulo.qrconfig.Open;
   if frmmodulo.qrconfig.FieldByName('CADASTRO_PRODUTO').asstring = 'PECAS' then
   begin

@@ -7,7 +7,8 @@ uses
   Dialogs, AdvGlowButton, ExtCtrls, Grids, Wwdbigrd, Wwdbgrid, DB,
   Menus, StdCtrls, Mask, wwdbedit, Spin, frxClass,
   frxDBSet, frxDesgn, ZAbstractRODataset, ZDataset, DBClient,
-  RzSpnEdt, ZAbstractDataset, RzEdit;
+  RzSpnEdt, ZAbstractDataset, RzEdit,
+  StrUtils, IniFiles, ACBrPosPrinter;
 
 type
   TfrmVenda_Entrega = class(TForm)
@@ -57,7 +58,12 @@ type
     procedure bt_cartaClick(Sender: TObject);
     procedure bt_laserClick(Sender: TObject);
   private
-    { Private declarations }
+    FAcbrPosPrinter : TACBrPosPrinter;
+
+    function CompletaString(texto, Lado : string; Caractere: Char; Tamanho: Integer) : string;
+
+    procedure AtivaImpressoraACBR(Ativar:Boolean = True);
+    procedure ImpressaoPosPrinter(Buffer :TStringList);
   public
     { Public declarations }
   end;
@@ -100,6 +106,64 @@ begin
   Action := cafree;
 end;
 
+procedure TfrmVenda_Entrega.AtivaImpressoraACBR(Ativar: Boolean);
+var
+  ArqINI : String;
+  INI : TIniFile;
+begin
+  if not Assigned(FAcbrPosPrinter) then
+    FAcbrPosPrinter := TACBrPosPrinter.Create(Self);
+
+  if Ativar then
+  begin
+    if not FAcbrPosPrinter.Ativo then
+    begin
+      ArqINI := ChangeFileExt('C:\SOS\server\ini\PosPrinter', '.ini');
+      INI := TIniFile.Create(ArqINI);
+
+      try
+        FAcbrPosPrinter.Porta                      := INI.ReadString('PosPrinter','Porta','');
+        FAcbrPosPrinter.Modelo                     := TACBrPosPrinterModelo(INI.ReadInteger('PosPrinter','Modelo', 0));
+        FAcbrPosPrinter.ArqLOG                     := INI.ReadString('PosPrinter','ArqLog','');
+        FAcbrPosPrinter.LinhasBuffer               := INI.ReadInteger('PosPrinter','LinhasBuffer',0);
+        FAcbrPosPrinter.LinhasEntreCupons          := INI.ReadInteger('PosPrinter','LinhasPular',0);
+        FAcbrPosPrinter.EspacoEntreLinhas          := INI.ReadInteger('PosPrinter','EspacoEntreLinhas',0);
+        FAcbrPosPrinter.ColunasFonteNormal         := INI.ReadInteger('PosPrinter','Colunas',0);
+        FAcbrPosPrinter.ControlePorta              := INI.ReadBool('PosPrinter','ControlePorta',True);
+        FAcbrPosPrinter.CortaPapel                 := INI.ReadBool('PosPrinter','CortarPapel',True);
+        FAcbrPosPrinter.TraduzirTags               := INI.ReadBool('PosPrinter','TraduzirTags',True);
+        FAcbrPosPrinter.IgnorarTags                := INI.ReadBool('PosPrinter','IgnorarTags',True);
+        FAcbrPosPrinter.PaginaDeCodigo             := TACBrPosPaginaCodigo(INI.ReadInteger('PosPrinter','PaginaDeCodigo',0));
+        FAcbrPosPrinter.ConfigBarras.MostrarCodigo := INI.ReadBool('Barras','HRI',True);
+        FAcbrPosPrinter.ConfigBarras.LarguraLinha  := INI.ReadInteger('Barras','Largura',0);
+        FAcbrPosPrinter.ConfigBarras.Altura        := INI.ReadInteger('Barras','Altura',0);
+        FAcbrPosPrinter.ConfigQRCode.Tipo          := INI.ReadInteger('QRCode','Tipo',0);
+        FAcbrPosPrinter.ConfigQRCode.LarguraModulo := INI.ReadInteger('QRCode','LarguraModulo',0);
+        FAcbrPosPrinter.ConfigQRCode.ErrorLevel    := INI.ReadInteger('QRCode','ErrorLevel',0);
+        FAcbrPosPrinter.ConfigLogo.KeyCode1        := INI.ReadInteger('Logo','KC1',0);
+        FAcbrPosPrinter.ConfigLogo.KeyCode2        := INI.ReadInteger('Logo','KC2',0);
+        FAcbrPosPrinter.ConfigLogo.FatorX          := INI.ReadInteger('Logo','FatorX',0);
+        FAcbrPosPrinter.ConfigLogo.FatorY          := INI.ReadInteger('Logo','FatorY',0);
+
+        FAcbrPosPrinter.Ativar;
+      finally
+        FreeAndNil(INI);
+      end;
+    end;
+  end
+  else
+  begin
+    if FAcbrPosPrinter.Ativo then
+    begin
+      try
+        FAcbrPosPrinter.Desativar;
+      finally
+        FreeAndNil(FAcbrPosPrinter);
+      end;
+    end;
+  end;
+end;
+
 procedure TfrmVenda_Entrega.bcancelarClick(Sender: TObject);
 begin
   close;
@@ -108,6 +172,15 @@ end;
 procedure TfrmVenda_Entrega.Cancelar1Click(Sender: TObject);
 begin
   close;
+end;
+
+function TfrmVenda_Entrega.CompletaString(texto, Lado: string; Caractere: Char;
+  Tamanho: Integer): string;
+begin
+  case AnsiIndexStr(UpperCase(Lado), ['D', 'E']) of
+    0: Result := Copy(texto, 1, Tamanho) + StringOfChar(Caractere, (Tamanho - Length(texto)));
+    1: Result := StringOfChar(Caractere, (Tamanho - Length(texto))) + Copy(texto, 1, Tamanho);
+  end;
 end;
 
 procedure TfrmVenda_Entrega.bgravarClick(Sender: TObject);
@@ -144,6 +217,12 @@ begin
   frmmodulo.qrconfig.open;
   combobox1.ItemIndex := frmmodulo.qrconfig.fieldbyname('entrega_impressao').asinteger;
   evias.intValue := frmmodulo.qrconfig.fieldbyname('entrega_vias').asinteger;
+end;
+
+procedure TfrmVenda_Entrega.ImpressaoPosPrinter(Buffer: TStringList);
+begin
+  FAcbrPosPrinter.Buffer.Text := Buffer.Text;
+  FAcbrPosPrinter.Imprimir;
 end;
 
 procedure TfrmVenda_Entrega.qrEntregaBeforeInsert(DataSet: TDataSet);
@@ -271,6 +350,7 @@ var
   conta_formas, I, VIAS: integer;
   dinheiro, chequeav, chequeap, cartaocred, cartaodeb, crediario: real;
   prestacao, SUBIR_PAPEL: integer;
+  vList : TStringList;
 begin
 // NORMAL               --> #18+#27#72+#20
 // NORMAL NEGRITO       --> #18+#27#71+#20
@@ -289,60 +369,99 @@ begin
 
   VIAS := EVIAS.intValue;
 
-  while VIAS <> 0 do
-  begin
+  vList := TStringList.Create;
 
-    writeln(arquivo, #18 + #27#71 + #20, frmprincipal.Texto_Justifica(emitente_fantasia, 30, ' ', 'C'));
-    writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(emitente_endereco, 52, ' ', 'C'));
-    writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(emitente_cidade + ' - CEP ' + emitente_cep, 52, ' ', 'C'));
-    writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica('Telefone: ' + emitente_telefone, 52, ' ', 'C'));
-    writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
-    writeln(arquivo, #15 + #27#72 + #20, 'GUIA DE ENTREGA - No. ' + frmprincipal.Texto_Justifica(frmvenda.lvenda_codigo.Caption, 6, '0', 'E') + '  Emis: ' + frmprincipal.Texto_Justifica(frmvenda.lvenda_data.Caption, 10, ' ', 'E') + ' ' + frmprincipal.Texto_Justifica(timetostr(time), 5, ' ', 'E'));
-    writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
-    writeln(arquivo, #15 + #27#72 + #20, 'Cliente...: ' + frmprincipal.Texto_Justifica(frmvenda.lcliente_codigo.Caption, 6, '0', 'E') + ' ' + frmprincipal.Texto_Justifica(frmvenda.lcliente_nome.Caption, 32, ' ', 'D'));
-    writeln(arquivo, #15 + #27#72 + #20, 'Endereco..: ' + frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('endereco').asstring + ' ' + frmvenda.qrcliente.fieldbyname('bairro').asstring, 39, ' ', 'D'));
-    writeln(arquivo, #15 + #27#72 + #20, 'Cid/UF/CEP: ' + frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('cidade').asstring + '/' + frmvenda.qrcliente.fieldbyname('uf').asstring + '  ' + frmvenda.qrcliente.fieldbyname('cep').asstring, 39, ' ', 'D'));
-    writeln(arquivo, #15 + #27#72 + #20, 'Telefones.: ' + frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('telefone1').asstring + '/' + frmvenda.qrcliente.fieldbyname('celular').asstring + '/' + frmvenda.qrcliente.fieldbyname('telefone2').asstring, 39, ' ', 'D'));
-    writeln(arquivo, #15 + #27#72 + #20, 'Ponto. Ref: ' + frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('complemento').asstring, 39, ' ', 'D'));
-    writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
-    writeln(arquivo, #15 + #27#72 + #20, 'P R O D U T O                          UN QUANTIDADE');
-    writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
-    I := 0;
+  Try
+    AtivaImpressoraACBR(True);
 
-    qrentrega.first;
-    while not qrentrega.eof do
+    while VIAS <> 0 do
     begin
+      writeln(arquivo, #18 + #27#71 + #20, frmprincipal.Texto_Justifica(emitente_fantasia, 30, ' ', 'C'));
+      writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(emitente_endereco, 52, ' ', 'C'));
+      writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(emitente_cidade + ' - CEP ' + emitente_cep, 52, ' ', 'C'));
+      writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica('Telefone: ' + emitente_telefone, 52, ' ', 'C'));
+      writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
+      writeln(arquivo, #15 + #27#72 + #20, 'GUIA DE ENTREGA - No. ' + frmprincipal.Texto_Justifica(frmvenda.lvenda_codigo.Caption, 6, '0', 'E') + '  Emis: ' + frmprincipal.Texto_Justifica(frmvenda.lvenda_data.Caption, 10, ' ', 'E') + ' ' + frmprincipal.Texto_Justifica(timetostr(time), 5, ' ', 'E'));
+      writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
+      writeln(arquivo, #15 + #27#72 + #20, 'Cliente...: ' + frmprincipal.Texto_Justifica(frmvenda.lcliente_codigo.Caption, 6, '0', 'E') + ' ' + frmprincipal.Texto_Justifica(frmvenda.lcliente_nome.Caption, 27, ' ', 'D'));
+      writeln(arquivo, #15 + #27#72 + #20, 'Endereco..: ' + frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('endereco').asstring + ' ' + frmvenda.qrcliente.fieldbyname('bairro').asstring, 39, ' ', 'D'));
+      writeln(arquivo, #15 + #27#72 + #20, 'Cid/UF/CEP: ' + frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('cidade').asstring + '/' + frmvenda.qrcliente.fieldbyname('uf').asstring + '  ' + frmvenda.qrcliente.fieldbyname('cep').asstring, 39, ' ', 'D'));
+      writeln(arquivo, #15 + #27#72 + #20, 'Telefones.: ' + frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('telefone1').asstring + '/' + frmvenda.qrcliente.fieldbyname('celular').asstring + '/' + frmvenda.qrcliente.fieldbyname('telefone2').asstring, 39, ' ', 'D'));
+      writeln(arquivo, #15 + #27#72 + #20, 'Ponto. Ref: ' + frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('complemento').asstring, 39, ' ', 'D'));
+      writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
+      writeln(arquivo, #15 + #27#72 + #20, 'P R O D U T O                          UN QUANTIDADE');
+      writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
 
-      if qrentrega.fieldbyname('qtde_entregue').asfloat > 0 then
+      vList.Add('</fn></ce>' + copy(emitente_fantasia, 1, 46));
+      vList.Add('</fn></ce>' + copy(emitente_endereco, 1, 46));
+      vList.Add('</fn></ce>' + ' - CEP ' + emitente_cep);
+      vList.Add('</fn></ce>' + 'Telefone: ' + emitente_telefone);
+      vList.Add('</linha_simples>');
+      vList.Add('</fn></ae>' + 'GUIA DE ENTREGA - No. ' + CompletaString(frmprincipal.Texto_Justifica(frmvenda.lvenda_codigo.Caption, 6, '0', 'E'),'D',' ',7));
+      vList.Add('</fn></ae>Cliente...: ' + frmprincipal.Texto_Justifica(frmvenda.lcliente_codigo.Caption, 6, '0', 'E') + ' ' + frmprincipal.Texto_Justifica(frmvenda.lcliente_nome.Caption, 27, ' ', 'D'));
+      vList.Add('</fn></ae>Endereco..: '+frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('endereco').asstring + ' ' + frmvenda.qrcliente.fieldbyname('bairro').asstring, 32, ' ', 'D'));
+      vList.Add('</fn></ae>Cid/UF/CEP: '+frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('cidade').asstring + '/' + frmvenda.qrcliente.fieldbyname('uf').asstring + '  ' + frmvenda.qrcliente.fieldbyname('cep').asstring, 32, ' ', 'D'));
+      vList.Add('</fn></ae>Telefones.: '+frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('telefone1').asstring + '/' + frmvenda.qrcliente.fieldbyname('celular').asstring + '/' + frmvenda.qrcliente.fieldbyname('telefone2').asstring, 32, ' ', 'D'));
+      vList.Add('</fn></ae>Ponto. Ref: '+frmprincipal.Texto_Justifica(frmvenda.qrcliente.fieldbyname('complemento').asstring, 31, ' ', 'D'));
+      vList.Add('</linha_simples>');
+      vList.Add('<n></ae>' + CompletaString('P R O D U T O','D',' ',30) + '   UN  QUANTIDADE</n>');
+      vList.Add('</linha_simples>');
+
+      I := 0;
+
+      qrentrega.first;
+      while not qrentrega.eof do
       begin
+        if qrentrega.fieldbyname('qtde_entregue').asfloat > 0 then
+        begin
+          writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(qrentrega.fieldbyname('codigo').asstring, 6, '0', 'E') + ' ' + frmprincipal.Texto_Justifica(qrentrega.fieldbyname('produto').asstring, 31, ' ', 'D') + ' ' + frmprincipal.Texto_Justifica(qrentrega.fieldbyname('unidade').asstring, 2, '  ', 'D') + ' ' + frmprincipal.Texto_Justifica(formatfloat(mascara_qtde, qrentrega.fieldbyname('qtde_entregue').asfloat), 10, ' ', 'E'));
+          vList.Add('</fn></ae>'+ CompletaString(frmprincipal.Texto_Justifica(qrentrega.fieldbyname('codigo').asstring, 6, '0', 'E'),'D',' ',7) + frmprincipal.Texto_Justifica(qrentrega.fieldbyname('produto').asstring, 25, ' ', 'D') + ' ' + frmprincipal.Texto_Justifica(qrentrega.fieldbyname('unidade').asstring, 2, '  ', 'D') + ' ' + frmprincipal.Texto_Justifica(formatfloat(mascara_qtde, qrentrega.fieldbyname('qtde_entregue').asfloat), 11, ' ', 'E'));
+        end;
 
-        writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(qrentrega.fieldbyname('codigo').asstring, 6, '0', 'E') + ' ' + frmprincipal.Texto_Justifica(qrentrega.fieldbyname('produto').asstring, 31, ' ', 'D') + ' ' + frmprincipal.Texto_Justifica(qrentrega.fieldbyname('unidade').asstring, 2, '  ', 'D') + ' ' + frmprincipal.Texto_Justifica(formatfloat(mascara_qtde, qrentrega.fieldbyname('qtde_entregue').asfloat), 10, ' ', 'E'));
+        qrentrega.Next;
       end;
 
-      qrentrega.Next;
+      writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
+      writeln(arquivo, 'Reconhe‡o   que   recebi  a(s)  mercadoria(s)  acima ');
+      writeln(arquivo, 'relacionada(s) em perfeito estado.');
+      writeln(arquivo, '');
+      writeln(arquivo, '');
+      writeln(arquivo, #15 + #27#72 + #20, 'Data: -----/-----/----------');
+      writeln(arquivo, #15 + #27#72 + #20, '');
+      writeln(arquivo, #15 + #27#72 + #20, '');
+      writeln(arquivo, #15 + #27#72 + #20, '         -----------------------------              ');
+      writeln(arquivo, #15 + #27#72 + #20, '                  ASSINATURA');
+
+      vList.Add('</linha_simples>');
+      vList.Add('</fn></ae>Reconheço que recebi a(s) mercadoria(s) acima');
+      vList.Add('</fn></ae>relacionada(s) em perfeito estado.');
+      vList.Add('');
+      vList.Add('</fn></ae>Data: -----/-----/----------');
+      vList.Add('');
+      vList.Add('</linha_simples>');
+      vList.Add('</fn></ce>ASSINATURA');
+      vList.Add('</zera>');
+      vList.Add('</zera>');
+      vList.Add('</corte_total>');
+
+      while SUBIR_PAPEL <> 0 do
+      begin
+        Writeln(arquivo, #15 + #27#72 + #20, '');
+        SUBIR_PAPEL := SUBIR_PAPEL - 1;
+      end;
+
+      VIAS := VIAS - 1;
+      writeln(arquivo, '');
+      writeln(arquivo, '');
+
+      ImpressaoPosPrinter(vList);
+
+      vList.Clear;
     end;
-
-    writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
-    writeln(arquivo, 'Reconhe‡o   que   recebi  a(s)  mercadoria(s)  acima ');
-    writeln(arquivo, 'relacionada(s) em perfeito estado.');
-    writeln(arquivo, '');
-    writeln(arquivo, '');
-    writeln(arquivo, #15 + #27#72 + #20, 'Data: -----/-----/----------');
-    writeln(arquivo, #15 + #27#72 + #20, '');
-    writeln(arquivo, #15 + #27#72 + #20, '');
-    writeln(arquivo, #15 + #27#72 + #20, '         -----------------------------              ');
-    writeln(arquivo, #15 + #27#72 + #20, '                  ASSINATURA');
-    while SUBIR_PAPEL <> 0 do
-    begin
-      Writeln(arquivo, #15 + #27#72 + #20, '');
-      SUBIR_PAPEL := SUBIR_PAPEL - 1;
-    end;
-
-    VIAS := VIAS - 1;
-    writeln(arquivo, '');
-    writeln(arquivo, '');
-
-  end;
+  Finally
+    FreeAndNil(vList);
+    AtivaImpressoraACBR(False);
+  End;
 
   closefile(arquivo);
 end;

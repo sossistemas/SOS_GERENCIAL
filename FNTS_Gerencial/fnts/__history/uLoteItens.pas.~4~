@@ -1,0 +1,51 @@
+unit uLoteItens;
+
+interface
+
+uses ZDataset, modulo, System.SysUtils, Data.SqlExpr, Datasnap.DBClient;
+
+const
+  SPLOTE = 'LOTE_ITEM_IU';
+
+type
+  TLoteItens = class(TObject)
+  private
+    FcdsItensLote: TClientDataSet;
+
+  protected
+    { protected declarations }
+  public
+
+  constructor Create;
+
+  destructor Destroy; override;
+
+
+    
+  published
+//    property ID : integer;
+//    property CODPRODUTO : string;
+//    property SALDO : Real;
+//    property FABRICACAOPROD : TDate;
+//    property PRECUSTO : Currency;
+
+    property cdsItensLote: TClientDataSet read FcdsItensLote write FcdsItensLote;
+
+  end;
+
+implementation
+
+{ TLoteItens }
+
+constructor TLoteItens.Create;
+begin
+  FcdsItensLote := TClientDataSet.Create(nil);
+end;
+
+destructor TLoteItens.Destroy;
+begin
+  FreeAndNil(FcdsItensLote);
+  inherited Destroy;
+end;
+
+end.

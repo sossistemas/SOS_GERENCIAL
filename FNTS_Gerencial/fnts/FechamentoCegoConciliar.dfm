@@ -3,7 +3,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
   Top = 0
   ActiveControl = GCego
   BorderStyle = bsNone
-  ClientHeight = 374
+  ClientHeight = 384
   ClientWidth = 561
   Color = 10804896
   Font.Charset = DEFAULT_CHARSET
@@ -143,7 +143,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
         6984AC202E42751297CED7DA93E2B3D973F5D8ABD273F799D45D641A5CCEA1E1
         65B5119A54FB20C0004E7B10B44195D3E70000000049454E44AE426082}
       TabOrder = 0
-      Version = '1.1.2.0'
+      Version = '1.2.0.0'
       OnClick = bfecharClick
     end
   end
@@ -151,7 +151,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
     Left = 24
     Top = 67
     Width = 513
-    Height = 226
+    Height = 254
     Caption = 'Lan'#231'amentos do Fechamento Cego'
     Font.Charset = ANSI_CHARSET
     Font.Color = clBlack
@@ -214,7 +214,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
     end
     object Label6: TLabel
       Left = 76
-      Top = 187
+      Top = 213
       Width = 168
       Height = 25
       Caption = 'Diferen'#231'a Total:'
@@ -290,6 +290,63 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
       Font.Style = []
       ParentFont = False
     end
+    object Image1: TImage
+      Left = 6
+      Top = 185
+      Width = 27
+      Height = 23
+      Center = True
+      Picture.Data = {
+        0B54504E474772617068696336040000424D3604000000000000360000002800
+        0000100000001000000001002000000000000004000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000ADBC0045C0D0007FABBA0043000000000000000000000000000000000000
+        000000000000000000000000000000000000000000000000000000000000AEBC
+        006FBACB00FFC1D200FFB9C900FFADBB006A0000000000000000000000000000
+        00000000000000000000000000000000000000000000FFFF0001AEBD0078BACA
+        00FFB1C000FFADBB00FEB2C100FFB9C900FFADBD007100000000000000000000
+        00000000000000000000000000000000000000000000A8B3002CB5C400DDBCCC
+        00FFADBC00FFADBC00FEACBB00FEBCCC00FFB4C300E9A3B0002A000000000000
+        000000000000000000000000000000000000ABBB0062C1D3009EABBB005FB0BF
+        0099BDCD00FFADBC00FFBCCD00FFB1C000B4ADBC0058C0D1009CADBB005E0000
+        0000000000000000000000000000ACBA006FBCCC00FFBFD000FFB5C500FDABBA
+        0065B0BE0093C6D800FFB1C100B1A9B90054B5C500EEC1D100FFBBCB00FFAABB
+        006A0000000000000000ADBB0048BACB00FFB1C000FFADBC00FEB1C100FFB5C4
+        00FEACBC0073B5C50073ACBB0066B4C400F0B5C400FFACBB00FEB2C100FFB9C9
+        00FFAFBE004300000000ACBC0092C0D100FFADBC00FEADBC00FEADBC00FEB4C4
+        00FFB4C400FFAABB007CAEBC00F3B9C900FFACBB00FEADBC00FEADBB00FEC0D2
+        00FFAEBC008B00000000ADBA004BBBCC00FFB1C000FFADBC00FEB1C000FFB6C5
+        00FFAFBC0076B6C30070AEBC0068B4C400F3B4C400FFACBB00FEB1C000FFBACA
+        00FFAEBD00460000000000000000ABBA0074BDCD00FFBECF00FFB6C600FFACBA
+        0069B0BE008FC6D700FFB0C100ADA9B70056B4C400F1C0D100FFBCCC00FFACBA
+        006F00000000000000000000000000000000ADBC0067C0D100A3ACBC0060B0BF
+        0095BCCD00FFAEBC00FFBDCD00FFB0C000B0ADBC0058C0D200A0AABA00640000
+        00000000000000000000000000000000000000000000A4B5002DB4C500D9BBCB
+        00FFADBC00FFADBC00FEADBB00FEBCCC00FFB4C400E6A6B1002B000000000000
+        000000000000000000000000000000000000000000007FFF0002AEBC007EBBCB
+        00FFB1C000FFADBC00FEB1C000FFBACA00FFAFBE0076FFFF0001000000000000
+        000000000000000000000000000000000000000000000000000000000000ADBD
+        0074BCCC00FFC1D100FFBBCB00FFAEBC006F0000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000ADBA004BBFCF0085ADBB0048000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        000000000000}
+      Transparent = True
+    end
+    object Label12: TLabel
+      Left = 39
+      Top = 188
+      Width = 18
+      Height = 13
+      Caption = 'Pix:'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
     object AdvShapeButton1: TAdvShapeButton
       Left = 8
       Top = 38
@@ -346,7 +403,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
       ParentBackground = False
       ParentFont = False
       TabOrder = 0
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object edCegoDinheiro: TJvCalcEdit
       Left = 119
@@ -420,7 +477,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
       ParentBackground = False
       ParentFont = False
       TabOrder = 2
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object edCegoCheque: TJvCalcEdit
       Left = 119
@@ -490,7 +547,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
     end
     object edCegoDifTotal: TJvCalcEdit
       Left = 250
-      Top = 183
+      Top = 209
       Width = 255
       Height = 33
       Margins.Left = 4
@@ -743,7 +800,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
       ParentBackground = False
       ParentFont = False
       TabOrder = 15
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object AdvShapeButton4: TAdvShapeButton
       Left = 8
@@ -802,7 +859,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
       ParentBackground = False
       ParentFont = False
       TabOrder = 16
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object AdvShapeButton5: TAdvShapeButton
       Left = 8
@@ -863,7 +920,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
       ParentBackground = False
       ParentFont = False
       TabOrder = 17
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object AdvShapeButton6: TAdvShapeButton
       Left = 8
@@ -923,7 +980,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
       ParentBackground = False
       ParentFont = False
       TabOrder = 18
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object edCegoDinheiroRea: TJvCalcEdit
       Left = 250
@@ -1057,10 +1114,76 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
       TabOrder = 24
       DecimalPlacesAlwaysShown = True
     end
+    object edcegoPix: TJvCalcEdit
+      Left = 119
+      Top = 183
+      Width = 125
+      Height = 21
+      Margins.Left = 4
+      Margins.Top = 1
+      AutoSize = False
+      Color = 4227072
+      DisplayFormat = ',0.00'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      NumGlyphs = 2
+      ParentFont = False
+      ReadOnly = True
+      ShowButton = False
+      TabOrder = 25
+      DecimalPlacesAlwaysShown = True
+    end
+    object edcegoPixRea: TJvCalcEdit
+      Left = 250
+      Top = 183
+      Width = 125
+      Height = 21
+      Margins.Left = 4
+      Margins.Top = 1
+      AutoSize = False
+      Color = clYellow
+      DisplayFormat = ',0.00'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      NumGlyphs = 2
+      ParentFont = False
+      ReadOnly = True
+      ShowButton = False
+      TabOrder = 26
+      DecimalPlacesAlwaysShown = True
+    end
+    object edCegoPixDif: TJvCalcEdit
+      Left = 380
+      Top = 183
+      Width = 125
+      Height = 21
+      Margins.Left = 4
+      Margins.Top = 1
+      AutoSize = False
+      Color = clMaroon
+      DisplayFormat = ',0.00'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      NumGlyphs = 2
+      ParentFont = False
+      ReadOnly = True
+      ShowButton = False
+      TabOrder = 27
+      DecimalPlacesAlwaysShown = True
+    end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 319
+    Top = 329
     Width = 561
     Height = 55
     Align = alBottom
@@ -1068,6 +1191,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
     Color = 3815994
     ParentBackground = False
     TabOrder = 2
+    ExplicitTop = 319
     object btnSalvarConciliar: TAdvGlowButton
       Left = 393
       Top = 0
@@ -1241,7 +1365,7 @@ object frmFechamentoCegoConciliar: TfrmFechamentoCegoConciliar
       '(select sum(saida) from c000044 where movimento = 08)'
       'from c000044')
     Params = <>
-    Left = 18
-    Top = 259
+    Left = 506
+    Top = 59
   end
 end

@@ -20,7 +20,7 @@ object frmOs_menu: TfrmOs_menu
   PixelsPerInch = 96
   TextHeight = 13
   object wwDBGrid1: TwwDBGrid
-    Left = 0
+    Left = 2
     Top = 98
     Width = 810
     Height = 413
@@ -565,7 +565,7 @@ object frmOs_menu: TfrmOs_menu
       ParentBackground = False
       ParentFont = False
       TabOrder = 3
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object AdvShapeButton2: TAdvShapeButton
       Left = 276
@@ -604,7 +604,7 @@ object frmOs_menu: TfrmOs_menu
       ParentBackground = False
       ParentFont = False
       TabOrder = 4
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object AdvShapeButton3: TAdvShapeButton
       Left = 484
@@ -649,7 +649,7 @@ object frmOs_menu: TfrmOs_menu
       ParentBackground = False
       ParentFont = False
       TabOrder = 5
-      Version = '6.1.0.3'
+      Version = '6.2.1.5'
     end
     object loc: TwwIncrementalSearch
       Left = 79
@@ -1443,7 +1443,7 @@ object frmOs_menu: TfrmOs_menu
         6984AC202E42751297CED7DA93E2B3D973F5D8ABD273F799D45D641A5CCEA1E1
         65B5119A54FB20C0004E7B10B44195D3E70000000049454E44AE426082}
       TabOrder = 0
-      Version = '1.1.2.0'
+      Version = '1.2.0.0'
       OnClick = AdvMetroButton1Click
     end
   end
@@ -1459,7 +1459,7 @@ object frmOs_menu: TfrmOs_menu
     Left = 672
     Top = 336
     Bitmap = {
-      494C01010500090018000F000F00FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010500090004000F000F00FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       00000000000036000000280000003C0000001E0000000100200000000000201C
       000000000000000000000000000000000000000000003DA3DAFFBCEBFAFFBCEB
       FCFFBFEEFEFFC6F4FFFFCEF8FFFFD3FAFFFFD0F8FFFFC7F2FFFFBAE9FCFFB3E4

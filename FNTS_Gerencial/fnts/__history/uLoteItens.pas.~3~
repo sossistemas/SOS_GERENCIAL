@@ -1,0 +1,30 @@
+unit uLoteItens;
+
+interface
+
+uses ZDataset, modulo, System.SysUtils, Data.SqlExpr;
+
+const
+  SPLOTE = 'LOTE_ITEM_IU';
+
+type
+  TLoteItens = class(TObject)
+  private
+
+  protected
+    { protected declarations }
+  public
+    { public declarations }
+    
+  published
+    property ID : integer;
+    property CODPRODUTO : string;
+    property SALDO : Real;
+    property FABRICACAOPROD : TDate;
+    property PRECUSTO : Currency;
+    property CODFORNEC :
+  end;  
+
+implementation
+
+end.

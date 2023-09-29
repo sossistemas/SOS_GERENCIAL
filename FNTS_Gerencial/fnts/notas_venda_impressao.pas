@@ -8,7 +8,7 @@ uses
   Menus, DB, ZAbstractRODataset, ZDataset, frxClass, frxDesgn,
   frxDBSet, AdvGlowButton, AdvShapeButton, Mask, RzSpnEdt,
   AdvMetroButton, AdvSmoothExpanderPanel, ZAbstractDataset, AdvSmoothPanel,
-  RzEdit;
+  RzEdit, IniFiles, ACBrPosPrinter, StrUtils;
 
 type
   Tfrmnotas_venda_impressao = class(TForm)
@@ -147,7 +147,13 @@ type
     procedure Laser21Click(Sender: TObject);
     procedure AdvMetroButton1Click(Sender: TObject);
   private
-    { Private declarations }
+    FAcbrPosPrinter : TACBrPosPrinter;
+
+    procedure AtivaImpressoraACBR(Ativar:Boolean = True);
+    procedure ImpressaoPosPrinter(Buffer :TMemo);
+
+    function CompletaString(texto, Lado : string; Caractere: Char; Tamanho: Integer) : string;
+
   public
     { Public declarations }
   end;
@@ -174,6 +180,65 @@ begin
   close;
 end;
 
+procedure Tfrmnotas_venda_impressao.AtivaImpressoraACBR(Ativar: Boolean);
+var
+  ArqINI : String;
+  INI : TIniFile;
+//  FAcbrPosPrinter : TACBrPosPrinter;
+begin
+  if not Assigned(FAcbrPosPrinter) then
+    FAcbrPosPrinter := TACBrPosPrinter.Create(Self);
+
+  if Ativar then
+  begin
+    if not FAcbrPosPrinter.Ativo then
+    begin
+      ArqINI := ChangeFileExt('C:\SOS\server\ini\PosPrinter', '.ini');
+      INI := TIniFile.Create(ArqINI);
+
+      try
+        FAcbrPosPrinter.Porta                      := INI.ReadString('PosPrinter','Porta','');
+        FAcbrPosPrinter.Modelo                     := TACBrPosPrinterModelo(INI.ReadInteger('PosPrinter','Modelo', 0));
+        FAcbrPosPrinter.ArqLOG                     := INI.ReadString('PosPrinter','ArqLog','');
+        FAcbrPosPrinter.LinhasBuffer               := INI.ReadInteger('PosPrinter','LinhasBuffer',0);
+        FAcbrPosPrinter.LinhasEntreCupons          := INI.ReadInteger('PosPrinter','LinhasPular',0);
+        FAcbrPosPrinter.EspacoEntreLinhas          := INI.ReadInteger('PosPrinter','EspacoEntreLinhas',0);
+        FAcbrPosPrinter.ColunasFonteNormal         := INI.ReadInteger('PosPrinter','Colunas',0);
+        FAcbrPosPrinter.ControlePorta              := INI.ReadBool('PosPrinter','ControlePorta',True);
+        FAcbrPosPrinter.CortaPapel                 := INI.ReadBool('PosPrinter','CortarPapel',True);
+        FAcbrPosPrinter.TraduzirTags               := INI.ReadBool('PosPrinter','TraduzirTags',True);
+        FAcbrPosPrinter.IgnorarTags                := INI.ReadBool('PosPrinter','IgnorarTags',True);
+        FAcbrPosPrinter.PaginaDeCodigo             := TACBrPosPaginaCodigo(INI.ReadInteger('PosPrinter','PaginaDeCodigo',0));
+        FAcbrPosPrinter.ConfigBarras.MostrarCodigo := INI.ReadBool('Barras','HRI',True);
+        FAcbrPosPrinter.ConfigBarras.LarguraLinha  := INI.ReadInteger('Barras','Largura',0);
+        FAcbrPosPrinter.ConfigBarras.Altura        := INI.ReadInteger('Barras','Altura',0);
+        FAcbrPosPrinter.ConfigQRCode.Tipo          := INI.ReadInteger('QRCode','Tipo',0);
+        FAcbrPosPrinter.ConfigQRCode.LarguraModulo := INI.ReadInteger('QRCode','LarguraModulo',0);
+        FAcbrPosPrinter.ConfigQRCode.ErrorLevel    := INI.ReadInteger('QRCode','ErrorLevel',0);
+        FAcbrPosPrinter.ConfigLogo.KeyCode1        := INI.ReadInteger('Logo','KC1',0);
+        FAcbrPosPrinter.ConfigLogo.KeyCode2        := INI.ReadInteger('Logo','KC2',0);
+        FAcbrPosPrinter.ConfigLogo.FatorX          := INI.ReadInteger('Logo','FatorX',0);
+        FAcbrPosPrinter.ConfigLogo.FatorY          := INI.ReadInteger('Logo','FatorY',0);
+
+        FAcbrPosPrinter.Ativar;
+      finally
+        FreeAndNil(INI);
+      end;
+    end;
+  end
+  else
+  begin
+    if FAcbrPosPrinter.Ativo then
+    begin
+      try
+        FAcbrPosPrinter.Desativar;
+      finally
+        FreeAndNil(FAcbrPosPrinter);
+      end;
+    end;
+  end;
+end;
+
 procedure Tfrmnotas_venda_impressao.bcancelarClick(Sender: TObject);
 begin
   close;
@@ -196,23 +261,22 @@ begin
 
 
   case combo_modelo.ItemIndex of
-    2:
+    2://Bobina
       TPBobinaClick(frmnotas_venda_impressao);
-    3:
+    3://Formulário Continuo - Razao
       TPRazaoClick(frmnotas_venda_impressao);
-    6:
+    6://Contrato - Guia entrega - Carnê
       TPContratoClick(frmnotas_venda_impressao);
-    10:
+    10://Formulário Continuo - Razão 2
       FormulrioContnuoRazo1click(frmnotas_venda_impressao);
-    12:
+    12://Bobina sem Formatação
       Bobinasemformatao1Click(frmnotas_venda_impressao);
-    13:
+    13://Pedido + Carnê
       PedidoCarn1Click(frmnotas_venda_impressao);
-    15:
+    15://Pedido + Carnê com Cod Barras
       PedidoCarncomcdigodebarras1Click(frmnotas_venda_impressao);
-    16:
+    16://Papel Razão - Laser/Jato de Tinta
       Laser21Click(frmnotas_venda_impressao);
-
   end;
 
   close;
@@ -259,12 +323,25 @@ begin
   evias.intValue := frmmodulo.qrconfig.FieldByName('VENDA_QTDE_VIAS_NOTA').asinteger;
   porta_impressora := frmmodulo.qrconfig.FieldByName('VENDA_PORTA_IMPRESSORA').asstring;
 
+  frmnotas_venda_impressao.Height := 175;
+  frmnotas_venda_impressao.Width  := 553;
+
 end;
 
 procedure Tfrmnotas_venda_impressao.combo_modeloKeyPress(Sender: TObject; var Key: Char);
 begin
   if Key = #13 then
     bgravar.SetFocus;
+end;
+
+
+function Tfrmnotas_venda_impressao.CompletaString(texto, Lado: string;
+  Caractere: Char; Tamanho: Integer): string;
+begin
+  case AnsiIndexStr(UpperCase(Lado), ['D', 'E']) of
+    0: Result := Copy(texto, 1, Tamanho) + StringOfChar(Caractere, (Tamanho - Length(texto)));
+    1: Result := StringOfChar(Caractere, (Tamanho - Length(texto))) + Copy(texto, 1, Tamanho);
+  end;
 end;
 
 procedure Tfrmnotas_venda_impressao.eviasKeyPress(Sender: TObject; var Key: Char);
@@ -276,11 +353,17 @@ end;
 procedure Tfrmnotas_venda_impressao.TPBobinaClick(Sender: TObject);
 var
   arquivo: textfile;
-  texto1, texto2, texto3, texto4, texto5, texto6: string;
+  texto1, texto2, texto3, texto4, texto5, texto6, linha: string;
   subir_papel, conta_formas: integer;
-  dinheiro, chequeav, chequeap, cartaocred, cartaodeb, crediario: real;
-  prestacao: integer;
+  dinheiro, chequeav, chequeap, cartaocred, cartaodeb, crediario, Pix: real;
+  prestacao, i: integer;
+
+  MEMO : TMemo;
+
+  strList :TStringList;
 begin
+  linha := EmptyStr;
+
 // NORMAL               --> #18+#27#72+#20
 // NORMAL NEGRITO       --> #18+#27#71+#20
 // FONTE GRANDE         --> #27#72+#14
@@ -288,6 +371,15 @@ begin
 // CONDENSADO           --> #15+#27#72+#20
 // CONDENSADO NEGRITO   --> #15+#27#71+#20
 
+  MEMO := TMemo.Create(Self);
+
+  MEMO.Parent     := Screen.ActiveForm;
+  MEMO.Font.Name  := 'Courier New';
+  MEMO.Font.Size  := 10;
+  MEMO.Font.Style := [fsBold];
+  MEMO.ParentFont := False;
+  MEMO.Height     := 280;
+  MEMO.Width      := 442;
 
   frmmodulo.qrconfig.open;
   subir_papel := frmmodulo.qrconfig.fieldbyname('bobina_subirpapel').asinteger;
@@ -298,8 +390,18 @@ begin
   writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(emitente_endereco, 52, ' ', 'C'));
   writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(emitente_cidade + ' - CEP ' + emitente_cep, 52, ' ', 'C'));
   writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica('Telefone: ' + emitente_telefone, 52, ' ', 'C'));
+
+  MEMO.Lines.Add('</fn></ce>' + emitente_fantasia);
+  MEMO.Lines.Add('</fn></ce>' + emitente_endereco);
+  MEMO.Lines.Add('</fn></ce>' + emitente_cidade);
+  MEMO.Lines.Add('</fn></ce>' + 'Telefone: ' + emitente_telefone);
+
   writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
   writeln(arquivo, #15 + #27#72 + #20, 'No. ' + frmprincipal.Texto_Justifica(frmmodulo.qrvenda.fieldbyname('codigo').asstring, 6, '0', 'E') + '  Emis: ' + frmprincipal.Texto_Justifica(frmmodulo.qrvenda.fieldbyname('data').asstring, 10, ' ', 'E') + ' ' + frmprincipal.Texto_Justifica(timetostr(time), 5, ' ', 'E') + '  Vd: ' + frmprincipal.Texto_Justifica(frmmodulo.qrvenda.fieldbyname('vendedor').asstring, 13, ' ', 'D'));
+
+  MEMO.Lines.Add('</Linha_Simples>');
+  MEMO.Lines.Add('</ae>' + 'No.' + frmmodulo.qrvenda.fieldbyname('codigo').asstring + '  Emis: ' + frmmodulo.qrvenda.fieldbyname('data').asstring + ' ' + timetostr(time) + '  Vd: ' + frmmodulo.qrvenda.fieldbyname('vendedor').asstring);
+  MEMO.Lines.Add('</Linha_Simples>');
 
    // informacoes do cliente
   writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
@@ -313,6 +415,16 @@ begin
   writeln(arquivo, #15 + #27#72 + #20, 'P R O D U T O     QTDE.   X   UNITARIO  =  VLR.TOTAL');
   writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
 
+  MEMO.Lines.Add('</ae>' + ' Cliente...: ' + CLIENTE_CODIGO + ' ' + CLIENTE_nome   );
+  MEMO.Lines.Add('</ae>' + ' Endereco..: ' + CLIENTE_endereco + ' ' + CLIENTE_bairro);
+  MEMO.Lines.Add('</ae>' + ' Cid/UF/CEP: ' + CLIENTE_cidade + '/' + CLIENTE_uf + '  ' + CLIENTE_cep);
+  MEMO.Lines.Add('</ae>' + ' Tefones...: ' + CLIENTE_telefone);
+  MEMO.Lines.Add('</ae>' + ' CPF/CNPJ..: ' + CLIENTE_cpf);
+  MEMO.Lines.Add('</ae>' + ' RG/IE.....: ' + CLIENTE_rg);
+  MEMO.Lines.Add('</Linha_Simples>');
+  MEMO.Lines.Add('<n>' + 'P R O D U T O   QTDE.  X  UNITARIO  =  VLR.TOTAL'+ '</N>');
+  MEMO.Lines.Add('</Linha_Simples>');
+
   qrproduto_mov.first;
   while not qrproduto_mov.eof do
   begin
@@ -321,21 +433,31 @@ begin
     writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(qrproduto_mov.fieldbyname('codproduto').asstring, 6, '0', 'E') + ' ' + frmprincipal.Texto_Justifica(qrproduto_mov.fieldbyname('produto').asstring, 44 - length(texto1), ' ', 'D') + ' ' + texto1);
 
     writeln(arquivo, #15 + #27#72 + #20, '         ' + frmprincipal.Texto_Justifica(formatfloat(mascara_qtde, qrproduto_mov.fieldbyname('qtde').asfloat), 11, ' ', 'E') + ' ' + frmprincipal.Texto_Justifica(qrproduto_mov.fieldbyname('unidade').asstring, 2, ' ', 'D') + '   X ' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, qrproduto_mov.fieldbyname('unitario').asfloat), 10, ' ', 'E') + '  = ' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, qrproduto_mov.fieldbyname('total').asfloat), 10, ' ', 'E'));
+
+    MEMO.Lines.Add('</ae>' +  qrproduto_mov.fieldbyname('codproduto').asstring + ' ' + qrproduto_mov.fieldbyname('produto').asstring +  ' ' + texto1);
+//    MEMO.Lines.Add('</ae>' + '              ' + formatfloat(mascara_qtde, qrproduto_mov.fieldbyname('qtde').asfloat) + ' ' + qrproduto_mov.fieldbyname('unidade').asstring  + '   X ' + formatfloat(mascara_valor, qrproduto_mov.fieldbyname('unitario').asfloat) + '  = ' + '</fn></ad>' + formatfloat(mascara_valor, qrproduto_mov.fieldbyname('total').asfloat));
+    MEMO.Lines.Add('</ae>' + CompletaString(formatfloat(mascara_qtde, qrproduto_mov.fieldbyname('qtde').asfloat),'E',' ',19) + ' ' + qrproduto_mov.fieldbyname('unidade').asstring  + '  X ' + CompletaString(formatfloat(mascara_valor, qrproduto_mov.fieldbyname('unitario').asfloat),'D',' ',9) + ' = ' + CompletaString(formatfloat(mascara_valor, qrproduto_mov.fieldbyname('total').asfloat),'E',' ',10));
+
     qrproduto_mov.Next;
   end;
 
   writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
-  writeln(arquivo, #15 + #27#72 + #20, '  ** Meios de  Pagamento **  | SUBTOTAL  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('subtotal').asfloat), 10, ' ', 'E'));
+  writeln(arquivo, #15 + #27#72 + #20, '  ** Meios de  Pagamento ** | SUBTOTAL  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('subtotal').asfloat), 10, ' ', 'E'));
 
-  dinheiro := frmmodulo.qrvenda.fieldbyname('meio_dinheiro').asfloat;
-  chequeav := frmmodulo.qrvenda.fieldbyname('meio_chequeav').asfloat;
-  chequeap := frmmodulo.qrvenda.fieldbyname('meio_chequeap').asfloat;
+  MEMO.Lines.Add('</Linha_Simples>');
+  MEMO.Lines.Add('</ae>' + '** Meios de Pagamento ** | SUBTOTAL |  '+  CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('subtotal').asfloat),'E',' ',9));
+
+  dinheiro   := frmmodulo.qrvenda.fieldbyname('meio_dinheiro').asfloat;
+  chequeav   := frmmodulo.qrvenda.fieldbyname('meio_chequeav').asfloat;
+  chequeap   := frmmodulo.qrvenda.fieldbyname('meio_chequeap').asfloat;
   cartaocred := frmmodulo.qrvenda.fieldbyname('meio_cartaocred').asfloat;
-  cartaodeb := frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat;
-  crediario := frmmodulo.qrvenda.fieldbyname('meio_crediario').asfloat;
+  cartaodeb  := frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat;
+  crediario  := frmmodulo.qrvenda.fieldbyname('meio_crediario').asfloat;
+  Pix        := frmmodulo.qrvenda.fieldbyname('meio_pix').AsFloat;
+
   conta_formas := 1;
 
-  while conta_formas <> 7 do
+  while conta_formas < 7 do
   begin
     if conta_formas = 1 then
     begin
@@ -343,43 +465,43 @@ begin
       begin
         dinheiro := 0;
         writeln(arquivo, #15 + #27#72 + #20, 'Dinheiro ....... R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_dinheiro').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
-      end
-      else
+        MEMO.Lines.Add('</ae>'+'Dinheiro .... R$' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_dinheiro').asfloat),'D',' ',9)+ '| DESCONTO |'+ CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat),'E',' ',11));
+      end;
+      if chequeav <> 0 then
       begin
-        if chequeav <> 0 then
-        begin
-          chequeav := 0;
-          writeln(arquivo, #15 + #27#72 + #20, 'Cheque a Vista . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeav').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
-        end
-        else
-        begin
-          if chequeap <> 0 then
-          begin
-            chequeap := 0;
-            writeln(arquivo, #15 + #27#72 + #20, 'Cheque a Prazo . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeap').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
-          end
-          else
-          begin
-            if cartaocred <> 0 then
-            begin
-              cartaocred := 0;
-              writeln(arquivo, #15 + #27#72 + #20, 'Cartao Credito . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaocred').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
-            end
-            else
-            begin
-              if cartaodeb <> 0 then
-              begin
-                cartaodeb := 0;
-                writeln(arquivo, #15 + #27#72 + #20, 'Cartao Debito .. R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
-              end
-              else
-              begin
-                crediario := 0;
-                writeln(arquivo, #15 + #27#72 + #20, 'Crediario ...... R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_crediario').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
-              end;
-            end;
-          end;
-        end;
+        chequeav := 0;
+        writeln(arquivo, #15 + #27#72 + #20, 'Cheque a Vista . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeav').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
+        MEMO.Lines.Add('</ae>'+'Cheque a Vist.R$' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeav').asfloat),'D',' ',9)+ '| DESCONTO |'+ CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat),'E',' ',11));
+      end;
+      if chequeap <> 0 then
+      begin
+        chequeap := 0;
+        writeln(arquivo, #15 + #27#72 + #20, 'Cheque a Prazo . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeap').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
+        MEMO.Lines.Add('</ae>'+'Cheque a Praz.R$' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeap').asfloat),'D',' ',9)+ '| DESCONTO |'+ CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat),'E',' ',11));
+      end;
+      if cartaocred <> 0 then
+      begin
+        cartaocred := 0;
+        writeln(arquivo, #15 + #27#72 + #20, 'Cartao Credito . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaocred').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
+        MEMO.Lines.Add('</ae>'+'Cartao Cred...R$' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaocred').asfloat),'D',' ',9)+ '| DESCONTO |'+ CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat),'E',' ',11));
+      end;
+      if cartaodeb <> 0 then
+      begin
+        cartaodeb := 0;
+        writeln(arquivo, #15 + #27#72 + #20, 'Cartao Debito .. R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
+        MEMO.Lines.Add('</ae>'+'Cartao Debito.R$' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat),'D',' ',9)+ '| DESCONTO |'+ CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat),'E',' ',11));
+      end;
+      if crediario > 0 then
+      begin
+        crediario := 0;
+        writeln(arquivo, #15 + #27#72 + #20, 'Crediario ...... R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_crediario').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
+        MEMO.Lines.Add('</ae>'+'Crediario ....R$' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_crediario').asfloat),'D',' ',9)+ '| DESCONTO |'+ CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat),'E',' ',11));
+      end;
+      if Pix > 0 then
+      begin
+        Pix := 0;
+        writeln(arquivo, #15 + #27#72 + #20, 'Pix ............ R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_pix').asfloat), 9, ' ', 'E') + ' | DESCONTO  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat), 10, ' ', 'E'));
+        MEMO.Lines.Add('</ae>'+'Pix ......... R$' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_pix').asfloat),'D',' ',9)+ '| DESCONTO |'+ CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('desconto').asfloat),'E',' ',11));
       end;
     end;
 
@@ -389,43 +511,35 @@ begin
       begin
         writeln(arquivo, #15 + #27#72 + #20, 'Cheque a Vista . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeav').asfloat), 9, ' ', 'E') + ' | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
         chequeav := 0;
-      end
-      else
-      begin
-        if chequeap <> 0 then
-        begin
-          writeln(arquivo, #15 + #27#72 + #20, 'Cheque a Prazo . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeap').asfloat), 9, ' ', 'E') + ' | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
-          chequeap := 0;
-        end
-        else
-        begin
-          if cartaocred <> 0 then
-          begin
-            writeln(arquivo, #15 + #27#72 + #20, 'Cartao Credito . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaocred').asfloat), 9, ' ', 'E') + ' | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
-            cartaocred := 0;
-          end
-          else
-          begin
-            if cartaodeb <> 0 then
-            begin
-              writeln(arquivo, #15 + #27#72 + #20, 'Cartao Debito .. R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
-              cartaodeb := 0;
-            end
-            else
-            begin
-              if crediario <> 0 then
-              begin
-                writeln(arquivo, #15 + #27#72 + #20, 'Crediario ...... R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_crediario').asfloat), 9, ' ', 'E') + ' | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
-                crediario := 0;
-              end
-              else
-              begin
-                writeln(arquivo, #15 + #27#72 + #20, '                             | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
-              end;
-            end;
-          end;
-        end;
       end;
+
+      if chequeap <> 0 then
+      begin
+        writeln(arquivo, #15 + #27#72 + #20, 'Cheque a Prazo . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeap').asfloat), 9, ' ', 'E') + ' | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
+        chequeap := 0;
+      end;
+
+      if cartaocred <> 0 then
+      begin
+        writeln(arquivo, #15 + #27#72 + #20, 'Cartao Credito . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaocred').asfloat), 9, ' ', 'E') + ' | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
+        cartaocred := 0;
+      end;
+
+      if cartaodeb <> 0 then
+      begin
+        writeln(arquivo, #15 + #27#72 + #20, 'Cartao Debito .. R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
+        cartaodeb := 0;
+      end;
+
+      if crediario <> 0 then
+      begin
+        writeln(arquivo, #15 + #27#72 + #20, 'Crediario ...... R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_crediario').asfloat), 9, ' ', 'E') + ' | ACRESCIMO |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
+        crediario := 0;
+      end;
+
+      writeln(arquivo, #15 + #27#72 + #20, '                             | ACRESCIMO|' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat), 10, ' ', 'E'));
+//      MEMO.Lines.Add('</ae>'+'                             | ACRESCIMO |  ' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat),' ',5));
+      MEMO.Lines.Add('</fn></ad>'+'| ACRESCIMO|' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('acrescimo').asfloat),'E',' ',11) + ' '  );
     end;
 
     if conta_formas = 3 then
@@ -434,65 +548,49 @@ begin
       begin
         writeln(arquivo, #15 + #27#72 + #20, 'Cheque a Prazo . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_chequeap').asfloat), 9, ' ', 'E') + ' |----------------------');
         chequeap := 0;
-      end
-      else
-      begin
-        if cartaocred <> 0 then
-        begin
-          writeln(arquivo, #15 + #27#72 + #20, 'Cartao Credito . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaocred').asfloat), 9, ' ', 'E') + ' |----------------------');
-          cartaocred := 0;
-        end
-        else
-        begin
-          if cartaodeb <> 0 then
-          begin
-            writeln(arquivo, #15 + #27#72 + #20, 'Cartao Debito .. R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' |----------------------');
-            cartaodeb := 0;
-
-          end
-          else
-          begin
-            if crediario <> 0 then
-            begin
-              writeln(arquivo, #15 + #27#72 + #20, 'Crediario ...... R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_crediario').asfloat), 9, ' ', 'E') + ' |----------------------');
-              crediario := 0;
-            end
-            else
-            begin
-              writeln(arquivo, #15 + #27#72 + #20, '                             |----------------------');
-            end;
-          end;
-        end;
       end;
+
+      if cartaocred <> 0 then
+      begin
+        writeln(arquivo, #15 + #27#72 + #20, 'Cartao Credito . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaocred').asfloat), 9, ' ', 'E') + ' |----------------------');
+        cartaocred := 0;
+      end;
+
+      if cartaodeb <> 0 then
+      begin
+        writeln(arquivo, #15 + #27#72 + #20, 'Cartao Debito .. R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' |----------------------');
+        cartaodeb := 0;
+      end;
+
+      writeln(arquivo, #15 + #27#72 + #20, '                             |----------------------');
+      MEMO.Lines.Add('</ad>'+CompletaString('--','D','-',23));
     end;
+
     if conta_formas = 4 then
     begin
       if cartaocred <> 0 then
       begin
         writeln(arquivo, #15 + #27#72 + #20, 'Cartao Credito . R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaocred').asfloat), 9, ' ', 'E') + ' | T O T A L |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('total').asfloat), 10, ' ', 'E'));
         cartaocred := 0;
-      end
-      else
-      begin
-        if cartaodeb <> 0 then
-        begin
-          writeln(arquivo, #15 + #27#72 + #20, 'Cartao Debito .. R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' | T O T A L |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('total').asfloat), 10, ' ', 'E'));
-          cartaodeb := 0;
-        end
-        else
-        begin
-          if crediario <> 0 then
-          begin
-            writeln(arquivo, #15 + #27#72 + #20, 'Crediario ...... R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' | T O T A L |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('total').asfloat), 10, ' ', 'E'));
-            crediario := 0;
-          end
-          else
-          begin
-            writeln(arquivo, #15 + #27#72 + #20, '                             | T O T A L |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('total').asfloat), 10, ' ', 'E'));
-          end;
-        end;
       end;
+
+      if cartaodeb <> 0 then
+      begin
+        writeln(arquivo, #15 + #27#72 + #20, 'Cartao Debito .. R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' | T O T A L |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('total').asfloat), 10, ' ', 'E'));
+        cartaodeb := 0;
+      end;
+
+      if crediario <> 0 then
+      begin
+        writeln(arquivo, #15 + #27#72 + #20, 'Crediario ...... R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').asfloat), 9, ' ', 'E') + ' | T O T A L |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('total').asfloat), 10, ' ', 'E'));
+        crediario := 0;
+      end;
+
+      writeln(arquivo, #15 + #27#72 + #20, '                             |  TOTAL  |' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('total').asfloat), 10, ' ', 'E'));
+      MEMO.Lines.Add('</fn></ad>' + '|   TOTAL  |' + CompletaString(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('total').asfloat),'E',' ',11) + ' ');
+
     end;
+
     if conta_formas = 5 then
     begin
       if cartaodeb <> 0 then
@@ -518,7 +616,6 @@ begin
         writeln(arquivo, #15 + #27#72 + #20, 'Crediario ...... R$' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.qrvenda.fieldbyname('meio_crediario').asfloat), 9, ' ', 'E') + ' |');
         crediario := 0;
       end;
-
     end;
 
     conta_formas := conta_formas + 1;
@@ -532,12 +629,18 @@ begin
     Writeln(arquivo, #15 + #27#72 + #20, 'No.  Vencimento   Documento     Tipo        Valor-R$');
     Writeln(arquivo, #15 + #27#72 + #20, '----------------------------------------------------');
 
+    MEMO.Lines.Add('</linha_simples>');
+    MEMO.Lines.Add('</fn></ce>PRESTACOES');
+    MEMO.Lines.Add('</linha_simples>');
+    MEMO.Lines.Add('No. Vencimento  Documento    Tipo      Valor-R$');
+    MEMO.Lines.Add('</linha_simples>');
+
     frmmodulo.QRcontasreceber.First;
     prestacao := 1;
     while not frmmodulo.QRcontasreceber.eof do
     begin
       writeln(arquivo, #15 + #27#72 + #20, frmprincipal.Texto_Justifica(inttostr(prestacao), 3, '0', 'E') + '  ' + frmprincipal.Texto_Justifica(frmmodulo.QRcontasreceber.fieldbyname('data_vencimento').asstring, 10, ' ', 'D') + '   ' + frmprincipal.Texto_Justifica(frmmodulo.QRcontasreceber.fieldbyname('documento').asstring, 13, ' ', 'D') + ' ' + frmprincipal.Texto_Justifica(frmmodulo.QRcontasreceber.fieldbyname('tipo').asstring, 9, ' ', 'D') + ' ' + frmprincipal.Texto_Justifica(formatfloat(mascara_valor, frmmodulo.QRcontasreceber.fieldbyname('valor_original').asfloat), 10, ' ', 'E'));
-
+      MEMO.Lines.Add('</ae>'+CompletaString(frmprincipal.Texto_Justifica(inttostr(prestacao), 3, '0', 'E'),'D',' ',5) + CompletaString(frmmodulo.QRcontasreceber.fieldbyname('data_vencimento').asstring,'D',' ' ,12) + CompletaString(frmmodulo.QRcontasreceber.fieldbyname('documento').asstring,'D', ' ', 12) + CompletaString( frmmodulo.QRcontasreceber.fieldbyname('tipo').asstring,'D',' ',10) + CompletaString(formatfloat(mascara_valor, frmmodulo.QRcontasreceber.fieldbyname('valor_original').asfloat), 'E',' ', 9));
       prestacao := prestacao + 1;
       frmmodulo.QRcontasreceber.next;
     end;
@@ -550,11 +653,33 @@ begin
   Writeln(arquivo, #15 + #27#72 + #20, '         ------------------------------------       ');
   WRiteln(arquivo, #15 + #27#72 + #20, '                      Assinatura');
 
+  MEMO.Lines.Add('</fn></linha_simples>');
+  MEMO.Lines.Add('');
+  MEMO.Lines.Add('');
+  MEMO.Lines.Add('</fn></linha_simples>');
+  MEMO.Lines.Add('</fn></ce>'+'Assinatura');
+  MEMO.Lines.Add('</zera>');
+  MEMO.Lines.Add('</zera>');
+  MEMO.Lines.Add('</corte_total>');
+
   while subir_papel <> 0 do
   begin
     Writeln(arquivo, #15 + #27#72 + #20, '');
     subir_papel := subir_papel - 1;
   end;
+
+  Try
+    AtivaImpressoraACBR(True);
+
+    for i := 1 to EVIAS.intValue do
+      ImpressaoPosPrinter(MEMO);
+
+  Finally
+//    strList.Free;
+    AtivaImpressoraACBR(False);
+    MEMO.Free;
+  End;
+
 
   closefile(arquivo);
 
@@ -595,7 +720,6 @@ begin
   frmmodulo.qrrelatorio.fieldbyname('linha4').AsString := FORMATFLOAT('###,###,##0.00', frmmodulo.qrvenda.fieldbyname('meio_cartaodeb').AsFloat);
   frmmodulo.qrrelatorio.fieldbyname('linha5').AsString := FORMATFLOAT('###,###,##0.00', frmmodulo.qrvenda.fieldbyname('meio_cartaocred').AsFloat);
 
-
   frmmodulo.qrrelatorio.post;
   FXvenda.LoadFromFile('C:\SOS\server\rel\f000110.fr3');
   FXvenda.ShowReport;
@@ -626,14 +750,12 @@ begin
   end
   else
   begin
-
     frmmodulo.qrrelatorio.open;
     frmmodulo.qrrelatorio.edit;
     frmmodulo.qrrelatorio.fieldbyname('linha6').asstring := IntToStr(QRPRODUTO_MOV.RecordCount);
     frmmodulo.qrrelatorio.post;
     FXvenda.LoadFromFile('C:\SOS\server\rel\f000050.fr3');
     FXvenda.ShowReport;
-
   end;
 end;
 
@@ -1201,6 +1323,12 @@ begin
   frmmodulo.qrrelatorio.post;
   FXvenda.LoadFromFile('C:\SOS\server\rel\f000155.fr3');
   fxvenda.ShowReport;
+end;
+
+procedure Tfrmnotas_venda_impressao.ImpressaoPosPrinter(Buffer :TMemo);
+begin
+  FAcbrPosPrinter.Buffer.Text := Buffer.Lines.Text;
+  FAcbrPosPrinter.Imprimir;
 end;
 
 end.

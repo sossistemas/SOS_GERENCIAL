@@ -1,0 +1,656 @@
+unit uLancLotes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvGlowButton, AdvMetroButton,
+  Vcl.StdCtrls, Vcl.ExtCtrls, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, Vcl.ComCtrls, dxCore, cxDateUtils, cxStyles,
+  cxCustomData, cxFilter, cxData, cxDataStorage, cxNavigator, dxDateRanges,
+  cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData,
+  cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView,
+  cxGridTableView, cxGridDBTableView, cxGrid, cxDropDownEdit, cxCalendar,
+  cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.Mask, JvExMask, JvToolEdit, JvSpin,
+  Vcl.Menus, cxButtons, Datasnap.DBClient, Data.FMTBcd, Data.SqlExpr,
+  uLoteItens,uLote, Vcl.Grids, Vcl.DBGrids, ZDataset, ZAbstractRODataset,
+  ZAbstractDataset;
+type
+  TfrmLancLotes = class(TForm)
+    Panel2: TPanel;
+    Label20: TLabel;
+    AdvMetroButton1: TAdvMetroButton;
+    Panel1: TPanel;
+    bcancelar: TAdvGlowButton;
+    bgravar: TAdvGlowButton;
+    Panel3: TPanel;
+    GroupBox1: TGroupBox;
+    lblNroLote: TLabel;
+    Panel4: TPanel;
+    GroupBox2: TGroupBox;
+    tjDTValidade: TJvDateEdit;
+    tjValidade: TJvTimeEdit;
+    cxGrid1: TcxGrid;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1Level1: TcxGridLevel;
+    GroupBox3: TGroupBox;
+    cxBProduto: TcxButtonEdit;
+    Label1: TLabel;
+    cxCodigoProd: TcxTextEdit;
+    Label2: TLabel;
+    JvDTValidadeProduto: TJvDateEdit;
+    Label3: TLabel;
+    cxUN: TcxTextEdit;
+    Label4: TLabel;
+    Label5: TLabel;
+    cxBFornecedor: TcxButtonEdit;
+    cxQtdProd: TcxTextEdit;
+    cxValCusto: TcxTextEdit;
+    cxValTotal: TcxTextEdit;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    cxbtInserir: TcxButton;
+    ds1: TDataSource;
+    cdsTempItensLote: TClientDataSet;
+    cdsTempItensLoteID: TIntegerField;
+    cdsTempItensLoteCODPRODUTO: TStringField;
+    cdsTempItensLoteDESCPRODUTO: TStringField;
+    cdsTempItensLoteUN: TStringField;
+    cdsTempItensLoteQTD: TFloatField;
+    cdsTempItensLotePRECUSTO: TCurrencyField;
+    cdsTempItensLoteTOTALCUSTO: TCurrencyField;
+    cdsTempItensLoteCODFORNEC: TStringField;
+    cdsTempItensLoteDESCFORNEC: TStringField;
+    cdsTempItensLoteFABRICACAO: TDateField;
+    cdsTempItensLoteVALIDADE: TDateField;
+    cdsTempItensLoteIDLOTE: TIntegerField;
+    cxGrid1DBTableView1CODPRODUTO: TcxGridDBColumn;
+    cxGrid1DBTableView1DESCPRODUTO: TcxGridDBColumn;
+    cxGrid1DBTableView1UN: TcxGridDBColumn;
+    cxGrid1DBTableView1QTD: TcxGridDBColumn;
+    cxGrid1DBTableView1PRECUSTO: TcxGridDBColumn;
+    cxGrid1DBTableView1TOTALCUSTO: TcxGridDBColumn;
+    cxGrid1DBTableView1CODFORNEC: TcxGridDBColumn;
+    cxGrid1DBTableView1DESCFORNEC: TcxGridDBColumn;
+    cxGrid1DBTableView1VALIDADE: TcxGridDBColumn;
+    cxDescricaoLote: TcxTextEdit;
+    Label9: TLabel;
+    ZQuery1: TZQuery;
+    procedure cxBProdutoPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure AdvMetroButton1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure cxBFornecedorPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure cxQtdProdKeyPress(Sender: TObject; var Key: Char);
+    procedure cxValCustoKeyPress(Sender: TObject; var Key: Char);
+    procedure cxValTotalKeyPress(Sender: TObject; var Key: Char);
+    procedure cxBProdutoKeyPress(Sender: TObject; var Key: Char);
+    procedure cxQtdProdExit(Sender: TObject);
+    procedure cxValCustoExit(Sender: TObject);
+    procedure cxQtdProdPropertiesChange(Sender: TObject);
+    procedure cxValCustoPropertiesChange(Sender: TObject);
+    procedure tjValidadeKeyPress(Sender: TObject; var Key: Char);
+    procedure tjDTValidadeKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure cxbtInserirClick(Sender: TObject);
+    procedure cxBProdutoKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure cxBFornecedorKeyPress(Sender: TObject; var Key: Char);
+    procedure cxBFornecedorKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure bgravarClick(Sender: TObject);
+    procedure tjDTValidadeKeyPress(Sender: TObject; var Key: Char);
+    procedure tjDTValidadeExit(Sender: TObject);
+    procedure JvDTValidadeProdutoExit(Sender: TObject);
+    procedure cxDescricaoLoteKeyPress(Sender: TObject; var Key: Char);
+    procedure JvDTValidadeProdutoKeyPress(Sender: TObject; var Key: Char);
+  private
+    FIncluir: Boolean;
+    FLote : TLote;
+    FLoteItens : TLoteItens;
+    FCODFOR: string;
+
+    procedure TotalizarCusto;
+    procedure SetIncluir(const Value: Boolean);
+    procedure inserirDataset;
+    procedure limparCampos;
+    procedure SetCODFOR(const Value: string);
+
+    function SomenteNros(var key: char):Char;
+    function CarregarParametrosLote : Boolean;
+    function ValidarCampos : Boolean;
+
+  public
+    property Incluir : Boolean read FIncluir write SetIncluir;
+    property CODFOR : string read FCODFOR write SetCODFOR;
+  end;
+
+var
+  frmLancLotes: TfrmLancLotes;
+
+implementation
+
+
+{$R *.dfm}
+
+uses modulo, xloc_fornecedor, xloc_produto;
+
+procedure TfrmLancLotes.AdvMetroButton1Click(Sender: TObject);
+begin
+  frmLancLotes.Close;
+end;
+
+procedure TfrmLancLotes.cxQtdProdExit(Sender: TObject);
+begin
+  if not (cxQtdProd.Text = EmptyStr) then
+    cxQtdProd.Text := FormatFloat('0.000',StrToFloat(cxQtdProd.Text));
+end;
+
+procedure TfrmLancLotes.cxQtdProdKeyPress(Sender: TObject; var Key: Char);
+begin
+  key := SomenteNros(Key);
+
+  if key = #13 then
+    cxValCusto.SetFocus;
+end;
+
+procedure TfrmLancLotes.cxQtdProdPropertiesChange(Sender: TObject);
+begin
+  TotalizarCusto;
+end;
+
+procedure TfrmLancLotes.cxValCustoExit(Sender: TObject);
+begin
+  if not (cxValCusto.Text = EmptyStr) then
+    cxValCusto.Text := FormatFloat('0.00',StrToFloat(cxValCusto.Text));
+end;
+
+procedure TfrmLancLotes.cxValCustoKeyPress(Sender: TObject; var Key: Char);
+begin
+  key := SomenteNros(Key);
+  if key = #13 then
+    cxbtInserir.SetFocus;
+end;
+
+procedure TfrmLancLotes.cxValCustoPropertiesChange(Sender: TObject);
+begin
+  TotalizarCusto;
+end;
+
+procedure TfrmLancLotes.cxValTotalKeyPress(Sender: TObject; var Key: Char);
+begin
+  key := SomenteNros(Key);
+end;
+
+procedure TfrmLancLotes.cxBProdutoKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  begin
+    if cxCodigoProd.Text = EmptyStr then
+      cxBProdutoPropertiesButtonClick(Sender, 0)
+    else
+      JvDTValidadeProduto.SetFocus;
+  end;
+end;
+
+procedure TfrmLancLotes.cxBProdutoKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  texto : string;
+  p     : integer;
+begin
+  with cxBProduto do
+  begin
+    if key = 13 then
+    begin
+      if not (Text = EmptyStr) then
+        SelStart := Length(Text); //Completa o texto
+    end;
+
+    if key = 27 then  //ESC
+    begin
+      Clear;
+      cxCodigoProd.Clear;
+      cxUN.Clear;
+    end
+    else
+    begin
+      if not((key = 08) or (key = 46) or (key = 09)) then // se não for espaço ou delete ou apagar
+      begin
+        if not (Text = EmptyStr) then
+        begin
+          p:= SelStart;
+          texto := Copy(Text,0,p);
+        end;
+      end
+      else
+      begin
+        cxCodigoProd.Clear;
+        cxUN.Clear;
+      end;
+    end;
+
+  end;
+end;
+
+procedure TfrmLancLotes.cxBProdutoPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  frmLancLotes.cxUN.Clear;
+  frmLancLotes.cxCodigoProd.Clear;
+
+
+  resultado_pesquisa1 := EmptyStr;
+  frmxloc_produto := Tfrmxloc_produto.create(self);
+
+  try
+    if not(cxBProduto.Text = EmptyStr) then
+      frmxloc_produto.loc.Text := cxBProduto.Text;
+
+    frmxloc_produto.showmodal;
+    if resultado_pesquisa1 <> '' then
+    begin
+      frmmodulo.qrproduto.close;
+      frmmodulo.qrproduto.sql.clear;
+      frmmodulo.qrproduto.sql.add('select * from c000025 where atb like :atb and codigo = ''' + resultado_pesquisa1 + '''');
+      frmmodulo.qrproduto.ParamByName('atb').Value := ME_FiltraATB('TB_PRODUTO');
+      frmmodulo.qrproduto.open;
+
+      if frmmodulo.qrproduto.RecordCount > 0 then
+      begin
+        frmLancLotes.cxBProduto.Text   := frmmodulo.qrproduto.FieldByName('PRODUTO').Value;
+        frmLancLotes.cxCodigoProd.Text := frmmodulo.qrproduto.FieldByName('CODIGO').Value;
+        frmLancLotes.cxUN.Text         := frmmodulo.qrproduto.FieldByName('UNIDADE').Value;
+
+        if not(frmmodulo.qrproduto.FieldByName('PRECOCUSTO').Value = 0) and not(frmmodulo.qrproduto.FieldByName('PRECOCUSTO').Value = Null) then
+          frmLancLotes.cxValCusto.Text := FormatFloat('0.00', frmmodulo.qrproduto.FieldByName('PRECOCUSTO').Value)
+        else
+          frmLancLotes.cxValCusto.Text := FormatFloat('0.00',0);
+
+        frmLancLotes.JvDTValidadeProduto.SetFocus;
+      end;
+
+    end;
+  finally
+    FreeAndNil(frmxloc_produto);
+  end;
+end;
+
+procedure TfrmLancLotes.cxbtInserirClick(Sender: TObject);
+begin
+  if ValidarCampos then
+  begin
+    inserirDataset;
+    limparCampos;
+  end;
+end;
+
+procedure TfrmLancLotes.cxDescricaoLoteKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  begin
+    cxBProduto.SetFocus;
+    Exit;
+  end;
+end;
+
+procedure TfrmLancLotes.bgravarClick(Sender: TObject);
+var
+  vQuery : TZQuery;
+begin
+  if not (cdsTempItensLote.RecordCount > 0) then
+  begin
+    Application.MessageBox('NENHUM ITEM INSERIDO AO LOTE.','ATENÇÃO',MB_ICONERROR);
+    Exit;
+  end;
+
+  CarregarParametrosLote;
+  if FIncluir then
+  begin
+    if not FLote.GravarLote(0) then
+    begin
+      raise Exception.Create('Erro ao Inserir um novo Lote');
+      Exit;
+    end
+    else
+    begin
+      frmLancLotes.lblNroLote.Caption := Format('%9.9d', [FLote.BuscaID('GEN_LOTE_ID')]);
+      FLoteItens.IDLOTE := StrToInt(lblNroLote.Caption);
+
+      if not (FLoteItens.GravarItens(cdsTempItensLote)) then
+        raise Exception.Create('Erro ao inserir Itens ao novo lote')
+      else
+      begin
+        vQuery := TZQuery.Create(nil);
+        vQuery.Connection    := frmmodulo.Conexao;
+
+        cdsTempItensLote.EmptyDataSet;
+        cdsTempItensLote.DisableControls;
+
+        try
+          vQuery := FLoteItens.RetornaItensLoteQry(StrToInt(lblNroLote.Caption));
+
+          if vQuery.RecordCount > 0 then
+          begin
+            while not vQuery.Eof do
+            begin
+              cdsTempItensLote.Append;
+              cdsTempItensLote.FieldByName('ID').AsInteger          := vQuery.FieldByName('ID').AsInteger;
+              cdsTempItensLote.FieldByName('CODPRODUTO').AsString   := vQuery.FieldByName('codproduto').AsString;
+              cdsTempItensLote.FieldByName('DESCPRODUTO').AsString  := vQuery.FieldByName('produto').AsString;
+              cdsTempItensLote.FieldByName('UN').AsString           := vQuery.FieldByName('unidade').AsString;;
+              cdsTempItensLote.FieldByName('QTD').AsFloat           := vQuery.FieldByName('saldo').AsFloat;;
+              cdsTempItensLote.FieldByName('PRECUSTO').AsCurrency   := vQuery.FieldByName('precusto').AsCurrency;
+              cdsTempItensLote.FieldByName('TOTALCUSTO').AsCurrency := vQuery.FieldByName('total_custo').AsCurrency;
+              cdsTempItensLote.FieldByName('CODFORNEC').AsString    := vQuery.FieldByName('codfornecedor').AsString;
+              cdsTempItensLote.FieldByName('DESCFORNEC').AsString   := vQuery.FieldByName('fornecedor').AsString;
+              cdsTempItensLote.FieldByName('FABRICACAO').Value      := vQuery.FieldByName('fabricacaoprod').Value;
+              cdsTempItensLote.FieldByName('VALIDADE').Value        := vQuery.FieldByName('validadeproduto').Value;
+              cdsTempItensLote.FieldByName('IDLOTE').AsInteger      := vQuery.FieldByName('id_lote').AsInteger;
+              cdsTempItensLote.Post;
+
+              vQuery.Next;
+            end;
+          end;
+
+          FLote.AtualizaStatusLote(StrToInt(lblNroLote.Caption), 'LC');
+        finally
+          cdsTempItensLote.EnableControls;
+          FreeAndNil(vQuery);
+        end;
+
+        FIncluir := False;
+        Application.MessageBox('Lote gravado com sucesso.','OK',MB_ICONINFORMATION);
+
+      end;
+    end;
+  end;
+
+end;
+
+function TfrmLancLotes.CarregarParametrosLote: Boolean;
+begin
+  if not(FIncluir) then
+    FLote.ID := StrToInt(lblNroLote.Caption)
+  else
+    FLote.ID := 0;
+
+  FLote.DESCRED    := cxDescricaoLote.Text;
+  FLote.DATAINICIO := Date;
+  FLote.HORAINICIO := Time;
+  FLote.DATAFIM    := StrToDate(tjDTValidade.Text);
+  FLote.HORAFIM    := StrToTime(tjValidade.Text);
+  FLote.STATUS     := 'EL';
+end;
+
+procedure TfrmLancLotes.cxBFornecedorKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  begin
+    if FCODFOR = EmptyStr then
+      cxBFornecedorPropertiesButtonClick(Sender,0)
+    else
+      cxQtdProd.SetFocus;
+  end;
+end;
+
+procedure TfrmLancLotes.cxBFornecedorKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  texto : string;
+  p     : integer;
+begin
+  with cxBFornecedor do
+  begin
+    if key = 13 then
+    begin
+      if not (Text = EmptyStr) then
+        SelStart := Length(Text); //Completa o texto
+    end;
+
+    if key = 27 then  //ESC
+    begin
+      Clear;
+      FCODFOR := EmptyStr;
+    end
+    else
+    begin
+      if not((key = 08) or (key = 46) or (key = 09)) then // se não for espaço ou delete ou apagar
+      begin
+        if not (Text = EmptyStr) then
+        begin
+          p:= SelStart;
+          texto := Copy(Text,0,p);
+        end;
+      end
+      else
+        FCODFOR := EmptyStr;
+    end;
+  end;
+
+end;
+
+procedure TfrmLancLotes.cxBFornecedorPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  FCODFOR := EmptyStr;
+
+  resultado_pesquisa1 := EmptyStr;
+  frmxloc_fornecedor := Tfrmxloc_fornecedor.create(self);
+
+  try
+    if not(frmLancLotes.cxBFornecedor.Text = EmptyStr) then
+      frmxloc_fornecedor.loc.Text := cxBFornecedor.Text;
+
+    frmxloc_fornecedor.ShowModal;
+
+    frmmodulo.qrfornecedor.close;
+    frmmodulo.qrfornecedor.sql.clear;
+    frmmodulo.qrfornecedor.sql.add('select * from c000009 where atb like :atb and codigo = ''' + resultado_pesquisa1 + '''');
+    frmmodulo.qrfornecedor.ParamByName('atb').Value := ME_FiltraATB('TB_FORNECEDOR');
+    frmmodulo.qrfornecedor.open;
+
+    if frmmodulo.qrfornecedor.RecordCount > 0 then
+    begin
+      frmLancLotes.cxBFornecedor.Text := frmmodulo.qrfornecedor.FieldByName('NOME').Value;
+      FCODFOR                         := frmmodulo.qrfornecedor.FieldByName('CODIGO').Value;
+      frmLancLotes.cxQtdProd.SetFocus;
+    end;
+
+  finally
+    FreeAndNil(frmxloc_fornecedor);
+  end;
+
+end;
+
+procedure TfrmLancLotes.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  cdsTempItensLote.EmptyDataSet;
+  cdsTempItensLote.Close;
+
+  if Assigned(FLote) then
+    FreeAndNil(FLote);
+
+  if Assigned(FLoteItens) then
+    FreeAndNil(FLoteItens);
+end;
+
+procedure TfrmLancLotes.FormCreate(Sender: TObject);
+begin
+
+  tjDTValidade.Date  := Now + 30;
+  tjValidade.Time    := Now;
+
+  if not Assigned(FLote) then
+    FLote := TLote.Create;
+
+  if not Assigned(FLoteItens) then
+    FLoteItens := TLoteItens.Create;
+
+  cdsTempItensLote.CreateDataSet;
+  cdsTempItensLote.Open;
+end;
+
+procedure TfrmLancLotes.FormShow(Sender: TObject);
+begin
+  tjDTValidade.SetFocus;
+
+  if FIncluir then
+    frmLancLotes.lblNroLote.Caption := Format('%9.9d', [FLote.BuscaID('GEN_LOTE_ID') + 1]);
+end;
+
+procedure TfrmLancLotes.inserirDataset;
+begin
+  with cdsTempItensLote do
+  begin
+    cdsTempItensLote.Append;
+    cdsTempItensLoteID.AsInteger          := 0;
+    cdsTempItensLoteCODPRODUTO.AsString   := cxCodigoProd.Text;
+    cdsTempItensLoteDESCPRODUTO.AsString  := cxBProduto.Text;
+    cdsTempItensLoteUN.AsString           := cxUN.Text;
+    cdsTempItensLoteQTD.AsFloat           := StrToFloat(cxQtdProd.Text);
+    cdsTempItensLotePRECUSTO.AsCurrency   := StrToCurr(cxValCusto.Text);
+    cdsTempItensLoteTOTALCUSTO.AsCurrency := StrToCurr(cxValTotal.Text);
+    cdsTempItensLoteCODFORNEC.AsString    := FCODFOR;
+    cdsTempItensLoteDESCFORNEC.AsString   := cxBFornecedor.Text;
+    cdsTempItensLoteFABRICACAO.Value      := Now;
+    cdsTempItensLoteVALIDADE.Value        := JvDTValidadeProduto.Date;
+    cdsTempItensLoteIDLOTE.Clear;
+    cdsTempItensLote.Post;
+  end;
+end;
+
+procedure TfrmLancLotes.JvDTValidadeProdutoExit(Sender: TObject);
+begin
+  try
+    StrToDate(JvDTValidadeProduto.Text);
+  except
+    on EConvertError do
+    begin
+      ShowMessage('Data Inválida!');
+      JvDTValidadeProduto.SetFocus;
+      Exit;
+    end;
+  end;
+end;
+
+procedure TfrmLancLotes.JvDTValidadeProdutoKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if key = #13 then
+  begin
+    cxBFornecedor.SetFocus;
+    Exit;
+  end;
+end;
+
+procedure TfrmLancLotes.limparCampos;
+begin
+  cxBProduto.Clear;
+  cxCodigoProd.Clear;
+  cxUN.Clear;
+  JvDTValidadeProduto.Clear;
+  cxBFornecedor.Clear;
+  FCODFOR := EmptyStr;
+  cxQtdProd.Clear;
+  cxValCusto.Clear;
+  cxValTotal.Clear;
+
+  cxBProduto.SetFocus;
+  Exit;
+end;
+
+procedure TfrmLancLotes.SetCODFOR(const Value: string);
+begin
+  FCODFOR := Value;
+end;
+
+procedure TfrmLancLotes.SetIncluir(const Value: Boolean);
+begin
+  FIncluir := Value;
+end;
+
+function TfrmLancLotes.SomenteNros(var key: char): Char;
+begin
+  if not (key in ['0'..'9',FormatSettings.DecimalSeparator,#13,#08,#09]) then
+    Result := #0
+  else
+    Result := key;
+end;
+
+procedure TfrmLancLotes.tjDTValidadeExit(Sender: TObject);
+begin
+  try
+    StrToDate(tjDTValidade.Text);
+  except
+    on EConvertError do
+    begin
+      ShowMessage('Data Inválida!');
+      tjDTValidade.SetFocus;
+      Exit;
+    end;
+  end;
+end;
+
+procedure TfrmLancLotes.tjDTValidadeKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (key = VK_TAB) and (tjDTValidade.Focused) then
+  begin
+    tjValidade.SetFocus;
+    Exit;
+  end;
+end;
+
+procedure TfrmLancLotes.tjDTValidadeKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+    tjValidade.SetFocus;
+end;
+
+procedure TfrmLancLotes.tjValidadeKeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  begin
+    cxDescricaoLote.SetFocus;
+    Exit;
+  end;
+end;
+
+procedure TfrmLancLotes.TotalizarCusto;
+begin
+  if (not(frmLancLotes.cxQtdProd.Text = EmptyStr)) and (not(frmLancLotes.cxValCusto.Text = EmptyStr)) then
+    frmLancLotes.cxValTotal.Text := FormatFloat('0.00',StrToFloat(cxQtdProd.Text) * StrToFloat(cxValCusto.Text))
+  else
+    frmLancLotes.cxValTotal.Text := FormatFloat('0.00',0);
+end;
+
+function TfrmLancLotes.ValidarCampos: Boolean;
+begin
+  Result := True;
+
+  if (cxBProduto.Text = EmptyStr) and (cxCodigoProd.Text = EmptyStr) then
+  begin
+    Application.MessageBox('Produto Inválido.','Atenção',MB_ICONERROR);
+    Result := False;
+  end;
+
+  if (tjDTValidade.Text = '  /  /    ') and (JvDTValidadeProduto.Text = '  /  /    ')  then
+  begin
+    Application.MessageBox('Data incorreta.','Atenção',MB_ICONERROR);
+    Result := False;
+  end;
+
+  if (cxBFornecedor.Text = EmptyStr) and (FCODFOR = EmptyStr) then
+  begin
+    Application.MessageBox('É necessário informar o Fornecedor.','Atenção',MB_ICONERROR);
+    Result := False;
+  end;
+
+end;
+
+end.

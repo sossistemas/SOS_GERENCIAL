@@ -86,6 +86,7 @@ begin
       frmmodulo.qrcondpgto_parcela.SQL.clear;
       frmmodulo.qrcondpgto_parcela.SQL.add('select * from c000016 where atb like :atb and codcondpgto = ''' + frmmodulo.qrcondpgto.fieldbyname('codigo').asstring + ''' order by codigo');
       frmmodulo.qrcondpgto_parcela.open;
+
       if frmmodulo.qrcondpgto_parcela.RecordCount > 0 then
       begin
         frmvenda.qrvenda_contasreceber.close;
@@ -152,25 +153,27 @@ begin
         frmvenda.qrvenda_contasreceber.REFRESH;
         wwDBGrid1.SetFocus;
         // zera valores no venda_fechamento
-        frmvenda_fechamento.rdinheiro.Value := 0.00;
-        frmvenda_fechamento.rchequeav.Value := 0.00;
-        frmvenda_fechamento.rchequeap.Value := 0.00;
-        frmvenda_fechamento.rcartaodeb.Value := 0.00;
+        frmvenda_fechamento.rdinheiro.Value   := 0.00;
+        frmvenda_fechamento.rchequeav.Value   := 0.00;
+        frmvenda_fechamento.rchequeap.Value   := 0.00;
+        frmvenda_fechamento.rcartaodeb.Value  := 0.00;
         frmvenda_fechamento.rcartaocred.Value := 0.00;
-        frmvenda_fechamento.rconvenio.Value := 0.00;
-        frmvenda_fechamento.rcrediario.Value := 0.00;
+        frmvenda_fechamento.rconvenio.Value   := 0.00;
+        frmvenda_fechamento.rcrediario.Value  := 0.00;
         frmvenda_fechamento.rfinanceira.Value := 0.00;
-        frmvenda_fechamento.rsoma.Value := 0.00;
-        frmvenda_fechamento.rdiferenca.Value := 0.00;
-        frmvenda_fechamento.rboleto := 0.00;
-
+        frmvenda_fechamento.rsoma.Value       := 0.00;
+        frmvenda_fechamento.rdiferenca.Value  := 0.00;
+        frmvenda_fechamento.rboleto           := 0.00;
+        frmvenda_fechamento.rPix.Value        := 0.00;
       end
       else
       begin
         application.messagebox('Esta Condição de Pagamento não possue parcelas! Seu cadastro não foi feito corretamente!', 'Atenção', mb_ok + MB_ICONWARNING);
         combocondpgto.SetFocus;
       end;
-      frmvenda.qrvenda_contasreceber.first;
+
+      if not frmvenda.qrvenda_contasreceber.IsEmpty then
+        frmvenda.qrvenda_contasreceber.first;
     end
     else
     begin
@@ -396,135 +399,152 @@ end;
 
 procedure Tfrmvenda_contasreceber.BGRAVARClick(Sender: TObject);
 var
-  xsoma_dinheiro, xsoma_chequeav, xsoma_boleto, xsoma_chequeap, xsoma_ctdeb, xsoma_ctcrt, xsoma_carteira, xsoma_convenio: real;
-  acdinheiro, acboleto, acchequeav, acchequeap, acctdeb, acctcrt, accarteira, acconvenio: real;
+  xsoma_dinheiro, xsoma_chequeav, xsoma_boleto, xsoma_chequeap, xsoma_ctdeb, xsoma_ctcrt, xsoma_carteira, xsoma_convenio, xsoma_pix: real;
+  acdinheiro, acboleto, acchequeav, acchequeap, acctdeb, acctcrt, accarteira, acconvenio, acpix: real;
   VTIPO: string;
   parcela_credito, parcela_debito: Integer;
 begin
   if combocondpgto.text = '' then
     exit;
-  if frmvenda.qrvenda_contasreceber.RecordCount = 0 then
+
+  if not frmvenda.qrvenda_contasreceber.IsEmpty  then
   begin
-    combocondpgtoExit(combocondpgto);
     if frmvenda.qrvenda_contasreceber.RecordCount = 0 then
     begin
-      Application.MessageBox('Não foi informado as parcelas, verifique o cadastro da condição de pagamento utilizada.', 'Atenção!', MB_ICONINFORMATION);
-      Exit;
+      combocondpgtoExit(combocondpgto);
+      if frmvenda.qrvenda_contasreceber.RecordCount = 0 then
+      begin
+        Application.MessageBox('Não foi informado as parcelas, verifique o cadastro da condição de pagamento utilizada.', 'Atenção!', MB_ICONINFORMATION);
+        Exit;
+      end;
     end;
+    // acumula valores
+    if rdiferenca.Value <> 0 then
+    begin
+      application.messagebox('Os valores informados nas parcelas não confere com o valor total desta venda! Favor verificar!', 'Atenção', mb_ok + MB_ICONWARNING);
+      wwDBGrid1.SetFocus;
+      exit;
+    end;
+    frmvenda.qrvenda_contasreceber.ApplyUpdates;
+    frmvenda.qrvenda_contasreceber.first;
+    xsoma_dinheiro := 0.00;
+    xsoma_chequeav := 0.00;
+    xsoma_chequeap := 0.00;
+    xsoma_ctdeb    := 0.00;
+    xsoma_ctcrt    := 0.00;
+    xsoma_carteira := 0.00;
+    xsoma_boleto   := 0.00;
+    xsoma_convenio := 0.00;
+    xsoma_pix      := 0.00;
+
+    acdinheiro := 0.00;
+    acchequeav := 0.00;
+    acchequeap := 0.00;
+    acctdeb    := 0.00;
+    acctcrt    := 0.00;
+    accarteira := 0.00;
+    acboleto   := 0.00;
+    acconvenio := 0.00;
+    acpix      := 0.00;
+
+    VTIPO := 'CARTEIRA';
+
+    parcela_credito := 0;
+    parcela_debito := 0;
+
+    // enquanto nao chegar o fim da tabela de parcelas cl00002
+    frmvenda.qrvenda_contasreceber.First;
+    while not frmvenda.qrvenda_contasreceber.eof do
+    begin
+      if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'DINHEIRO' then
+      begin
+        application.ProcessMessages;
+        xsoma_dinheiro := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
+        acdinheiro := acdinheiro + xsoma_dinheiro;
+        frmvenda_fechamento.rdinheiro.Value := acdinheiro;
+//        frmvenda.qrvenda_contasreceber.Next;
+      end;
+      if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CHEQUE A VISTA' then
+      begin
+        application.ProcessMessages;
+        xsoma_chequeav := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
+        acchequeav := acchequeav + xsoma_chequeav;
+        frmvenda_fechamento.rchequeav.Value := acchequeav;
+//        frmvenda.qrvenda_contasreceber.Next;
+      end;
+      if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CHEQUE PRE-DATADO' then
+      begin
+        application.ProcessMessages;
+        xsoma_chequeap := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
+        acchequeap := acchequeap + xsoma_chequeap;
+        frmvenda_fechamento.rchequeap.Value := acchequeap;
+//        frmvenda.qrvenda_contasreceber.Next;
+      end;
+      if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CARTAO DE DEBITO' then
+      begin
+        application.ProcessMessages;
+        xsoma_ctdeb := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
+        acctdeb := acctdeb + xsoma_ctdeb;
+        frmvenda_fechamento.rcartaodeb.Value := acctdeb;
+        parcela_debito := parcela_debito + 1;
+        frmvenda_fechamento.spin_debito.Value := parcela_debito;
+//        frmvenda.qrvenda_contasreceber.Next;
+      end;
+      if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CARTAO DE CREDITO' then
+      begin
+        application.ProcessMessages;
+        xsoma_ctcrt := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
+        acctcrt := acctcrt + xsoma_ctcrt;
+        frmvenda_fechamento.rcartaocred.Value := acctcrt;
+        parcela_credito := parcela_credito + 1;
+        frmvenda_fechamento.spin_credito.Value := parcela_credito;
+//        frmvenda.qrvenda_contasreceber.Next;
+      end;
+      if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CARTEIRA' then
+      begin
+        application.ProcessMessages;
+        xsoma_carteira := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
+        accarteira := accarteira + xsoma_carteira;
+        frmvenda_fechamento.rcrediario.Value := accarteira;
+//        frmvenda.qrvenda_contasreceber.Next;
+      end;
+      if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'BOLETO BANCARIO' then
+      begin
+        application.ProcessMessages;
+        xsoma_boleto := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
+        acboleto := acboleto + xsoma_boleto;
+        frmvenda_fechamento.rboleto := acboleto;
+//        frmvenda.qrvenda_contasreceber.Next;
+      end;
+      if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CONVENIO' then
+      begin
+        application.ProcessMessages;
+        xsoma_convenio := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
+        acconvenio := acconvenio + xsoma_convenio;
+        frmvenda_fechamento.rconvenio.Value := acconvenio;
+//        frmvenda.qrvenda_contasreceber.Next;
+      end;
+
+      if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'PIX' then
+      begin
+        application.ProcessMessages;
+        xsoma_pix := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
+        acpix := acpix + xsoma_pix;
+        frmvenda_fechamento.rPix.Value := acpix;
+//        frmvenda.qrvenda_contasreceber.Next;
+      end;
+
+      frmvenda_fechamento.rsoma.Value := acdinheiro + acchequeav + acchequeap + acctdeb + acctcrt + accarteira + acboleto + acconvenio + acpix;
+      frmvenda.qrvenda_contasreceber.Next;
+    end;
+    // liberar botao finalizar do fechamento de vendas
+    if frmvenda_fechamento.rsoma.Value = frmvenda_fechamento.rtotal.Value then
+    begin
+      bgravar.Enabled := True;
+    end;
+    CONTINUAR := True;
+    close;
   end;
-  // acumula valores
-  if rdiferenca.Value <> 0 then
-  begin
-    application.messagebox('Os valores informados nas parcelas não confere com o valor total desta venda! Favor verificar!', 'Atenção', mb_ok + MB_ICONWARNING);
-    wwDBGrid1.SetFocus;
-    exit;
-  end;
-  frmvenda.qrvenda_contasreceber.ApplyUpdates;
-  frmvenda.qrvenda_contasreceber.first;
-  xsoma_dinheiro := 0.00;
-  xsoma_chequeav := 0.00;
-  xsoma_chequeap := 0.00;
-  xsoma_ctdeb := 0.00;
-  xsoma_ctcrt := 0.00;
-  xsoma_carteira := 0.00;
-  xsoma_boleto := 0.00;
-  xsoma_convenio := 0.00;
-  acdinheiro := 0.00;
-  acchequeav := 0.00;
-  acchequeap := 0.00;
-  acctdeb := 0.00;
-  acctcrt := 0.00;
-  accarteira := 00;
-  acboleto := 0.00;
-  acconvenio := 0.00;
-  VTIPO := 'CARTEIRA';
-
-  parcela_credito := 0;
-  parcela_debito := 0;
-
-  // enquanto nao chegar o fim da tabela de parcelas cl00002
-  while not frmvenda.qrvenda_contasreceber.eof do
-  begin
-    if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'DINHEIRO' then
-    begin
-      application.ProcessMessages;
-      xsoma_dinheiro := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
-      acdinheiro := acdinheiro + xsoma_dinheiro;
-      frmvenda_fechamento.rdinheiro.Value := acdinheiro;
-      frmvenda.qrvenda_contasreceber.Next;
-    end;
-    if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CHEQUE A VISTA' then
-    begin
-      application.ProcessMessages;
-      xsoma_chequeav := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
-      acchequeav := acchequeav + xsoma_chequeav;
-      frmvenda_fechamento.rchequeav.Value := acchequeav;
-      frmvenda.qrvenda_contasreceber.Next;
-    end;
-    if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CHEQUE PRE-DATADO' then
-    begin
-      application.ProcessMessages;
-      xsoma_chequeap := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
-      acchequeap := acchequeap + xsoma_chequeap;
-      frmvenda_fechamento.rchequeap.Value := acchequeap;
-      frmvenda.qrvenda_contasreceber.Next;
-    end;
-    if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CARTAO DE DEBITO' then
-    begin
-      application.ProcessMessages;
-      xsoma_ctdeb := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
-      acctdeb := acctdeb + xsoma_ctdeb;
-      frmvenda_fechamento.rcartaodeb.Value := acctdeb;
-      parcela_debito := parcela_debito + 1;
-      frmvenda_fechamento.spin_debito.Value := parcela_debito;
-      frmvenda.qrvenda_contasreceber.Next;
-    end;
-    if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CARTAO DE CREDITO' then
-    begin
-      application.ProcessMessages;
-      xsoma_ctcrt := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
-      acctcrt := acctcrt + xsoma_ctcrt;
-      frmvenda_fechamento.rcartaocred.Value := acctcrt;
-      parcela_credito := parcela_credito + 1;
-      frmvenda_fechamento.spin_credito.Value := parcela_credito;
-      frmvenda.qrvenda_contasreceber.Next;
-    end;
-    if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CARTEIRA' then
-    begin
-      application.ProcessMessages;
-      xsoma_carteira := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
-      accarteira := accarteira + xsoma_carteira;
-      frmvenda_fechamento.rcrediario.Value := accarteira;
-      frmvenda.qrvenda_contasreceber.Next;
-    end;
-    if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'BOLETO BANCARIO' then
-    begin
-      application.ProcessMessages;
-      xsoma_boleto := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
-      acboleto := acboleto + xsoma_boleto;
-      frmvenda_fechamento.rboleto := acboleto;
-      frmvenda.qrvenda_contasreceber.Next;
-    end;
-    if frmvenda.qrvenda_contasreceber.fieldbyname('TIPO').asstring = 'CONVENIO' then
-    begin
-      application.ProcessMessages;
-      xsoma_convenio := frmvenda.qrvenda_contasreceber.fieldbyname('valor').asfloat;
-      acconvenio := acconvenio + xsoma_convenio;
-      frmvenda_fechamento.rconvenio.Value := acconvenio;
-      frmvenda.qrvenda_contasreceber.Next;
-    end;
-
-    frmvenda_fechamento.rsoma.Value := acdinheiro + acchequeav + acchequeap + acctdeb + acctcrt + accarteira + acboleto + acconvenio;
-
-  end;
-  // liberar botao finalizar do fechamento de vendas
-  if frmvenda_fechamento.rsoma.Value = frmvenda_fechamento.rtotal.Value then
-  begin
-    bgravar.Enabled := True;
-  end;
-  CONTINUAR := True;
-  close;
-
 end;
 
 procedure Tfrmvenda_contasreceber.C1Click(Sender: TObject);

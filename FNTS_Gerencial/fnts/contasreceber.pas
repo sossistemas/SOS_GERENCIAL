@@ -10,7 +10,7 @@ uses
 	frxDesgn, DBGrids, AdvToolBar, ACBrBoleto, ACBrBoletoFCFR, ACBrBase, ACBrUtil,
   IniFiles, DBClient, Collection, frxExportPDF, AdvMetroButton,
   AdvSmoothPanel, AdvSmoothExpanderPanel, System.ImageList, JvMemoryDataset,
-  JvExMask, JvToolEdit, JvBaseEdits, frxExportBaseDialog;
+  JvExMask, JvToolEdit, JvBaseEdits, frxExportBaseDialog, vcl.wwbutton;
 
 type
   Tfrmcontasreceber = class(TForm)
@@ -369,7 +369,7 @@ type
     qrvendaTOTAL: TFloatField;
     bliquidar: TAdvGlowButton;
     breceber: TAdvGlowButton;
-    bincluir: TAdvGlowMenuButton;
+   // bincluir: TAdvGlowMenuButton;
     balterar: TAdvGlowButton;
     bexcluir: TAdvGlowButton;
     bextornar: TAdvGlowButton;
@@ -408,6 +408,8 @@ type
     qrcontasreceberIDONLINE: TIntegerField;
     qrcontasreceberATB: TWideStringField;
     qrservicoATB: TWideStringField;
+    bincluir: TAdvGlowButton;
+    ImageList2: TImageList;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure qrcontasreceberCalcFields(DataSet: TDataSet);

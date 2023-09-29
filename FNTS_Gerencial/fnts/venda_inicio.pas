@@ -295,7 +295,6 @@ var
   dias: integer;
   vlimite: double;
 begin
-
   if frmmodulo.natoperacao = 'venda' then
   begin
     bgravar.Enabled := false;
@@ -471,7 +470,6 @@ begin
       end; }
 
     movimento_venda := 1; // inclusao
-
 
     numero_cupomx := '';
 

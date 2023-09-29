@@ -383,12 +383,19 @@ begin
 
   qros_produto.Close;
   qros_produto.sql.clear;
-  qros_produto.SQL.Add('select c.CODNOTA,  c.CODPRODUTO, c.UNITARIO, c.TOTAL, c.UNIDADE , c.SERIAL, c.QTDE , p.produto from c000032 c ');
-  qros_produto.SQL.Add('inner join C000025 p on (c.CODPRODUTO = p.CODIGO) where c.atb like :atbc and p.atb like :atbp and c.CODNOTA = :CODNOTA');
+  qros_produto.SQL.Add('select c.CODNOTA,  c.CODPRODUTO, c.UNITARIO, c.TOTAL, c.UNIDADE , c.SERIAL, c.QTDE , p.produto');
+  qros_produto.SQL.Add('from c000032 c ');
+  qros_produto.SQL.Add('inner join C000025 p on (c.CODPRODUTO = p.CODIGO)');
+  qros_produto.SQL.Add('where c.atb like :atbc');
+  qros_produto.SQL.Add('and p.atb like :atbp');
+  qros_produto.SQL.Add('and c.CODNOTA = :CODNOTA');
+  qros_produto.SQL.Add('and c.data =:data');
+  qros_produto.ParamByName('atbc').Value              := ME_FiltraATB('TB_MOVIMENTO');
+  qros_produto.ParamByName('atbp').Value              := ME_FiltraATB('TB_PRODUTO');
   qros_produto.Params.ParamByName('CODNOTA').AsString := FRMMODULO.cdsos.FIELDBYNAME('CODIGO').ASSTRING;
-  qros_produto.ParamByName('atbc').Value := ME_FiltraATB('TB_MOVIMENTO');
-  qros_produto.ParamByName('atbp').Value := ME_FiltraATB('TB_PRODUTO');
+  qros_produto.ParamByName('DATA').AsDate             := FRMMODULO.cdsos.FIELDBYNAME('DATA').Value;
   qros_produto.Open;
+
   if Novo_Ramo_Atividade = raComecioGeral then
   begin
     fxos.LoadFromFile('\SOS\server\rel\f000066.fr3');
@@ -404,7 +411,6 @@ begin
     fxos.LoadFromFile('\SOS\server\rel\f000066.fr3');
     fxos.ShowReport;
   end;
-
 end;
 
 procedure Tfrmos_impressao.TPRazaoA4Click(Sender: TObject);

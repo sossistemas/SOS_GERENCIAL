@@ -71,6 +71,10 @@ type
     bgravar: TAdvGlowButton;
     bcancelar: TAdvGlowButton;
     Bevel2: TBevel;
+    Shape7: TShape;
+    rPix: TJvCalcEdit;
+    ePix: TShape;
+    Label16: TLabel;
     procedure rdesconto1KeyPress(Sender: TObject; var Key: Char);
     procedure racrescimo2KeyPress(Sender: TObject; var Key: Char);
     procedure rdesconto1Enter(Sender: TObject);
@@ -96,8 +100,11 @@ type
     procedure rcartaocredExit(Sender: TObject);
     procedure rcartaodebExit(Sender: TObject);
     procedure rcrediarioExit(Sender: TObject);
+    procedure rPixEnter(Sender: TObject);
+    procedure rPixExit(Sender: TObject);
+    procedure rPixKeyPress(Sender: TObject; var Key: Char);
   private
-    { Private declarations }
+    procedure TotalizarTela;
   public
     { Public declarations }
   end;
@@ -182,7 +189,32 @@ begin
   tedit(Sender).color := clwindow;
   edinheiro.Brush.Color := clwindow;
 
-  rsoma.Value := rdinheiro.value + rchequeav.value + rchequeap.Value + rcartaocred.value + rcartaodeb.Value + rcrediario.Value;
+  TotalizarTela;
+end;
+
+procedure Tfrmos_fechamento_auto.rPixEnter(Sender: TObject);
+begin
+  tedit(Sender).Color := $00A0FAF8;
+  ePix.Brush.Color    := $00A0FAF8;
+end;
+
+procedure Tfrmos_fechamento_auto.rPixExit(Sender: TObject);
+begin
+  tedit(Sender).color    := clwindow;
+  ecartaodeb.Brush.Color := clwindow;
+
+  TotalizarTela;
+end;
+
+procedure Tfrmos_fechamento_auto.rPixKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+    perform(wm_nextdlgctl, 0, 0);
+end;
+
+procedure Tfrmos_fechamento_auto.TotalizarTela;
+begin
+  rsoma.Value := rdinheiro.value + rchequeav.value + rchequeap.Value + rcartaocred.value + rcartaodeb.Value + rcrediario.Value + rPix.Value;
   rdiferenca.Value := rtotal.Value - rsoma.Value;
 end;
 
@@ -190,6 +222,10 @@ procedure Tfrmos_fechamento_auto.bgravarClick(Sender: TObject);
 var
   texto: PWideChar;
 begin
+  if (rdinheiro.Value = 0.00) and (rchequeav.Value = 0.00) and (rchequeap.Value = 0.00) and (rcartaocred.Value = 0.00) and (rcartaodeb.Value = 0.00) and (rcrediario.Value = 0.00) and (rPix.Value = 0.00) and (rsoma.Value = 0.00) and (rdiferenca.Value = 0.00) then
+  begin
+    Exit;
+  end;
   try
     FRMMODULO.QRCONFIG.OPEN;
     if rcrediario.Value > 0 then
@@ -267,97 +303,59 @@ begin
     //  LANCAMENTOS ESPECIFICOS DE CADA FORMA DE PAGAMENTO
     frmmodulo.qrcaixa_mov.OPEN;
     frmmodulo.qrconfig.open;
+
+    frmmodulo.qrcaixa_mov.insert;
+    frmmodulo.qrcaixa_mov.FieldByName('codigo').asstring      := frmprincipal.codifica('000044');
+    frmmodulo.qrcaixa_mov.fieldbyname('codcaixa').asstring    := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
+    frmmodulo.qrcaixa_mov.fieldbyname('codoperador').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
+    frmmodulo.qrcaixa_mov.fieldbyname('data').asstring        := frmmodulo.qrcaixa_operador.FIELDBYNAME('DATA').ASSTRING;
+    frmmodulo.qrcaixa_mov.fieldbyname('saida').asfloat        := 0;
+
+
     if rdinheiro.Value <> 0 then
     begin
-      frmmodulo.qrcaixa_mov.insert;
-      frmmodulo.qrcaixa_mov.FieldByName('codigo').asstring := frmprincipal.codifica('000044');
-      frmmodulo.qrcaixa_mov.fieldbyname('codcaixa').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('codoperador').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('data').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('DATA').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('saida').asfloat := 0;
-      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat := rdinheiro.value;
-      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat := rdinheiro.value;
-      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AV').asstring;
+      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat     := rdinheiro.value;
+      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat       := rdinheiro.value;
+      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring   := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AV').asstring;
       frmmodulo.qrcaixa_mov.fieldbyname('movimento').asINTEGER := 18; // os em dinheiro
-      frmmodulo.qrcaixa_mov.fieldbyname('historico').asstring := 'O.S. No. ' + FRMMODULO.cdsos.FIELDBYNAME('CODIGO').ASSTRING + ' - ' + FRMMODULO.cdsos.FIELDBYNAME('CLIENTE').ASSTRING;
-      frmmodulo.qrcaixa_mov.post;
     end;
     if rchequeav.Value <> 0 then
     begin
-      frmmodulo.qrcaixa_mov.insert;
-      frmmodulo.qrcaixa_mov.FieldByName('codigo').asstring := frmprincipal.codifica('000044');
-      frmmodulo.qrcaixa_mov.fieldbyname('codcaixa').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('codoperador').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('data').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('DATA').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('saida').asfloat := 0;
-      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat := 0;
-      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat := rchequeav.value;
-      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AV').asstring;
+      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat     := 0;
+      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat       := rchequeav.value;
+      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring   := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AV').asstring;
       frmmodulo.qrcaixa_mov.fieldbyname('movimento').asINTEGER := 20; // os em cheque a vista
-      frmmodulo.qrcaixa_mov.fieldbyname('historico').asstring := 'O.S. No. ' + FRMMODULO.cdsos.FIELDBYNAME('CODIGO').ASSTRING + ' - ' + FRMMODULO.cdsos.FIELDBYNAME('CLIENTE').ASSTRING;
-      frmmodulo.qrcaixa_mov.post;
     end;
     if rchequeap.Value <> 0 then
     begin
-      frmmodulo.qrcaixa_mov.insert;
-      frmmodulo.qrcaixa_mov.FieldByName('codigo').asstring := frmprincipal.codifica('000044');
-      frmmodulo.qrcaixa_mov.fieldbyname('codcaixa').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('codoperador').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('data').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('DATA').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('saida').asfloat := 0;
-      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat := 0;
-      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat := rchequeap.value;
-      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
+      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat     := 0;
+      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat       := rchequeap.value;
+      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring   := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
       frmmodulo.qrcaixa_mov.fieldbyname('movimento').asINTEGER := 21; // os em cheque a prazo
-      frmmodulo.qrcaixa_mov.fieldbyname('historico').asstring := 'O.S. No. ' + FRMMODULO.cdsos.FIELDBYNAME('CODIGO').ASSTRING + ' - ' + FRMMODULO.cdsos.FIELDBYNAME('CLIENTE').ASSTRING;
-      frmmodulo.qrcaixa_mov.post;
     end;
     if rcartaocred.Value <> 0 then
     begin
-      frmmodulo.qrcaixa_mov.insert;
-      frmmodulo.qrcaixa_mov.FieldByName('codigo').asstring := frmprincipal.codifica('000044');
-      frmmodulo.qrcaixa_mov.fieldbyname('codcaixa').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('codoperador').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('data').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('DATA').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('saida').asfloat := 0;
-      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat := 0;
-      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat := rcartaocred.value;
-      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
+      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat     := 0;
+      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat       := rcartaocred.value;
+      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring   := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
       frmmodulo.qrcaixa_mov.fieldbyname('movimento').asINTEGER := 22; // os em cartao de credito
-      frmmodulo.qrcaixa_mov.fieldbyname('historico').asstring := 'O.S. No. ' + FRMMODULO.cdsos.FIELDBYNAME('CODIGO').ASSTRING + ' - ' + FRMMODULO.cdsos.FIELDBYNAME('CLIENTE').ASSTRING;
-      frmmodulo.qrcaixa_mov.post;
     end;
     if rcartaodeb.Value <> 0 then
     begin
-      frmmodulo.qrcaixa_mov.insert;
-      frmmodulo.qrcaixa_mov.FieldByName('codigo').asstring := frmprincipal.codifica('000044');
-      frmmodulo.qrcaixa_mov.fieldbyname('codcaixa').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('codoperador').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('data').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('DATA').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('saida').asfloat := 0;
-      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat := 0;
-      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat := rcartaoDEB.value;
-      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
+      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat     := 0;
+      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat       := rcartaoDEB.value;
+      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring   := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
       frmmodulo.qrcaixa_mov.fieldbyname('movimento').asINTEGER := 23; // os em cartao de credito
-      frmmodulo.qrcaixa_mov.fieldbyname('historico').asstring := 'O.S. No. ' + FRMMODULO.cdsos.FIELDBYNAME('CODIGO').ASSTRING + ' - ' + FRMMODULO.cdsos.FIELDBYNAME('CLIENTE').ASSTRING;
-      frmmodulo.qrcaixa_mov.post;
     end;
     if rcrediario.Value <> 0 then
     begin
-      frmmodulo.qrcaixa_mov.insert;
-      frmmodulo.qrcaixa_mov.FieldByName('codigo').asstring := frmprincipal.codifica('000044');
-      frmmodulo.qrcaixa_mov.fieldbyname('codcaixa').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('codoperador').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('data').asstring := frmmodulo.qrcaixa_operador.FIELDBYNAME('DATA').ASSTRING;
-      frmmodulo.qrcaixa_mov.fieldbyname('saida').asfloat := 0;
-      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat := 0;
-      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat := rcrediario.value;
-      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
+      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat     := 0;
+      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat       := rcrediario.value;
+      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring   := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AP').asstring;
       frmmodulo.qrcaixa_mov.fieldbyname('movimento').asINTEGER := 19; // os em CREDIARIO
-      frmmodulo.qrcaixa_mov.fieldbyname('historico').asstring := 'O.S. No. ' + FRMMODULO.cdsos.FIELDBYNAME('CODIGO').ASSTRING + ' - ' + FRMMODULO.cdsos.FIELDBYNAME('CLIENTE').ASSTRING;
-      frmmodulo.qrcaixa_mov.post;
       // lancamento do contas a receber
-        frmmodulo.qrcontasreceber.open;
+
+      frmmodulo.qrcontasreceber.open;
       if rdinheiro.value <> 0 then
       begin
         frmmodulo.qrcontasreceber.insert;
@@ -398,19 +396,31 @@ begin
         frmos_auto.qrOS_contasreceber.next;
       end;
     end;
-    frmmodulo.cdsos.fieldbyname('TOTAL').asfloat := rtotal.value;
-    frmmodulo.cdsos.fieldbyname('SUBTOTAL').asfloat := rsubtotal.value;
-    FRMMODULO.cdsos.FIELDBYNAME('meio_dinheiro').asfloat := rdinheiro.Value;
-    FRMMODULO.cdsos.FIELDBYNAME('meio_chequeav').asfloat := rchequeav.Value;
-    FRMMODULO.cdsos.FIELDBYNAME('meio_chequeap').asfloat := rchequeap.Value;
+    if rPix.Value <> 0 then
+    begin
+      frmmodulo.qrcaixa_mov.fieldbyname('entrada').asfloat     := 0;
+      frmmodulo.qrcaixa_mov.FieldByName('valor').asfloat       := rcrediario.value;
+      frmmodulo.qrcaixa_mov.fieldbyname('codconta').asstring   := frmmodulo.qrconfig.fieldbyname('PLANO_OS_AV').asstring;
+      frmmodulo.qrcaixa_mov.fieldbyname('movimento').asINTEGER := 44; // os em Pix
+    end;
+
+    frmmodulo.qrcaixa_mov.fieldbyname('historico').asstring := 'O.S. No. ' + FRMMODULO.cdsos.FIELDBYNAME('CODIGO').ASSTRING + ' - ' + FRMMODULO.cdsos.FIELDBYNAME('CLIENTE').ASSTRING;
+    frmmodulo.qrcaixa_mov.post;
+
+    frmmodulo.cdsos.fieldbyname('TOTAL').asfloat           := rtotal.value;
+    frmmodulo.cdsos.fieldbyname('SUBTOTAL').asfloat        := rsubtotal.value;
+    FRMMODULO.cdsos.FIELDBYNAME('meio_dinheiro').asfloat   := rdinheiro.Value;
+    FRMMODULO.cdsos.FIELDBYNAME('meio_chequeav').asfloat   := rchequeav.Value;
+    FRMMODULO.cdsos.FIELDBYNAME('meio_chequeap').asfloat   := rchequeap.Value;
     FRMMODULO.cdsos.FIELDBYNAME('meio_cartaocred').asfloat := rcartaocred.Value;
-    FRMMODULO.cdsos.FIELDBYNAME('meio_cartaodeb').asfloat := rcartaodeb.Value;
-    FRMMODULO.cdsos.FIELDBYNAME('meio_crediario').asfloat := rcrediario.Value;
-    FRMMODULO.cdsos.FIELDBYNAME('desconto').asfloat := rdesconto2.Value;
-    FRMMODULO.cdsos.FIELDBYNAME('acrescimo').asfloat := racrescimo2.Value;
-    FRMMODULO.cdsos.FIELDBYNAME('CODCAIXA').ASSTRING := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
-    FRMMODULO.cdsos.FIELDBYNAME('SITUACAO').ASSTRING := 'FECHADA';
-    FRMMODULO.cdsos.FIELDBYNAME('ST').ASSTRING := '4';
+    FRMMODULO.cdsos.FIELDBYNAME('meio_cartaodeb').asfloat  := rcartaodeb.Value;
+    FRMMODULO.cdsos.FIELDBYNAME('meio_crediario').asfloat  := rcrediario.Value;
+    FRMMODULO.cdsos.FIELDBYNAME('meio_pix').AsFloat        := rPix.Value;
+    FRMMODULO.cdsos.FIELDBYNAME('desconto').asfloat        := rdesconto2.Value;
+    FRMMODULO.cdsos.FIELDBYNAME('acrescimo').asfloat       := racrescimo2.Value;
+    FRMMODULO.cdsos.FIELDBYNAME('CODCAIXA').ASSTRING       := frmmodulo.qrcaixa_operador.FIELDBYNAME('CODIGO').ASSTRING;
+    FRMMODULO.cdsos.FIELDBYNAME('SITUACAO').ASSTRING       := 'FECHADA';
+    FRMMODULO.cdsos.FIELDBYNAME('ST').ASSTRING             := '4';
 
     if cupom_fiscal then
     begin
@@ -525,8 +535,7 @@ begin
   tedit(Sender).color := clwindow;
   echequeav.Brush.Color := clwindow;
 
-  rsoma.Value := rdinheiro.value + rchequeav.value + rchequeap.Value + rcartaocred.value + rcartaodeb.Value + rcrediario.Value;
-  rdiferenca.Value := rtotal.Value - rsoma.Value;
+  TotalizarTela;
 end;
 
 procedure Tfrmos_fechamento_auto.rchequeapExit(Sender: TObject);
@@ -534,8 +543,7 @@ begin
   tedit(Sender).color := clwindow;
   echequeap.Brush.Color := clwindow;
 
-  rsoma.Value := rdinheiro.value + rchequeav.value + rchequeap.Value + rcartaocred.value + rcartaodeb.Value + rcrediario.Value;
-  rdiferenca.Value := rtotal.Value - rsoma.Value;
+  TotalizarTela;
 end;
 
 procedure Tfrmos_fechamento_auto.rcartaocredExit(Sender: TObject);
@@ -543,8 +551,7 @@ begin
   tedit(Sender).color := clwindow;
   ecartaocred.Brush.Color := clwindow;
 
-  rsoma.Value := rdinheiro.value + rchequeav.value + rchequeap.Value + rcartaocred.value + rcartaodeb.Value + rcrediario.Value;
-  rdiferenca.Value := rtotal.Value - rsoma.Value;
+  TotalizarTela;
 end;
 
 procedure Tfrmos_fechamento_auto.rcartaodebExit(Sender: TObject);
@@ -552,8 +559,7 @@ begin
   tedit(Sender).color := clwindow;
   ecartaodeb.Brush.Color := clwindow;
 
-  rsoma.Value := rdinheiro.value + rchequeav.value + rchequeap.Value + rcartaocred.value + rcartaodeb.Value + rcrediario.Value;
-  rdiferenca.Value := rtotal.Value - rsoma.Value;
+  TotalizarTela;
 end;
 
 procedure Tfrmos_fechamento_auto.rcrediarioExit(Sender: TObject);
@@ -561,8 +567,7 @@ begin
   tedit(Sender).color := clwindow;
   ecrediario.Brush.Color := clwindow;
 
-  rsoma.Value := rdinheiro.value + rchequeav.value + rchequeap.Value + rcartaocred.value + rcartaodeb.Value + rcrediario.Value;
-  rdiferenca.Value := rtotal.Value - rsoma.Value;
+  TotalizarTela;
 end;
 
 end.
